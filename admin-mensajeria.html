@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mensajería — VitaCore WRHMS Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Poppins', system-ui, sans-serif; background: #F3F6F9; color: #0B2340; display: flex; min-height: 100vh; }
+
+    /* Sidebar */
+    .sidebar {
+      width: 240px; min-height: 100vh; background: #0B2340;
+      display: flex; flex-direction: column; flex-shrink: 0;
+      position: fixed; top: 0; left: 0; bottom: 0; z-index: 10;
+    }
+    .sidebar-logo { padding: 24px 20px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .sidebar-logo .logo-main { font-size: 20px; font-weight: 800; color: white; }
+    .sidebar-logo .logo-sub { font-size: 11px; color: #64b5d9; margin-top: 2px; }
+    .sidebar-logo .logo-tag {
+      display: inline-block; margin-top: 8px; background: #00A896; color: white;
+      font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 10px;
+    }
+    .sidebar-nav { padding: 16px 12px; flex: 1; }
+    .nav-label { font-size: 10px; font-weight: 600; color: #64748b; letter-spacing: 0.8px; text-transform: uppercase; padding: 0 8px; margin: 16px 0 6px; }
+    .nav-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px; border-radius: 8px; cursor: pointer;
+      font-size: 14px; color: #94a3b8; font-weight: 500;
+      text-decoration: none; transition: all 0.15s; margin-bottom: 2px;
+    }
+    .nav-item:hover { background: rgba(255,255,255,0.08); color: white; }
+    .nav-item.active { background: #00A896; color: white; font-weight: 600; }
+    .nav-item .nav-icon { font-size: 16px; width: 20px; text-align: center; }
+    .sidebar-user { padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; }
+    .user-avatar-sm { width: 36px; height: 36px; background: #00A896; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: white; }
+    .user-name { font-size: 13px; font-weight: 600; color: white; }
+    .user-role { font-size: 11px; color: #64748b; }
+
+    /* Main layout */
+    .main { margin-left: 240px; flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+    .topbar {
+      background: white; padding: 0 24px; height: 60px;
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 5;
+    }
+    .topbar-left { display: flex; align-items: center; gap: 12px; }
+    .topbar-back {
+      font-size: 13px; color: #64748b; text-decoration: none;
+      display: flex; align-items: center; gap: 4px;
+      padding: 4px 10px; border-radius: 6px; border: 1px solid #e2e8f0; transition: all 0.15s;
+    }
+    .topbar-back:hover { background: #F3F6F9; color: #0B2340; }
+    .topbar-title { font-size: 17px; font-weight: 700; }
+
+    /* Thread layout */
+    .threads-layout {
+      display: flex; flex: 1; height: calc(100vh - 60px); overflow: hidden;
+    }
+
+    /* Thread list */
+    .thread-list {
+      width: 40%; border-right: 1px solid #e2e8f0;
+      display: flex; flex-direction: column; background: white; overflow: hidden;
+    }
+    .list-header {
+      padding: 18px 20px; border-bottom: 1px solid #e2e8f0;
+      display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+    }
+    .list-title { font-size: 16px; font-weight: 700; }
+    .btn-new {
+      background: #00A896; color: white; border: none; border-radius: 8px;
+      padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+    }
+    .list-filters { padding: 12px 20px; border-bottom: 1px solid #f1f5f9; display: flex; gap: 4px; flex-shrink: 0; }
+    .filter-chip {
+      padding: 5px 12px; border-radius: 16px; font-size: 12px; font-weight: 500;
+      cursor: pointer; border: 1px solid #e2e8f0; color: #64748b; background: transparent;
+      transition: all 0.12s;
+    }
+    .filter-chip:hover { border-color: #00A896; color: #00A896; }
+    .filter-chip.active { background: #0B2340; color: white; border-color: #0B2340; font-weight: 600; }
+    .thread-items { overflow-y: auto; flex: 1; }
+    .thread-item {
+      padding: 16px 20px; border-bottom: 1px solid #f1f5f9;
+      cursor: pointer; transition: background 0.1s;
+    }
+    .thread-item:hover { background: #f8fafc; }
+    .thread-item.selected { background: #D6F5F1; border-left: 3px solid #00A896; }
+    .thread-item-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+    .thread-title { font-size: 14px; font-weight: 700; color: #0B2340; line-height: 1.3; flex: 1; }
+    .thread-time { font-size: 11px; color: #94a3b8; white-space: nowrap; margin-top: 2px; }
+    .thread-meta { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .thread-author { font-size: 12px; color: #64748b; }
+    .badge {
+      display: inline-flex; align-items: center; padding: 2px 8px;
+      border-radius: 10px; font-size: 11px; font-weight: 600; white-space: nowrap;
+    }
+    .badge-director { background: #D6F5F1; color: #00A896; }
+    .badge-profesional { background: #d1fae5; color: #059669; }
+    .badge-admin { background: #e8eef6; color: #0B2340; }
+    .badge-administrativo { background: #fef3c7; color: #F0A500; }
+    .badge-abierto { background: #d1fae5; color: #059669; }
+    .badge-cerrado { background: #f1f5f9; color: #64748b; }
+    .badge-aud-todos { background: #D6F5F1; color: #00A896; }
+    .badge-aud-dir { background: #ede9fe; color: #7c3aed; }
+    .badge-aud-miem { background: #fef3c7; color: #F0A500; }
+    .reply-count { font-size: 12px; color: #94a3b8; display: flex; align-items: center; gap: 3px; }
+
+    /* Thread detail */
+    .thread-detail {
+      flex: 1; display: flex; flex-direction: column; overflow: hidden; background: #f8fafc;
+    }
+    .detail-header {
+      padding: 18px 24px; border-bottom: 1px solid #e2e8f0; background: white;
+      display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-shrink: 0;
+    }
+    .detail-title { font-family: 'Lora', serif; font-size: 16px; font-weight: 700; color: #0B2340; line-height: 1.3; }
+    .detail-meta { display: flex; gap: 6px; align-items: center; margin-top: 6px; flex-wrap: wrap; }
+    .btn-close-thread {
+      background: white; border: 1px solid #e2e8f0; color: #E8735A;
+      border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
+      white-space: nowrap; transition: all 0.15s;
+    }
+    .btn-close-thread:hover { background: #fee2e2; border-color: #fca5a5; }
+
+    /* Messages */
+    .messages { flex: 1; overflow-y: auto; padding: 20px 24px; display: flex; flex-direction: column; gap: 16px; }
+    .msg { display: flex; gap: 10px; }
+    .msg-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 700; color: white; flex-shrink: 0; margin-top: 2px;
+    }
+    .av-navy { background: #0B2340; }
+    .av-teal { background: #00A896; }
+    .av-green { background: #059669; }
+    .av-orange { background: #F0A500; }
+    .msg-body { flex: 1; }
+    .msg-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+    .msg-author { font-size: 14px; font-weight: 700; color: #0B2340; }
+    .msg-time { font-size: 11px; color: #94a3b8; }
+    .msg-bubble {
+      background: white; border-radius: 12px; border-radius: 4px 12px 12px 12px;
+      padding: 12px 16px; font-size: 14px; color: #374151; line-height: 1.5;
+      border: 1px solid #e2e8f0; box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+      max-width: 560px;
+    }
+    .msg.opening .msg-bubble { background: #f0f9ff; border-color: #bae6fd; }
+
+    /* Reply input */
+    .reply-area {
+      padding: 16px 24px; border-top: 1px solid #e2e8f0; background: white; flex-shrink: 0;
+      display: flex; gap: 10px; align-items: flex-end;
+    }
+    .reply-input {
+      flex: 1; border: 1px solid #e2e8f0; border-radius: 10px;
+      padding: 10px 14px; font-size: 14px; color: #0B2340;
+      resize: none; font-family: 'Poppins', inherit; outline: none;
+      transition: border-color 0.15s;
+    }
+    .reply-input:focus { border-color: #00A896; }
+    .btn-reply {
+      background: #00A896; color: white; border: none; border-radius: 8px;
+      padding: 10px 20px; font-size: 14px; font-weight: 600; cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+      white-space: nowrap; transition: background 0.15s;
+    }
+    .btn-reply:hover { background: #0e7490; }
+  </style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <img src="assets/logo-dark.png" alt="VitaCore" style="height:30px;width:auto;display:block;margin-bottom:4px;">
+    <div style="font-size:11px;color:#9CA3AF;letter-spacing:0.3px;">CMRB | WRHMS</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-label">Principal</div>
+    <a href="admin-dashboard.html" class="nav-item">
+      <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block;vertical-align:middle"><rect x="18" y="3" width="4" height="18" rx="1"/><rect x="10" y="8" width="4" height="13" rx="1"/><rect x="2" y="13" width="4" height="8" rx="1"/></svg></span> Dashboard
+    </a>
+    <a href="admin-communications.html" class="nav-item">
+      <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block;vertical-align:middle"><path d="m3 11 18-5v12L3 13v-2z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg></span> Comunicaciones
+    </a>
+    <a href="admin-mensajeria.html" class="nav-item active">
+      <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block;vertical-align:middle"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span> Mensajería
+    </a>
+    <a href="#" class="nav-item">
+      <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block;vertical-align:middle"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span> Documentos
+    </a>
+    <div class="nav-label">Gestión</div>
+    <a href="admin-members.html" class="nav-item">
+      <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block;vertical-align:middle"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span> Miembros
+    </a>
+    <a href="#" class="nav-item">
+      <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="display:inline-block;vertical-align:middle"><polyline points="20 6 9 17 4 12"/></svg></span> Validador
+    </a>
+    <a href="#" class="nav-item">
+      <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block;vertical-align:middle"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span> Configuración
+    </a>
+  </nav>
+  <div class="sidebar-user">
+    <div class="user-avatar-sm">AS</div>
+    <div>
+      <div class="user-name">Admin Sistema</div>
+      <div class="user-role">admin</div>
+    </div>
+  </div>
+</aside>
+
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <a href="index.html" class="topbar-back">← Mocks</a>
+      <span class="topbar-title">Mensajería Oficial</span>
+    </div>
+    <div style="font-size:13px;color:#64748b;">4 hilos · 7 abiertos</div>
+  </div>
+
+  <div class="threads-layout">
+
+    <!-- Thread list -->
+    <div class="thread-list">
+      <div class="list-header">
+        <span class="list-title">Hilos Oficiales</span>
+        <button class="btn-new">+ Nuevo Hilo</button>
+      </div>
+      <div class="list-filters">
+        <span class="filter-chip active">Todos</span>
+        <span class="filter-chip">Abiertos</span>
+        <span class="filter-chip">Cerrados</span>
+        <span class="filter-chip">Directores</span>
+      </div>
+      <div class="thread-items">
+
+        <div class="thread-item selected">
+          <div class="thread-item-header">
+            <span class="thread-title">Posición del Colegio frente a recortes IPROSS</span>
+            <span class="thread-time">Hace 2h</span>
+          </div>
+          <div class="thread-meta">
+            <span class="thread-author">Dr. Ramírez</span>
+            <span class="badge badge-director">director</span>
+            <span class="badge badge-aud-todos">Todos</span>
+            <span class="badge badge-abierto">Abierto</span>
+            <span class="reply-count"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block;vertical-align:middle"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> 8</span>
+          </div>
+        </div>
+
+        <div class="thread-item">
+          <div class="thread-item-header">
+            <span class="thread-title">Consulta: protocolo de guardias nocturnas</span>
+            <span class="thread-time">Hace 1d</span>
+          </div>
+          <div class="thread-meta">
+            <span class="thread-author">Dra. Fuentes</span>
+            <span class="badge badge-director">director</span>
+            <span class="badge badge-aud-todos">Todos</span>
+            <span class="badge badge-abierto">Abierto</span>
+            <span class="reply-count"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block;vertical-align:middle"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> 3</span>
+          </div>
+        </div>
+
+        <div class="thread-item">
+          <div class="thread-item-header">
+            <span class="thread-title">Reunión extraordinaria CD — acta borrador</span>
+            <span class="thread-time">Hace 3d</span>
+          </div>
+          <div class="thread-meta">
+            <span class="thread-author">Dr. Ramírez</span>
+            <span class="badge badge-director">director</span>
+            <span class="badge badge-aud-dir">Solo Directores</span>
+            <span class="badge badge-cerrado">Cerrado</span>
+            <span class="reply-count"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block;vertical-align:middle"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> 0</span>
+          </div>
+        </div>
+
+        <div class="thread-item">
+          <div class="thread-item-header">
+            <span class="thread-title">Consulta a Dr. García sobre derivación</span>
+            <span class="thread-time">Hace 5d</span>
+          </div>
+          <div class="thread-meta">
+            <span class="thread-author">Dr. García</span>
+            <span class="badge badge-profesional">profesional</span>
+            <span class="badge badge-aud-miem">Miembro específico</span>
+            <span class="badge badge-abierto">Abierto</span>
+            <span class="reply-count"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block;vertical-align:middle"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> 2</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Thread detail -->
+    <div class="thread-detail">
+      <div class="detail-header">
+        <div>
+          <div class="detail-title">Posición del Colegio frente a recortes IPROSS</div>
+          <div class="detail-meta">
+            <span class="badge badge-abierto">Abierto</span>
+            <span class="badge badge-aud-todos">Audiencia: Todos</span>
+            <span style="font-size:12px;color:#64748b;">8 respuestas · Iniciado hace 2 horas</span>
+          </div>
+        </div>
+        <button class="btn-close-thread">Cerrar Hilo</button>
+      </div>
+
+      <div class="messages">
+
+        <!-- Opening message -->
+        <div class="msg opening">
+          <div class="msg-avatar av-navy">RR</div>
+          <div class="msg-body">
+            <div class="msg-header">
+              <span class="msg-author">Dr. Roberto Ramírez</span>
+              <span class="badge badge-director">director</span>
+              <span class="msg-time">Hoy, 08:15</span>
+            </div>
+            <div class="msg-bubble">
+              Estimados colegas, quiero abrir este espacio para coordinar la posición institucional del Colegio frente a los recientes recortes anunciados por IPROSS. Es fundamental que actuemos de manera coordinada. Solicito que quienes tengan información documentada sobre los impactos en sus especialidades lo compartan en este hilo.
+            </div>
+          </div>
+        </div>
+
+        <!-- Reply 1 -->
+        <div class="msg">
+          <div class="msg-avatar av-teal">CF</div>
+          <div class="msg-body">
+            <div class="msg-header">
+              <span class="msg-author">Dra. Carmen Fuentes</span>
+              <span class="badge badge-director">director</span>
+              <span class="msg-time">Hoy, 08:52</span>
+            </div>
+            <div class="msg-bubble">
+              Totalmente de acuerdo, Dr. Ramírez. Desde Secretaría estamos recopilando las consultas recibidas. Ya tenemos al menos 14 reportes de profesionales afectados. Coordinaremos una reunión para esta semana si es posible.
+            </div>
+          </div>
+        </div>
+
+        <!-- Reply 2 -->
+        <div class="msg">
+          <div class="msg-avatar av-green">JG</div>
+          <div class="msg-body">
+            <div class="msg-header">
+              <span class="msg-author">Dr. Juan García</span>
+              <span class="badge badge-profesional">profesional</span>
+              <span class="msg-time">Hoy, 09:30</span>
+            </div>
+            <div class="msg-bubble">
+              En Cirugía General el impacto es significativo. Hay prestaciones que directamente dejaron de cubrirse sin previo aviso. Puedo aportar el detalle por escrito si lo necesitan.
+            </div>
+          </div>
+        </div>
+
+        <!-- Reply 3 -->
+        <div class="msg">
+          <div class="msg-avatar av-orange">AM</div>
+          <div class="msg-body">
+            <div class="msg-header">
+              <span class="msg-author">Dra. Ana Martínez</span>
+              <span class="badge badge-profesional">profesional</span>
+              <span class="msg-time">Hoy, 10:11</span>
+            </div>
+            <div class="msg-bubble">
+              Desde Clínica Médica también hay afectaciones. En particular la cobertura de interconsultas se redujo un 40%. Apoyo la propuesta de coordinar una respuesta formal del Colegio.
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="reply-area">
+        <textarea class="reply-input" rows="2" placeholder="Escribir respuesta oficial..."></textarea>
+        <button class="btn-reply">Responder</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

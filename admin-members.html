@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Miembros — VitaCore WRHMS Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Poppins', system-ui, sans-serif; background: #F3F6F9; color: #0B2340; display: flex; min-height: 100vh; }
+
+    /* Sidebar */
+    .sidebar {
+      width: 240px; min-height: 100vh; background: #0B2340;
+      display: flex; flex-direction: column; flex-shrink: 0;
+      position: fixed; top: 0; left: 0; bottom: 0; z-index: 10;
+    }
+    .sidebar-logo { padding: 24px 20px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .sidebar-logo .logo-main { font-size: 20px; font-weight: 800; color: white; }
+    .sidebar-logo .logo-sub { font-size: 11px; color: #64b5d9; margin-top: 2px; }
+    .sidebar-logo .logo-tag {
+      display: inline-block; margin-top: 8px; background: #00A896; color: white;
+      font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 10px;
+    }
+    .sidebar-nav { padding: 16px 12px; flex: 1; }
+    .nav-label { font-size: 10px; font-weight: 600; color: #64748b; letter-spacing: 0.8px; text-transform: uppercase; padding: 0 8px; margin: 16px 0 6px; }
+    .nav-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px; border-radius: 8px; cursor: pointer;
+      font-size: 14px; color: #94a3b8; font-weight: 500;
+      text-decoration: none; transition: all 0.15s; margin-bottom: 2px;
+    }
+    .nav-item:hover { background: rgba(255,255,255,0.08); color: white; }
+    .nav-item.active { background: #00A896; color: white; font-weight: 600; }
+    .nav-item .nav-icon { font-size: 16px; width: 20px; text-align: center; }
+    .sidebar-user { padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; }
+    .user-avatar-sm { width: 36px; height: 36px; background: #00A896; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: white; }
+    .user-name { font-size: 13px; font-weight: 600; color: white; }
+    .user-role { font-size: 11px; color: #64748b; }
+
+    /* Main */
+    .main { margin-left: 240px; flex: 1; }
+    .topbar {
+      background: white; padding: 0 32px; height: 60px;
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 5;
+    }
+    .topbar-left { display: flex; align-items: center; gap: 12px; }
+    .topbar-back {
+      font-size: 13px; color: #64748b; text-decoration: none;
+      display: flex; align-items: center; gap: 4px;
+      padding: 4px 10px; border-radius: 6px; border: 1px solid #e2e8f0; transition: all 0.15s;
+    }
+    .topbar-back:hover { background: #F3F6F9; color: #0B2340; }
+    .topbar-title { font-size: 17px; font-weight: 700; }
+
+    /* Content */
+    .content { padding: 28px 32px; }
+    .content-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+    .page-title { font-family: 'Lora', serif; font-size: 22px; font-weight: 700; }
+    .page-subtitle { font-size: 13px; color: #64748b; margin-top: 3px; }
+    .btn-primary {
+      background: #00A896; color: white; border: none; border-radius: 8px;
+      padding: 10px 20px; font-size: 14px; font-weight: 600; cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+      text-decoration: none; transition: background 0.15s;
+    }
+    .btn-primary:hover { background: #0e7490; }
+
+    /* Filter tabs */
+    .filter-tabs { display: flex; gap: 4px; margin-bottom: 20px; align-items: center; }
+    .filter-tab {
+      padding: 7px 16px; border-radius: 8px; font-size: 13px; font-weight: 500;
+      cursor: pointer; border: 1px solid #e2e8f0; background: white; color: #64748b;
+      transition: all 0.15s;
+    }
+    .filter-tab:hover { border-color: #00A896; color: #00A896; }
+    .filter-tab.active { background: #0B2340; color: white; border-color: #0B2340; font-weight: 600; }
+    .search-input {
+      margin-left: auto; border: 1px solid #e2e8f0; border-radius: 8px;
+      padding: 7px 14px; font-size: 13px; color: #475569; outline: none;
+      width: 220px; font-family: 'Poppins', inherit;
+    }
+    .search-input:focus { border-color: #00A896; }
+
+    /* Table */
+    .table-card { background: white; border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+    table { width: 100%; border-collapse: collapse; }
+    th {
+      background: #f8fafc; padding: 11px 16px;
+      text-align: left; font-size: 11px; font-weight: 600;
+      color: #64748b; letter-spacing: 0.5px; text-transform: uppercase;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    td { padding: 13px 16px; border-bottom: 1px solid #f1f5f9; font-size: 13px; vertical-align: middle; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #fafbfc; }
+
+    /* Member avatar */
+    .member-cell { display: flex; align-items: center; gap: 12px; }
+    .mem-avatar {
+      width: 38px; height: 38px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 700; color: white; flex-shrink: 0;
+    }
+    .av-navy { background: #0B2340; }
+    .av-teal { background: #00A896; }
+    .av-green { background: #059669; }
+    .av-orange { background: #F0A500; }
+    .av-purple { background: #7c3aed; }
+    .av-rose { background: #e11d48; }
+    .av-slate { background: #475569; }
+    .av-cyan { background: #00A896; }
+    .mem-name { font-weight: 700; color: #0B2340; font-size: 14px; }
+    .mem-email { font-size: 12px; color: #94a3b8; margin-top: 1px; }
+
+    /* Badges */
+    .badge {
+      display: inline-flex; align-items: center; padding: 3px 10px;
+      border-radius: 12px; font-size: 11px; font-weight: 600; white-space: nowrap;
+    }
+    .badge-super_admin { background: #f1f5f9; color: #334155; }
+    .badge-admin { background: #e8eef6; color: #0B2340; }
+    .badge-director { background: #D6F5F1; color: #00A896; }
+    .badge-profesional { background: #d1fae5; color: #059669; }
+    .badge-administrativo { background: #fef3c7; color: #F0A500; }
+    .badge-activo { background: #d1fae5; color: #059669; }
+    .badge-inactivo { background: #f1f5f9; color: #64748b; }
+
+    /* Actions */
+    .actions { display: flex; gap: 6px; }
+    .btn-action {
+      padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 600;
+      cursor: pointer; border: 1px solid #e2e8f0; background: white; color: #475569;
+      transition: all 0.15s; text-decoration: none;
+    }
+    .btn-action:hover { background: #F3F6F9; }
+    .btn-action.edit { color: #00A896; border-color: #bae6fd; }
+    .btn-action.edit:hover { background: #D6F5F1; }
+
+    /* Role panel note */
+    .role-panel-note {
+      margin-top: 20px; background: #fffbeb; border: 1px solid #fde68a;
+      border-radius: 10px; padding: 14px 18px; font-size: 13px; color: #92400e;
+      display: flex; align-items: flex-start; gap: 10px;
+    }
+    .role-panel-note .note-icon { font-size: 18px; flex-shrink: 0; }
+    .role-panel-note strong { display: block; margin-bottom: 4px; color: #78350f; }
+  </style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <img src="assets/logo-dark.png" alt="VitaCore" style="height:30px;width:auto;display:block;margin-bottom:4px;">
+    <div style="font-size:11px;color:#9CA3AF;letter-spacing:0.3px;">CMRB | WRHMS</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-label">Principal</div>
+    <a href="admin-dashboard.html" class="nav-item">
+      <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block;vertical-align:middle"><rect x="18" y="3" width="4" height="18" rx="1"/><rect x="10" y="8" width="4" height="13" rx="1"/><rect x="2" y="13" width="4" height="8" rx="1"/></svg></span> Dashboard
+    </a>
+    <a href="admin-communications.html" class="nav-item">
+      <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block;vertical-align:middle"><path d="m3 11 18-5v12L3 13v-2z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg></span> Comunicaciones
+    </a>
+    <a href="admin-mensajeria.html" class="nav-item">
+      <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block;vertical-align:middle"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span> Mensajería
+    </a>
+    <a href="#" class="nav-item">
+      <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block;vertical-align:middle"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span> Documentos
+    </a>
+    <div class="nav-label">Gestión</div>
+    <a href="admin-members.html" class="nav-item active">
+      <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block;vertical-align:middle"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span> Miembros
+    </a>
+    <a href="#" class="nav-item">
+      <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="display:inline-block;vertical-align:middle"><polyline points="20 6 9 17 4 12"/></svg></span> Validador
+    </a>
+    <a href="#" class="nav-item">
+      <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block;vertical-align:middle"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span> Configuración
+    </a>
+  </nav>
+  <div class="sidebar-user">
+    <div class="user-avatar-sm">AS</div>
+    <div>
+      <div class="user-name">Admin Sistema</div>
+      <div class="user-role">admin</div>
+    </div>
+  </div>
+</aside>
+
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <a href="index.html" class="topbar-back">← Mocks</a>
+      <span class="topbar-title">Gestión de Miembros</span>
+    </div>
+    <div style="font-size:13px;color:#64748b;">276 miembros registrados</div>
+  </div>
+
+  <div class="content">
+    <div class="content-header">
+      <div>
+        <div class="page-title">Miembros del Colegio</div>
+        <div class="page-subtitle">Profesionales matriculados y personal administrativo del CMRB</div>
+      </div>
+      <a href="#" class="btn-primary">+ Agregar Miembro</a>
+    </div>
+
+    <div class="filter-tabs">
+      <div class="filter-tab active">Todos (276)</div>
+      <div class="filter-tab">Directores (8)</div>
+      <div class="filter-tab">Profesionales (251)</div>
+      <div class="filter-tab">Administrativos (17)</div>
+      <input class="search-input" type="text" placeholder="Buscar por nombre o matrícula...">
+    </div>
+
+    <div class="table-card">
+      <table>
+        <thead>
+          <tr>
+            <th>Miembro</th>
+            <th>Especialidad</th>
+            <th>Matrícula</th>
+            <th>Rol</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <div class="member-cell">
+                <div class="mem-avatar av-navy">RR</div>
+                <div>
+                  <div class="mem-name">Dr. Roberto Ramírez</div>
+                  <div class="mem-email">r.ramirez@cmrb.org.ar</div>
+                </div>
+              </div>
+            </td>
+            <td style="color:#475569;">Medicina General</td>
+            <td style="font-family:monospace;font-size:13px;color:#475569;">MP 3241</td>
+            <td><span class="badge badge-director">director</span></td>
+            <td><span class="badge badge-activo">Activo</span></td>
+            <td>
+              <div class="actions">
+                <a href="#" class="btn-action edit">Editar</a>
+                <a href="#" class="btn-action">Ver</a>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="member-cell">
+                <div class="mem-avatar av-teal">CF</div>
+                <div>
+                  <div class="mem-name">Dra. Carmen Fuentes</div>
+                  <div class="mem-email">c.fuentes@cmrb.org.ar</div>
+                </div>
+              </div>
+            </td>
+            <td style="color:#475569;">Pediatría</td>
+            <td style="font-family:monospace;font-size:13px;color:#475569;">MP 2987</td>
+            <td><span class="badge badge-director">director</span></td>
+            <td><span class="badge badge-activo">Activo</span></td>
+            <td>
+              <div class="actions">
+                <a href="#" class="btn-action edit">Editar</a>
+                <a href="#" class="btn-action">Ver</a>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="member-cell">
+                <div class="mem-avatar av-green">JG</div>
+                <div>
+                  <div class="mem-name">Dr. Juan García</div>
+                  <div class="mem-email">j.garcia@cmrb.org.ar</div>
+                </div>
+              </div>
+            </td>
+            <td style="color:#475569;">Cirugía General</td>
+            <td style="font-family:monospace;font-size:13px;color:#475569;">MP 4721</td>
+            <td><span class="badge badge-profesional">profesional</span></td>
+            <td><span class="badge badge-activo">Activo</span></td>
+            <td>
+              <div class="actions">
+                <a href="#" class="btn-action edit">Editar</a>
+                <a href="#" class="btn-action">Ver</a>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="member-cell">
+                <div class="mem-avatar av-purple">AM</div>
+                <div>
+                  <div class="mem-name">Dra. Ana Martínez</div>
+                  <div class="mem-email">a.martinez@cmrb.org.ar</div>
+                </div>
+              </div>
+            </td>
+            <td style="color:#475569;">Clínica Médica</td>
+            <td style="font-family:monospace;font-size:13px;color:#475569;">MP 5103</td>
+            <td><span class="badge badge-profesional">profesional</span></td>
+            <td><span class="badge badge-activo">Activo</span></td>
+            <td>
+              <div class="actions">
+                <a href="#" class="btn-action edit">Editar</a>
+                <a href="#" class="btn-action">Ver</a>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="member-cell">
+                <div class="mem-avatar av-orange">LS</div>
+                <div>
+                  <div class="mem-name">Laura Sánchez</div>
+                  <div class="mem-email">l.sanchez@cmrb.org.ar</div>
+                </div>
+              </div>
+            </td>
+            <td style="color:#475569;">—</td>
+            <td style="font-family:monospace;font-size:13px;color:#94a3b8;">N/A</td>
+            <td><span class="badge badge-administrativo">administrativo</span></td>
+            <td><span class="badge badge-activo">Activo</span></td>
+            <td>
+              <div class="actions">
+                <a href="#" class="btn-action edit">Editar</a>
+                <a href="#" class="btn-action">Ver</a>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="member-cell">
+                <div class="mem-avatar av-slate">PP</div>
+                <div>
+                  <div class="mem-name">Dr. Pablo Pereyra</div>
+                  <div class="mem-email">p.pereyra@cmrb.org.ar</div>
+                </div>
+              </div>
+            </td>
+            <td style="color:#475569;">Traumatología</td>
+            <td style="font-family:monospace;font-size:13px;color:#475569;">MP 4892</td>
+            <td><span class="badge badge-profesional">profesional</span></td>
+            <td><span class="badge badge-activo">Activo</span></td>
+            <td>
+              <div class="actions">
+                <a href="#" class="btn-action edit">Editar</a>
+                <a href="#" class="btn-action">Ver</a>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="member-cell">
+                <div class="mem-avatar av-rose">MG</div>
+                <div>
+                  <div class="mem-name">Dra. María Gómez</div>
+                  <div class="mem-email">m.gomez@cmrb.org.ar</div>
+                </div>
+              </div>
+            </td>
+            <td style="color:#475569;">Cardiología</td>
+            <td style="font-family:monospace;font-size:13px;color:#475569;">MP 3847</td>
+            <td><span class="badge badge-profesional">profesional</span></td>
+            <td><span class="badge badge-inactivo">Inactivo</span></td>
+            <td>
+              <div class="actions">
+                <a href="#" class="btn-action edit">Editar</a>
+                <a href="#" class="btn-action">Ver</a>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="member-cell">
+                <div class="mem-avatar av-navy">AS</div>
+                <div>
+                  <div class="mem-name">Admin Sistema</div>
+                  <div class="mem-email">admin@vitacore.com</div>
+                </div>
+              </div>
+            </td>
+            <td style="color:#475569;">—</td>
+            <td style="font-family:monospace;font-size:13px;color:#94a3b8;">N/A</td>
+            <td><span class="badge badge-admin">admin</span></td>
+            <td><span class="badge badge-activo">Activo</span></td>
+            <td>
+              <div class="actions">
+                <a href="#" class="btn-action edit">Editar</a>
+                <a href="#" class="btn-action">Ver</a>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="role-panel-note">
+      <div class="note-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block;vertical-align:middle"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+      <div>
+        <strong>Asignación de roles — Solo super_admin</strong>
+        La modificación de roles de usuario (director, admin, profesional, administrativo) está restringida al perfil <code style="background:#fde68a;padding:1px 6px;border-radius:4px;font-size:12px;">super_admin</code>. Con el rol actual <code style="background:#fde68a;padding:1px 6px;border-radius:4px;font-size:12px;">admin</code> podés editar datos del perfil pero no cambiar el rol asignado. Contactá al administrador principal para cambios de rol.
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — VitaCore WRHMS Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Poppins', system-ui, sans-serif; background: #F3F6F9; color: #0B2340; display: flex; min-height: 100vh; }
+
+    /* Sidebar */
+    .sidebar {
+      width: 240px; min-height: 100vh; background: #0B2340;
+      display: flex; flex-direction: column; flex-shrink: 0;
+      position: fixed; top: 0; left: 0; bottom: 0; z-index: 10;
+    }
+    .sidebar-logo {
+      padding: 24px 20px 20px; border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .sidebar-logo .logo-main { font-size: 20px; font-weight: 800; color: white; letter-spacing: -0.5px; }
+    .sidebar-logo .logo-sub { font-size: 11px; color: #64b5d9; margin-top: 2px; letter-spacing: 0.5px; }
+    .sidebar-logo .logo-tag {
+      display: inline-block; margin-top: 8px; background: #00A896; color: white;
+      font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 10px; letter-spacing: 0.5px;
+    }
+
+    .sidebar-nav { padding: 16px 12px; flex: 1; }
+    .nav-label { font-size: 10px; font-weight: 600; color: #64748b; letter-spacing: 0.8px; text-transform: uppercase; padding: 0 8px; margin: 16px 0 6px; }
+    .nav-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px; border-radius: 8px; cursor: pointer;
+      font-size: 14px; color: #94a3b8; font-weight: 500;
+      text-decoration: none; transition: all 0.15s;
+      margin-bottom: 2px;
+    }
+    .nav-item:hover { background: rgba(255,255,255,0.08); color: white; }
+    .nav-item.active { background: #00A896; color: white; font-weight: 600; }
+    .nav-item .nav-icon { font-size: 16px; width: 20px; text-align: center; }
+
+    .sidebar-user {
+      padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.1);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .user-avatar {
+      width: 36px; height: 36px; background: #00A896; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 700; color: white; flex-shrink: 0;
+    }
+    .user-name { font-size: 13px; font-weight: 600; color: white; }
+    .user-role { font-size: 11px; color: #64748b; margin-top: 1px; }
+
+    /* Main content */
+    .main { margin-left: 240px; flex: 1; min-height: 100vh; }
+
+    /* Top bar */
+    .topbar {
+      background: white; padding: 0 32px; height: 60px;
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 5;
+    }
+    .topbar-left { display: flex; align-items: center; gap: 12px; }
+    .topbar-back {
+      font-size: 13px; color: #64748b; text-decoration: none;
+      display: flex; align-items: center; gap: 4px;
+      padding: 4px 10px; border-radius: 6px; border: 1px solid #e2e8f0;
+      transition: all 0.15s;
+    }
+    .topbar-back:hover { background: #F3F6F9; color: #0B2340; }
+    .topbar-title { font-size: 17px; font-weight: 700; color: #0B2340; }
+    .topbar-right { display: flex; align-items: center; gap: 12px; }
+    .topbar-date { font-size: 13px; color: #64748b; }
+    .notif-btn {
+      width: 36px; height: 36px; border-radius: 8px; background: #F3F6F9;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; position: relative; font-size: 16px;
+    }
+    .notif-badge {
+      position: absolute; top: -4px; right: -4px;
+      background: #E8735A; color: white; font-size: 9px; font-weight: 700;
+      width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      border: 2px solid white;
+    }
+
+    /* Content area */
+    .content { padding: 28px 32px; }
+    .page-header { margin-bottom: 24px; }
+    .page-title { font-family: 'Lora', serif; font-size: 24px; font-weight: 700; color: #0B2340; }
+    .page-subtitle { font-size: 14px; color: #64748b; margin-top: 4px; }
+
+    /* Stat cards */
+    .stat-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
+    .stat-card {
+      background: white; border-radius: 12px; padding: 22px 20px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+      display: flex; align-items: flex-start; gap: 14px;
+    }
+    .stat-icon {
+      width: 48px; height: 48px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; flex-shrink: 0;
+    }
+    .stat-icon.blue { background: #D6F5F1; }
+    .stat-icon.teal { background: #ccfbf1; }
+    .stat-icon.green { background: #d1fae5; }
+    .stat-icon.orange { background: #fef3c7; }
+    .stat-value { font-size: 28px; font-weight: 800; color: #0B2340; line-height: 1; }
+    .stat-label { font-size: 13px; color: #64748b; margin-top: 4px; font-weight: 500; }
+    .stat-trend { font-size: 11px; color: #00A896; margin-top: 6px; font-weight: 600; }
+
+    /* Widgets row */
+    .widgets-row { display: grid; grid-template-columns: 3fr 2fr; gap: 20px; }
+
+    /* Widget card */
+    .widget {
+      background: white; border-radius: 12px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+      overflow: hidden;
+    }
+    .widget-header {
+      padding: 18px 20px; border-bottom: 1px solid #e2e8f0;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .widget-title { font-size: 15px; font-weight: 700; color: #0B2340; }
+    .widget-action { font-size: 12px; color: #00A896; font-weight: 600; cursor: pointer; text-decoration: none; }
+
+    /* Table */
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; }
+    th {
+      background: #f8fafc; padding: 10px 16px;
+      text-align: left; font-size: 11px; font-weight: 600;
+      color: #64748b; letter-spacing: 0.5px; text-transform: uppercase;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    td { padding: 12px 16px; border-bottom: 1px solid #f1f5f9; font-size: 13px; vertical-align: middle; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #f8fafc; }
+    .cell-title { font-weight: 600; color: #0B2340; }
+    .cell-author { color: #64748b; }
+
+    /* Badges */
+    .badge {
+      display: inline-flex; align-items: center; padding: 3px 10px;
+      border-radius: 12px; font-size: 11px; font-weight: 600; white-space: nowrap;
+    }
+    .badge-super_admin { background: #f1f5f9; color: #334155; }
+    .badge-admin { background: #e8eef6; color: #0B2340; }
+    .badge-director { background: #D6F5F1; color: #00A896; }
+    .badge-profesional { background: #d1fae5; color: #059669; }
+    .badge-administrativo { background: #fef3c7; color: #F0A500; }
+    .badge-abierto { background: #d1fae5; color: #059669; }
+    .badge-cerrado { background: #f1f5f9; color: #64748b; }
+    .badge-todos { background: #D6F5F1; color: #00A896; }
+    .badge-directores { background: #e8eef6; color: #0B2340; }
+    .badge-miembro { background: #fef3c7; color: #F0A500; }
+    .badge-number {
+      background: #f1f5f9; color: #475569; border-radius: 10px;
+      padding: 2px 8px; font-size: 12px; font-weight: 700;
+    }
+
+    /* Activity list */
+    .activity-list { padding: 8px 0; }
+    .activity-item {
+      padding: 12px 20px; display: flex; align-items: flex-start; gap: 12px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+    .activity-item:last-child { border-bottom: none; }
+    .activity-dot {
+      width: 8px; height: 8px; border-radius: 50%; margin-top: 5px; flex-shrink: 0;
+    }
+    .dot-teal { background: #00A896; }
+    .dot-green { background: #00A896; }
+    .dot-orange { background: #F0A500; }
+    .activity-text { font-size: 13px; color: #475569; line-height: 1.4; }
+    .activity-text strong { color: #0B2340; font-weight: 600; }
+    .activity-time { font-size: 11px; color: #94a3b8; margin-top: 3px; }
+  </style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <img src="assets/logo-dark.png" alt="VitaCore" style="height:30px;width:auto;display:block;margin-bottom:4px;">
+    <div style="font-size:11px;color:#9CA3AF;letter-spacing:0.3px;">CMRB | WRHMS</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-label">Principal</div>
+    <a href="admin-dashboard.html" class="nav-item">
+      <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block;vertical-align:middle"><rect x="18" y="3" width="4" height="18" rx="1"/><rect x="10" y="8" width="4" height="13" rx="1"/><rect x="2" y="13" width="4" height="8" rx="1"/></svg></span> Dashboard
+    </a>
+    <a href="admin-communications.html" class="nav-item">
+      <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block;vertical-align:middle"><path d="m3 11 18-5v12L3 13v-2z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg></span> Comunicaciones
+    </a>
+    <a href="admin-mensajeria.html" class="nav-item active">
+      <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block;vertical-align:middle"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span> Mensajería
+    </a>
+    <a href="#" class="nav-item">
+      <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block;vertical-align:middle"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span> Documentos
+    </a>
+    <div class="nav-label">Gestión</div>
+    <a href="admin-members.html" class="nav-item">
+      <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block;vertical-align:middle"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span> Miembros
+    </a>
+    <a href="#" class="nav-item">
+      <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="display:inline-block;vertical-align:middle"><polyline points="20 6 9 17 4 12"/></svg></span> Validador
+    </a>
+    <a href="#" class="nav-item">
+      <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block;vertical-align:middle"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span> Configuración
+    </a>
+  </nav>
+  <div class="sidebar-user">
+    <div class="user-avatar">AS</div>
+    <div>
+      <div class="user-name">Admin Sistema</div>
+      <div class="user-role">admin</div>
+    </div>
+  </div>
+</aside>
+
+<!-- Main -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <a href="index.html" class="topbar-back">← Mocks</a>
+      <span class="topbar-title">Dashboard</span>
+    </div>
+    <div class="topbar-right">
+      <span class="topbar-date">Viernes, 21 de marzo 2026</span>
+      <div class="notif-btn"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block;vertical-align:middle"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><span class="notif-badge">5</span></div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="page-header">
+      <div class="page-title">Panel de Control</div>
+      <div class="page-subtitle">Resumen general del sistema CMRB</div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stat-cards">
+      <div class="stat-card">
+        <div class="stat-icon blue"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block;vertical-align:middle"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <div>
+          <div class="stat-value">276</div>
+          <div class="stat-label">Total Miembros</div>
+          <div class="stat-trend">↑ 4 este mes</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon green"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="display:inline-block;vertical-align:middle"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div>
+          <div class="stat-value">241</div>
+          <div class="stat-label">Miembros Activos</div>
+          <div class="stat-trend">87.3% del total</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon teal"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block;vertical-align:middle"><path d="m3 11 18-5v12L3 13v-2z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg></div>
+        <div>
+          <div class="stat-value">18</div>
+          <div class="stat-label">Comunicaciones</div>
+          <div class="stat-trend">↑ 3 esta semana</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon orange"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block;vertical-align:middle"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+        <div>
+          <div class="stat-value">7</div>
+          <div class="stat-label">Hilos Activos</div>
+          <div class="stat-trend">2 sin respuesta</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Widgets -->
+    <div class="widgets-row">
+
+      <!-- Hilos recientes -->
+      <div class="widget">
+        <div class="widget-header">
+          <span class="widget-title">Hilos Recientes</span>
+          <a href="admin-mensajeria.html" class="widget-action">Ver todos →</a>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Título</th>
+                <th>Autor</th>
+                <th>Rol</th>
+                <th>Audiencia</th>
+                <th>Rep.</th>
+                <th>Estado</th>
+                <th>Fecha</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="cell-title">Posición del Colegio frente a recortes IPROSS</span></td>
+                <td><span class="cell-author">Dr. Ramírez</span></td>
+                <td><span class="badge badge-director">director</span></td>
+                <td><span class="badge badge-todos">Todos</span></td>
+                <td><span class="badge-number">8</span></td>
+                <td><span class="badge badge-abierto">Abierto</span></td>
+                <td style="color:#64748b;font-size:12px;">Hace 2h</td>
+              </tr>
+              <tr>
+                <td><span class="cell-title">Consulta: protocolo de guardias nocturnas</span></td>
+                <td><span class="cell-author">Dra. Fuentes</span></td>
+                <td><span class="badge badge-director">director</span></td>
+                <td><span class="badge badge-todos">Todos</span></td>
+                <td><span class="badge-number">3</span></td>
+                <td><span class="badge badge-abierto">Abierto</span></td>
+                <td style="color:#64748b;font-size:12px;">Hace 1d</td>
+              </tr>
+              <tr>
+                <td><span class="cell-title">Reunión extraordinaria CD — acta borrador</span></td>
+                <td><span class="cell-author">Dr. Ramírez</span></td>
+                <td><span class="badge badge-director">director</span></td>
+                <td><span class="badge badge-directores">Directores</span></td>
+                <td><span class="badge-number">0</span></td>
+                <td><span class="badge badge-cerrado">Cerrado</span></td>
+                <td style="color:#64748b;font-size:12px;">Hace 3d</td>
+              </tr>
+              <tr>
+                <td><span class="cell-title">Consulta a Dr. García sobre derivación</span></td>
+                <td><span class="cell-author">Dr. García</span></td>
+                <td><span class="badge badge-profesional">profesional</span></td>
+                <td><span class="badge badge-miembro">Miembro</span></td>
+                <td><span class="badge-number">2</span></td>
+                <td><span class="badge badge-abierto">Abierto</span></td>
+                <td style="color:#64748b;font-size:12px;">Hace 5d</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Actividad reciente -->
+      <div class="widget">
+        <div class="widget-header">
+          <span class="widget-title">Actividad Reciente</span>
+          <span class="widget-action">Ver log →</span>
+        </div>
+        <div class="activity-list">
+          <div class="activity-item">
+            <div class="activity-dot dot-teal"></div>
+            <div>
+              <div class="activity-text"><strong>Dr. García</strong> respondió en 'Consulta IPROSS'</div>
+              <div class="activity-time">Hace 2 horas</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot dot-green"></div>
+            <div>
+              <div class="activity-text"><strong>Laura Sánchez</strong> publicó comunicación "Cierre administrativo"</div>
+              <div class="activity-time">Hace 4 horas</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot dot-orange"></div>
+            <div>
+              <div class="activity-text"><strong>Dra. Martínez</strong> se unió al hilo de guardias nocturnas</div>
+              <div class="activity-time">Hace 6 horas</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot dot-teal"></div>
+            <div>
+              <div class="activity-text"><strong>Admin Sistema</strong> activó matrícula MP 4892</div>
+              <div class="activity-time">Hace 1 día</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot dot-green"></div>
+            <div>
+              <div class="activity-text"><strong>Dr. Ramírez</strong> abrió hilo "Reunión extraordinaria CD"</div>
+              <div class="activity-time">Hace 3 días</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
