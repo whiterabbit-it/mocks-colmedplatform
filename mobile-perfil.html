@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi Perfil — VitaCore WRHMS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/feedback.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Poppins', system-ui, sans-serif;
+      background: #cbd5e1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 32px 16px;
+    }
+
+    /* Back link */
+    .back-link {
+      align-self: flex-start; margin-bottom: 16px; margin-left: calc(50% - 195px);
+      font-size: 13px; color: #475569; text-decoration: none;
+      display: flex; align-items: center; gap: 4px;
+      background: white; padding: 6px 14px; border-radius: 8px;
+      border: 1px solid #e2e8f0; font-weight: 500;
+      transition: all 0.15s;
+    }
+    .back-link:hover { background: #F3F6F9; }
+
+    /* Phone frame */
+    .phone {
+      width: 390px; height: 844px;
+      background: #F3F6F9;
+      border-radius: 48px;
+      overflow: hidden;
+      box-shadow: 0 32px 64px rgba(0,0,0,0.28), 0 0 0 2px #94a3b8, inset 0 0 0 1px rgba(255,255,255,0.3);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    /* Status bar */
+    .status-bar {
+      background: #0B2340;
+      padding: 12px 24px 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .status-time { font-size: 15px; font-weight: 700; color: white; }
+    .status-icons { display: flex; align-items: center; gap: 6px; }
+    .status-icons span { font-size: 13px; color: white; }
+
+    /* App header */
+    .app-header {
+      background: #0B2340;
+      padding: 8px 20px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .notif-btn {
+      width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.12);
+      display: flex; align-items: center; justify-content: center;
+      position: relative; font-size: 18px; color: white;
+    }
+    .notif-dot {
+      position: absolute; top: 2px; right: 2px;
+      width: 16px; height: 16px; background: #E8735A;
+      border-radius: 50%; border: 2px solid #0B2340;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 9px; font-weight: 700; color: white;
+    }
+
+    /* Scroll area */
+    .scroll-area { flex: 1; overflow-y: auto; padding: 16px 16px 80px; }
+    .scroll-area::-webkit-scrollbar { display: none; }
+
+    /* Section label */
+    .section-label {
+      font-size: 11px; font-weight: 700; color: #64748b;
+      letter-spacing: 0.8px; text-transform: uppercase;
+      margin-bottom: 10px; margin-top: 4px;
+    }
+
+    /* Cards */
+    .card {
+      background: white; border-radius: 16px; padding: 16px;
+      margin-bottom: 12px; border: 1px solid #e2e8f0;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+
+    /* Header card */
+    .profile-header-card {
+      background: white; border-radius: 16px; padding: 20px 16px;
+      margin-bottom: 12px; border: 1px solid #e2e8f0;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+      display: flex; align-items: center; gap: 16px;
+    }
+    .avatar-circle {
+      width: 60px; height: 60px; border-radius: 50%;
+      background: #00A896; display: flex; align-items: center; justify-content: center;
+      font-size: 22px; font-weight: 700; color: white; flex-shrink: 0;
+      font-family: 'Poppins', sans-serif;
+    }
+    .profile-info { flex: 1; min-width: 0; }
+    .profile-name {
+      font-family: 'Lora', serif; font-size: 17px; font-weight: 700;
+      color: #0B2340; line-height: 1.2; margin-bottom: 3px;
+    }
+    .profile-specialty { font-size: 12px; color: #64748b; margin-bottom: 8px; }
+    .profile-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .status-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: #d1fae5; color: #065f46;
+      font-size: 11px; font-weight: 600;
+      padding: 3px 10px; border-radius: 12px;
+    }
+    .status-dot {
+      width: 7px; height: 7px; border-radius: 50%; background: #10b981; flex-shrink: 0;
+    }
+    .credencial-btn {
+      display: inline-flex; align-items: center; gap: 4px;
+      background: #00A896; color: white;
+      font-size: 11px; font-weight: 600;
+      padding: 4px 12px; border-radius: 10px;
+      text-decoration: none; transition: background 0.15s;
+    }
+    .credencial-btn:hover { background: #008f7e; }
+
+    /* Section header inside card */
+    .card-section-header {
+      font-size: 11px; font-weight: 700; color: #64748b;
+      letter-spacing: 0.7px; text-transform: uppercase;
+      margin-bottom: 14px; padding-bottom: 10px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    /* Data grid */
+    .data-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 8px; }
+    .data-field { display: flex; flex-direction: column; gap: 2px; }
+    .data-field.full-width { grid-column: 1 / -1; }
+    .field-label { font-size: 10px; color: #94a3b8; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+    .field-value { font-size: 13px; color: #1e293b; font-weight: 500; }
+    .edit-link { font-size: 11px; color: #00A896; font-weight: 600; text-align: right; margin-top: 12px; display: block; text-decoration: none; }
+    .edit-link:hover { text-decoration: underline; }
+
+    /* Note text */
+    .note-text { font-size: 11px; color: #94a3b8; margin-top: 12px; font-style: italic; }
+
+    /* Consultorio cards */
+    .consultorio-card {
+      background: #F3F6F9; border-radius: 10px; padding: 12px;
+      margin-bottom: 8px; border: 1px solid #e2e8f0;
+    }
+    .consultorio-card:last-child { margin-bottom: 0; }
+    .consultorio-name { font-size: 13px; font-weight: 600; color: #0B2340; margin-bottom: 3px; }
+    .consultorio-detail { font-size: 12px; color: #64748b; }
+
+    /* OS list */
+    .os-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 9px 0; border-bottom: 1px solid #f1f5f9;
+    }
+    .os-row:last-child { border-bottom: none; }
+    .os-name { font-size: 13px; color: #1e293b; font-weight: 500; }
+    .badge {
+      display: inline-flex; align-items: center;
+      padding: 3px 10px; border-radius: 12px;
+      font-size: 11px; font-weight: 600;
+    }
+    .badge-teal { background: #D6F5F1; color: #00A896; }
+    .badge-yellow { background: #fef3c7; color: #d97706; }
+
+    /* Toggle rows */
+    .toggle-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 0; border-bottom: 1px solid #f1f5f9;
+    }
+    .toggle-row:last-child { border-bottom: none; }
+    .toggle-label { font-size: 13px; color: #1e293b; font-weight: 500; }
+    .toggle {
+      width: 40px; height: 22px; border-radius: 11px; position: relative; flex-shrink: 0;
+    }
+    .toggle-on { background: #00A896; }
+    .toggle-off { background: #cbd5e1; }
+    .toggle-knob {
+      position: absolute; top: 3px;
+      width: 16px; height: 16px; border-radius: 50%;
+      background: white; box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+      transition: left 0.15s;
+    }
+    .toggle-on .toggle-knob { left: 21px; }
+    .toggle-off .toggle-knob { left: 3px; }
+
+    /* Financial row */
+    .fin-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 9px 0; border-bottom: 1px solid #f1f5f9;
+    }
+    .fin-row:last-child { border-bottom: none; }
+    .fin-label { font-size: 13px; color: #64748b; }
+    .fin-value { font-size: 13px; color: #1e293b; font-weight: 600; }
+    .fin-value-ok { display: flex; align-items: center; gap: 5px; color: #065f46; font-weight: 600; font-size: 13px; }
+    .action-link { font-size: 12px; color: #00A896; font-weight: 600; text-decoration: none; margin-top: 10px; display: block; }
+    .action-link:hover { text-decoration: underline; }
+
+    /* Security section */
+    .sec-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 0; border-bottom: 1px solid #f1f5f9;
+    }
+    .sec-row:last-child { border-bottom: none; }
+    .sec-left { display: flex; flex-direction: column; gap: 2px; }
+    .sec-label { font-size: 13px; color: #1e293b; font-weight: 500; }
+    .sec-sub { font-size: 11px; color: #94a3b8; }
+    .sec-action {
+      font-size: 12px; color: #00A896; font-weight: 600;
+      background: #D6F5F1; padding: 4px 12px; border-radius: 8px;
+      text-decoration: none;
+    }
+    .sec-check { display: flex; align-items: center; gap: 4px; color: #00A896; font-size: 12px; font-weight: 600; }
+    .logout-link {
+      display: block; text-align: center; margin-top: 14px;
+      font-size: 13px; color: #dc2626; font-weight: 600;
+      text-decoration: none;
+    }
+    .logout-link:hover { text-decoration: underline; }
+
+    /* Tab bar */
+    .tab-bar {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      background: white; border-top: 1px solid #e2e8f0;
+      display: flex; height: 72px;
+      box-shadow: 0 -4px 12px rgba(0,0,0,0.06);
+    }
+    .tab-item {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 4px; cursor: pointer; padding: 8px 0;
+      font-size: 10px; font-weight: 600; color: #94a3b8;
+      text-decoration: none; transition: color 0.15s;
+    }
+    .tab-item.active { color: #00A896; }
+    .tab-icon { font-size: 20px; }
+    .tab-item.active .tab-icon { filter: drop-shadow(0 0 4px rgba(0,168,150,0.4)); }
+  </style>
+</head>
+<body>
+
+<a href="index.html" class="back-link">← Volver a mocks</a>
+
+<div class="phone">
+
+  <!-- Status bar -->
+  <div class="status-bar">
+    <span class="status-time">9:41</span>
+    <div class="status-icons">
+      <span>
+        <span style="display:inline-flex;gap:2px;align-items:center">
+          <span style="width:4px;height:4px;border-radius:50%;background:currentColor;display:inline-block"></span>
+          <span style="width:4px;height:4px;border-radius:50%;background:currentColor;display:inline-block"></span>
+          <span style="width:4px;height:4px;border-radius:50%;background:currentColor;display:inline-block"></span>
+          <span style="width:4px;height:4px;border-radius:50%;background:currentColor;display:inline-block"></span>
+        </span>
+      </span>
+      <span>WiFi</span>
+      <span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block;vertical-align:middle">
+          <rect x="2" y="7" width="18" height="11" rx="2"/><path d="M20 11h2v3h-2"/>
+        </svg>
+      </span>
+    </div>
+  </div>
+
+  <!-- App header -->
+  <div class="app-header">
+    <div style="display:flex;align-items:center;gap:7px;">
+      <img src="assets/logo-dark.png" alt="VitaCore" style="height:24px;width:auto;">
+    </div>
+    <div class="notif-btn">
+      <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block;vertical-align:middle">
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+      </svg>
+      <span class="notif-dot">3</span>
+    </div>
+  </div>
+
+  <!-- Scrollable content -->
+  <div class="scroll-area">
+
+    <!-- Header card -->
+    <div class="profile-header-card">
+      <div class="avatar-circle">JG</div>
+      <div class="profile-info">
+        <div class="profile-name">Dr. Juan García</div>
+        <div class="profile-specialty">Cirugía General</div>
+        <div class="profile-meta">
+          <span class="status-badge">
+            <span class="status-dot"></span>
+            Activo
+          </span>
+          <a href="mobile-credencial.html" class="credencial-btn">
+            Ver credencial
+            <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="display:inline-block;vertical-align:middle">
+              <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 1: Datos Personales -->
+    <div class="card">
+      <div class="card-section-header">Datos Personales</div>
+      <div class="data-grid">
+        <div class="data-field">
+          <span class="field-label">Email</span>
+          <span class="field-value" style="font-size:12px;">j.garcia@cmrb.org.ar</span>
+        </div>
+        <div class="data-field">
+          <span class="field-label">Teléfono</span>
+          <span class="field-value">(294) 442-1234</span>
+        </div>
+        <div class="data-field">
+          <span class="field-label">Fecha nac.</span>
+          <span class="field-value">15/08/1978</span>
+        </div>
+        <div class="data-field">
+          <span class="field-label">Domicilio</span>
+          <span class="field-value" style="font-size:12px;">Mitre 500, Bariloche</span>
+        </div>
+      </div>
+      <a href="#" class="edit-link">
+        <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block;vertical-align:middle;margin-right:3px">
+          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+        </svg>
+        Editar
+      </a>
+    </div>
+
+    <!-- Section 2: Credencial Profesional -->
+    <div class="card">
+      <div class="card-section-header">Credencial Profesional</div>
+      <div class="data-grid">
+        <div class="data-field">
+          <span class="field-label">Matrícula</span>
+          <span class="field-value">MP 4721</span>
+        </div>
+        <div class="data-field">
+          <span class="field-label">N° Socio</span>
+          <span class="field-value">#00342</span>
+        </div>
+        <div class="data-field">
+          <span class="field-label">Categoría</span>
+          <span class="field-value">Profesional</span>
+        </div>
+        <div class="data-field">
+          <span class="field-label">Vencimiento</span>
+          <span class="field-value">31/12/2026</span>
+        </div>
+        <div class="data-field full-width">
+          <span class="field-label">Especialidad 2°</span>
+          <span class="field-value">Proctología</span>
+        </div>
+      </div>
+      <p class="note-text">Solo editable desde secretaría</p>
+    </div>
+
+    <!-- Section 3: Consultorios -->
+    <div class="card">
+      <div class="card-section-header">Consultorios</div>
+      <div class="consultorio-card">
+        <div class="consultorio-name">
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#00A896" stroke-width="2" style="display:inline-block;vertical-align:middle;margin-right:4px">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+          </svg>
+          Hospital Zonal Bariloche
+        </div>
+        <div class="consultorio-detail">Cirugía — Lunes y Miércoles 8–20 hs</div>
+      </div>
+      <div class="consultorio-card">
+        <div class="consultorio-name">
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#00A896" stroke-width="2" style="display:inline-block;vertical-align:middle;margin-right:4px">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+          </svg>
+          Consultorio Privado
+        </div>
+        <div class="consultorio-detail">San Martín 220 — Lun–Vie 9–12 hs</div>
+      </div>
+    </div>
+
+    <!-- Section 4: Obras Sociales -->
+    <div class="card">
+      <div class="card-section-header">Obras Sociales</div>
+      <div class="os-row">
+        <span class="os-name">IPROSS</span>
+        <span class="badge badge-teal">Matriculado</span>
+      </div>
+      <div class="os-row">
+        <span class="os-name">OSPRERA</span>
+        <span class="badge badge-teal">Matriculado</span>
+      </div>
+      <div class="os-row">
+        <span class="os-name">OSDE</span>
+        <span class="badge badge-teal">Matriculado</span>
+      </div>
+      <div class="os-row">
+        <span class="os-name">PAMI</span>
+        <span class="badge badge-yellow">En trámite</span>
+      </div>
+    </div>
+
+    <!-- Section 5: Privacidad del directorio -->
+    <div class="card">
+      <div class="card-section-header">Privacidad del Directorio</div>
+      <div class="toggle-row">
+        <span class="toggle-label">Nombre en directorio</span>
+        <div class="toggle toggle-on"><div class="toggle-knob"></div></div>
+      </div>
+      <div class="toggle-row">
+        <span class="toggle-label">Especialidad</span>
+        <div class="toggle toggle-on"><div class="toggle-knob"></div></div>
+      </div>
+      <div class="toggle-row">
+        <span class="toggle-label">Institución</span>
+        <div class="toggle toggle-on"><div class="toggle-knob"></div></div>
+      </div>
+      <div class="toggle-row">
+        <span class="toggle-label">Teléfono</span>
+        <div class="toggle toggle-off"><div class="toggle-knob"></div></div>
+      </div>
+      <div class="toggle-row">
+        <span class="toggle-label">Email</span>
+        <div class="toggle toggle-off"><div class="toggle-knob"></div></div>
+      </div>
+    </div>
+
+    <!-- Section 6: Notificaciones -->
+    <div class="card">
+      <div class="card-section-header">Notificaciones</div>
+      <div class="toggle-row">
+        <span class="toggle-label">Circulares y Avisos</span>
+        <div class="toggle toggle-on"><div class="toggle-knob"></div></div>
+      </div>
+      <div class="toggle-row">
+        <span class="toggle-label">Cambios Obras Sociales</span>
+        <div class="toggle toggle-on"><div class="toggle-knob"></div></div>
+      </div>
+      <div class="toggle-row">
+        <span class="toggle-label">Mensajes Directos</span>
+        <div class="toggle toggle-on"><div class="toggle-knob"></div></div>
+      </div>
+      <div class="toggle-row">
+        <span class="toggle-label">Estado de cuota</span>
+        <div class="toggle toggle-on"><div class="toggle-knob"></div></div>
+      </div>
+      <div class="toggle-row">
+        <span class="toggle-label">Facturación</span>
+        <div class="toggle toggle-on"><div class="toggle-knob"></div></div>
+      </div>
+    </div>
+
+    <!-- Section 7: Estado financiero -->
+    <div class="card">
+      <div class="card-section-header">Estado Financiero</div>
+      <div class="fin-row">
+        <span class="fin-label">Cuota social</span>
+        <span class="fin-value-ok">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="display:inline-block;vertical-align:middle">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          Al día
+        </span>
+      </div>
+      <div class="fin-row">
+        <span class="fin-label">Próximo vencimiento</span>
+        <span class="fin-value">15/04/2026</span>
+      </div>
+      <a href="#" class="action-link">
+        Ver historial
+        <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="display:inline-block;vertical-align:middle;margin-left:2px">
+          <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </a>
+    </div>
+
+    <!-- Section 8: Seguridad -->
+    <div class="card">
+      <div class="card-section-header">Seguridad</div>
+      <div class="sec-row">
+        <div class="sec-left">
+          <span class="sec-label">Contraseña</span>
+          <span class="sec-sub">Última actualización: 22/03/2026</span>
+        </div>
+        <a href="#" class="sec-action">Cambiar</a>
+      </div>
+      <div class="sec-row">
+        <div class="sec-left">
+          <span class="sec-label">Autenticación 2FA</span>
+          <span class="sec-sub">Habilitado (SMS)</span>
+        </div>
+        <div class="sec-check">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="display:inline-block;vertical-align:middle">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          Activo
+        </div>
+      </div>
+      <a href="#" class="logout-link">
+        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block;vertical-align:middle;margin-right:4px">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+          <polyline points="16 17 21 12 16 7"/>
+          <line x1="21" y1="12" x2="9" y2="12"/>
+        </svg>
+        Cerrar sesión
+      </a>
+    </div>
+
+  </div>
+
+  <!-- Tab bar -->
+  <div class="tab-bar">
+    <a href="mobile-modules.html" class="tab-item">
+      <span class="tab-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block;vertical-align:middle">
+          <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+          <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+        </svg>
+      </span>
+      Módulos
+    </a>
+    <a href="mobile-foro.html" class="tab-item">
+      <span class="tab-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block;vertical-align:middle">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 0 2 2z"/>
+        </svg>
+      </span>
+      Foro
+    </a>
+    <a href="mobile-dms.html" class="tab-item">
+      <span class="tab-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block;vertical-align:middle">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+          <polyline points="22,6 12,13 2,6"/>
+        </svg>
+      </span>
+      DMs
+    </a>
+    <a href="mobile-perfil.html" class="tab-item active">
+      <span class="tab-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block;vertical-align:middle">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+        </svg>
+      </span>
+      Perfil
+    </a>
+  </div>
+
+</div>
+
+<script src="assets/feedback.js"></script>
+</body>
+</html>
