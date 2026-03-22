@@ -130,6 +130,73 @@
     .btn-action:hover { background: #F3F6F9; border-color: #cbd5e1; }
     .btn-action.edit { color: #00A896; border-color: #bae6fd; }
     .btn-action.edit:hover { background: #D6F5F1; }
+
+    /* Read counter */
+    .read-counter {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 20px;
+      padding: 4px 10px; font-size: 12px; font-weight: 600; color: #059669;
+      cursor: pointer; transition: all 0.15s; white-space: nowrap;
+    }
+    .read-counter:hover { background: #dcfce7; border-color: #86efac; }
+    .read-counter.low { background: #fef9c3; border-color: #fde047; color: #854d0e; }
+    .read-counter.none { background: #f1f5f9; border-color: #e2e8f0; color: #94a3b8; cursor: default; }
+
+    /* Modal overlay */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(11,35,64,0.5); z-index: 100;
+      align-items: center; justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: white; border-radius: 16px; width: 520px; max-height: 80vh;
+      display: flex; flex-direction: column;
+      box-shadow: 0 24px 48px rgba(0,0,0,0.18);
+    }
+    .modal-header {
+      padding: 20px 24px 16px; border-bottom: 1px solid #e2e8f0;
+      display: flex; align-items: flex-start; justify-content: space-between;
+    }
+    .modal-title { font-family: 'Lora', serif; font-size: 16px; font-weight: 700; color: #0B2340; line-height: 1.3; max-width: 380px; }
+    .modal-subtitle { font-size: 12px; color: #64748b; margin-top: 3px; }
+    .modal-close {
+      width: 28px; height: 28px; border-radius: 6px; border: 1px solid #e2e8f0;
+      background: white; cursor: pointer; display: flex; align-items: center;
+      justify-content: center; font-size: 16px; color: #64748b; flex-shrink: 0;
+      transition: all 0.15s;
+    }
+    .modal-close:hover { background: #fee2e2; border-color: #fca5a5; color: #dc2626; }
+    .modal-search {
+      padding: 14px 24px; border-bottom: 1px solid #f1f5f9;
+    }
+    .modal-search input {
+      width: 100%; border: 1px solid #e2e8f0; border-radius: 8px;
+      padding: 8px 12px 8px 36px; font-size: 13px; font-family: 'Poppins', sans-serif;
+      color: #0B2340; outline: none; background: #f8fafc;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: 10px center;
+    }
+    .modal-search input:focus { border-color: #00A896; background-color: white; }
+    .modal-list { overflow-y: auto; padding: 8px 0; }
+    .reader-row {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 24px; transition: background 0.1s;
+    }
+    .reader-row:hover { background: #f8fafc; }
+    .reader-avatar {
+      width: 34px; height: 34px; border-radius: 50%; background: #e8eef6;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700; color: #0B2340; flex-shrink: 0;
+    }
+    .reader-name { font-size: 13px; font-weight: 600; color: #0B2340; }
+    .reader-role { font-size: 11px; color: #64748b; margin-top: 1px; }
+    .reader-time { font-size: 11px; color: #94a3b8; margin-left: auto; white-space: nowrap; }
+    .modal-empty { text-align: center; padding: 32px; color: #94a3b8; font-size: 13px; }
+    .modal-footer {
+      padding: 12px 24px; border-top: 1px solid #f1f5f9;
+      font-size: 12px; color: #64748b; display: flex; justify-content: space-between; align-items: center;
+    }
   </style>
 </head>
 <body>
@@ -229,6 +296,7 @@
             <th>Autor</th>
             <th>Rol del Autor</th>
             <th>Estado</th>
+            <th>Lecturas</th>
             <th>Fecha</th>
             <th>Acciones</th>
           </tr>
@@ -245,6 +313,7 @@
             <td style="font-size:13px;color:#475569;">Dr. Roberto Ramírez</td>
             <td><span class="badge badge-director">director</span></td>
             <td><span class="badge badge-publicada">Publicada</span></td>
+            <td><span class="read-counter" onclick="openReads('circular-12')"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> 187 / 241</span></td>
             <td style="font-size:12px;color:#64748b;">18 mar 2026</td>
             <td>
               <div class="actions">
@@ -264,6 +333,7 @@
             <td style="font-size:13px;color:#475569;">Admin Sistema</td>
             <td><span class="badge badge-admin">admin</span></td>
             <td><span class="badge badge-publicada">Publicada</span></td>
+            <td><span class="read-counter" onclick="openReads('resolucion-04')"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> 214 / 241</span></td>
             <td style="font-size:12px;color:#64748b;">15 mar 2026</td>
             <td>
               <div class="actions">
@@ -283,6 +353,7 @@
             <td style="font-size:13px;color:#475569;">Laura Sánchez</td>
             <td><span class="badge badge-administrativo">administrativo</span></td>
             <td><span class="badge badge-publicada">Publicada</span></td>
+            <td><span class="read-counter low" onclick="openReads('aviso-semanta-santa')"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> 89 / 241</span></td>
             <td style="font-size:12px;color:#64748b;">12 mar 2026</td>
             <td>
               <div class="actions">
@@ -302,6 +373,7 @@
             <td style="font-size:13px;color:#475569;">Dra. Carmen Fuentes</td>
             <td><span class="badge badge-director">director</span></td>
             <td><span class="badge badge-publicada">Publicada</span></td>
+            <td><span class="read-counter" onclick="openReads('jornadas')"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> 193 / 241</span></td>
             <td style="font-size:12px;color:#64748b;">08 mar 2026</td>
             <td>
               <div class="actions">
@@ -321,6 +393,7 @@
             <td style="font-size:13px;color:#475569;">Laura Sánchez</td>
             <td><span class="badge badge-administrativo">administrativo</span></td>
             <td><span class="badge badge-borrador">Borrador</span></td>
+            <td><span class="read-counter none">— / —</span></td>
             <td style="font-size:12px;color:#64748b;">20 mar 2026</td>
             <td>
               <div class="actions">
@@ -340,6 +413,7 @@
             <td style="font-size:13px;color:#475569;">Admin Sistema</td>
             <td><span class="badge badge-admin">admin</span></td>
             <td><span class="badge badge-archivada">Archivada</span></td>
+            <td><span class="read-counter none">— / —</span></td>
             <td style="font-size:12px;color:#64748b;">15 dic 2025</td>
             <td>
               <div class="actions">
@@ -352,6 +426,167 @@
     </div>
   </div>
 </div>
+
+<!-- Read receipts modal -->
+<div class="modal-overlay" id="reads-modal" onclick="closeReads(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="modal-comm-title"></div>
+        <div class="modal-subtitle" id="modal-comm-subtitle"></div>
+      </div>
+      <button class="modal-close" onclick="closeReadsBtn()">✕</button>
+    </div>
+    <div class="modal-search">
+      <input type="text" id="reader-search" placeholder="Buscar por nombre, especialidad o rol..." oninput="filterReaders()">
+    </div>
+    <div class="modal-list" id="reader-list"></div>
+    <div class="modal-footer">
+      <span id="modal-count-label"></span>
+      <span id="modal-pending-label" style="color:#E8735A;font-weight:600;"></span>
+    </div>
+  </div>
+</div>
+
+<script>
+  const READS_DATA = {
+    'circular-12': {
+      title: 'Circular N° 12/2026 — Protocolo IPROSS actualizado',
+      total: 241,
+      readers: [
+        { name: 'Dr. Roberto Ramírez', initials: 'RR', role: 'director', time: 'Hoy 9:14' },
+        { name: 'Dra. Carmen Fuentes', initials: 'CF', role: 'director', time: 'Hoy 9:22' },
+        { name: 'Dr. Juan García', initials: 'JG', role: 'profesional', time: 'Hoy 9:35' },
+        { name: 'Dra. Ana Martínez', initials: 'AM', role: 'profesional', time: 'Hoy 9:41' },
+        { name: 'Dr. Marcelo Sandoval', initials: 'MS', role: 'profesional', time: 'Hoy 9:58' },
+        { name: 'Dra. Daniela González', initials: 'DG', role: 'director', time: 'Hoy 10:03' },
+        { name: 'Dr. Adrián Bergesio', initials: 'AB', role: 'director', time: 'Hoy 10:11' },
+        { name: 'Dr. Luis Chioconni', initials: 'LC', role: 'director', time: 'Hoy 10:24' },
+        { name: 'Dra. Eliana Guzmán', initials: 'EG', role: 'director', time: 'Hoy 10:38' },
+        { name: 'Dr. Arturo López Rivera', initials: 'AL', role: 'director', time: 'Hoy 10:52' },
+        { name: 'Dr. Pablo Pereyra', initials: 'PP', role: 'profesional', time: 'Hoy 11:04' },
+        { name: 'Dra. Fernanda Pérez Catán', initials: 'FP', role: 'profesional', time: 'Hoy 11:19' },
+        { name: 'Dr. Rodrigo Albero', initials: 'RA', role: 'director', time: 'Ayer 18:30' },
+        { name: 'Analía Leiva', initials: 'AL', role: 'administrativo', time: 'Ayer 18:45' },
+        { name: 'Pablo Kasprzycki', initials: 'PK', role: 'administrativo', time: 'Ayer 19:02' },
+        { name: 'Marcela Riva', initials: 'MR', role: 'administrativo', time: 'Ayer 19:15' },
+        { name: 'Dr. Martín Vallone', initials: 'MV', role: 'profesional', time: '19 mar 16:40' },
+        { name: 'Dr. Mariani Signoretta', initials: 'MS', role: 'profesional', time: '19 mar 17:05' },
+      ]
+    },
+    'resolucion-04': {
+      title: 'Resolución CD 04/2026 — Cuotas Anuales',
+      total: 241,
+      readers: [
+        { name: 'Dr. Roberto Ramírez', initials: 'RR', role: 'director', time: '15 mar 8:05' },
+        { name: 'Dra. Carmen Fuentes', initials: 'CF', role: 'director', time: '15 mar 8:17' },
+        { name: 'Dra. Daniela González', initials: 'DG', role: 'director', time: '15 mar 8:34' },
+        { name: 'Dr. Adrián Bergesio', initials: 'AB', role: 'director', time: '15 mar 9:02' },
+        { name: 'Dr. Luis Chioconni', initials: 'LC', role: 'director', time: '15 mar 9:18' },
+        { name: 'Dra. Eliana Guzmán', initials: 'EG', role: 'director', time: '15 mar 9:41' },
+        { name: 'Dr. Arturo López Rivera', initials: 'AL', role: 'director', time: '15 mar 10:05' },
+        { name: 'Dr. Marcelo Sandoval', initials: 'MS', role: 'director', time: '15 mar 10:22' },
+        { name: 'Dr. Juan García', initials: 'JG', role: 'profesional', time: '15 mar 10:48' },
+        { name: 'Dra. Ana Martínez', initials: 'AM', role: 'profesional', time: '15 mar 11:03' },
+        { name: 'Dr. Pablo Pereyra', initials: 'PP', role: 'profesional', time: '15 mar 11:27' },
+        { name: 'Analía Leiva', initials: 'AL', role: 'administrativo', time: '15 mar 12:10' },
+        { name: 'Pablo Kasprzycki', initials: 'PK', role: 'administrativo', time: '15 mar 12:34' },
+        { name: 'Marcela Riva', initials: 'MR', role: 'administrativo', time: '15 mar 13:01' },
+        { name: 'Dr. Rodrigo Albero', initials: 'RA', role: 'director', time: '16 mar 9:00' },
+        { name: 'Dra. Fernanda Pérez Catán', initials: 'FP', role: 'profesional', time: '16 mar 9:45' },
+        { name: 'Dr. Martín Vallone', initials: 'MV', role: 'profesional', time: '16 mar 11:20' },
+        { name: 'Dr. Mariani Signoretta', initials: 'MS', role: 'profesional', time: '17 mar 8:30' },
+      ]
+    },
+    'aviso-semanta-santa': {
+      title: 'Aviso: Cierre administrativo Semana Santa',
+      total: 241,
+      readers: [
+        { name: 'Dr. Roberto Ramírez', initials: 'RR', role: 'director', time: '12 mar 14:02' },
+        { name: 'Dr. Juan García', initials: 'JG', role: 'profesional', time: '12 mar 14:18' },
+        { name: 'Analía Leiva', initials: 'AL', role: 'administrativo', time: '12 mar 14:35' },
+        { name: 'Pablo Kasprzycki', initials: 'PK', role: 'administrativo', time: '12 mar 15:00' },
+        { name: 'Dra. Carmen Fuentes', initials: 'CF', role: 'director', time: '13 mar 9:10' },
+        { name: 'Dr. Marcelo Sandoval', initials: 'MS', role: 'profesional', time: '13 mar 10:40' },
+        { name: 'Marcela Riva', initials: 'MR', role: 'administrativo', time: '14 mar 8:55' },
+      ]
+    },
+    'jornadas': {
+      title: 'Informativo: Jornadas de Actualización Médica',
+      total: 241,
+      readers: [
+        { name: 'Dra. Carmen Fuentes', initials: 'CF', role: 'director', time: '8 mar 8:01' },
+        { name: 'Dr. Roberto Ramírez', initials: 'RR', role: 'director', time: '8 mar 8:14' },
+        { name: 'Dra. Daniela González', initials: 'DG', role: 'director', time: '8 mar 8:32' },
+        { name: 'Dr. Juan García', initials: 'JG', role: 'profesional', time: '8 mar 9:05' },
+        { name: 'Dra. Ana Martínez', initials: 'AM', role: 'profesional', time: '8 mar 9:22' },
+        { name: 'Dr. Pablo Pereyra', initials: 'PP', role: 'profesional', time: '8 mar 10:08' },
+        { name: 'Dr. Marcelo Sandoval', initials: 'MS', role: 'profesional', time: '8 mar 10:45' },
+        { name: 'Dr. Adrián Bergesio', initials: 'AB', role: 'director', time: '8 mar 11:00' },
+        { name: 'Dr. Luis Chioconni', initials: 'LC', role: 'director', time: '8 mar 11:20' },
+        { name: 'Dra. Eliana Guzmán', initials: 'EG', role: 'director', time: '8 mar 11:38' },
+        { name: 'Dr. Arturo López Rivera', initials: 'AL', role: 'director', time: '8 mar 12:00' },
+        { name: 'Dra. Fernanda Pérez Catán', initials: 'FP', role: 'profesional', time: '9 mar 8:15' },
+        { name: 'Dr. Martín Vallone', initials: 'MV', role: 'profesional', time: '9 mar 9:02' },
+        { name: 'Analía Leiva', initials: 'AL', role: 'administrativo', time: '9 mar 9:30' },
+        { name: 'Pablo Kasprzycki', initials: 'PK', role: 'administrativo', time: '9 mar 10:00' },
+        { name: 'Dr. Rodrigo Albero', initials: 'RA', role: 'director', time: '10 mar 8:45' },
+        { name: 'Marcela Riva', initials: 'MR', role: 'administrativo', time: '10 mar 9:15' },
+        { name: 'Dr. Mariani Signoretta', initials: 'MS', role: 'profesional', time: '10 mar 10:30' },
+      ]
+    }
+  };
+
+  const ROLE_LABELS = { director: 'Director', profesional: 'Profesional', administrativo: 'Administrativo', admin: 'Admin' };
+  let currentReaders = [];
+
+  function openReads(id) {
+    const data = READS_DATA[id];
+    if (!data) return;
+    currentReaders = data.readers;
+    document.getElementById('modal-comm-title').textContent = data.title;
+    document.getElementById('modal-comm-subtitle').textContent = `${data.readers.length} de ${data.total} miembros leyeron esta comunicación`;
+    document.getElementById('reader-search').value = '';
+    renderReaders(currentReaders, data.total);
+    document.getElementById('reads-modal').classList.add('open');
+    document.getElementById('reader-search').focus();
+  }
+
+  function closeReadsBtn() { document.getElementById('reads-modal').classList.remove('open'); }
+  function closeReads(e) { if (e.target === document.getElementById('reads-modal')) closeReadsBtn(); }
+
+  function filterReaders() {
+    const q = document.getElementById('reader-search').value.toLowerCase().trim();
+    const filtered = q ? currentReaders.filter(r =>
+      r.name.toLowerCase().includes(q) || r.role.toLowerCase().includes(q)
+    ) : currentReaders;
+    const data = Object.values(READS_DATA).find(d => d.readers === currentReaders);
+    renderReaders(filtered, data ? data.total : currentReaders.length);
+  }
+
+  function renderReaders(readers, total) {
+    const list = document.getElementById('reader-list');
+    if (readers.length === 0) {
+      list.innerHTML = '<div class="modal-empty">No se encontraron resultados.</div>';
+    } else {
+      list.innerHTML = readers.map(r => `
+        <div class="reader-row">
+          <div class="reader-avatar">${r.initials}</div>
+          <div>
+            <div class="reader-name">${r.name}</div>
+            <div class="reader-role">${ROLE_LABELS[r.role] || r.role}</div>
+          </div>
+          <div class="reader-time">${r.time}</div>
+        </div>
+      `).join('');
+    }
+    document.getElementById('modal-count-label').textContent = `${readers.length} lecturas mostradas`;
+    const pending = total - currentReaders.length;
+    document.getElementById('modal-pending-label').textContent = pending > 0 ? `${pending} sin leer` : '✓ Todos leyeron';
+  }
+
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeReadsBtn(); });
+</script>
 
 <script src="assets/feedback.js"></script>
 </body>
