@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DMs — VitaCore WRHMS Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/feedback.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Poppins', system-ui, sans-serif; background: #F3F6F9; color: #0B2340; display: flex; min-height: 100vh; }
+
+    /* Sidebar */
+    .sidebar { width: 240px; min-height: 100vh; background: #0B2340; display: flex; flex-direction: column; flex-shrink: 0; position: fixed; top: 0; left: 0; bottom: 0; z-index: 10; }
+    .sidebar-logo { padding: 24px 20px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .sidebar-logo .logo-main { font-size: 20px; font-weight: 800; color: white; }
+    .sidebar-logo .logo-sub { font-size: 11px; color: #64b5d9; margin-top: 2px; }
+    .sidebar-nav { padding: 16px 12px; flex: 1; overflow-y: auto; }
+    .nav-label { font-size: 10px; font-weight: 600; color: #64748b; letter-spacing: 0.8px; text-transform: uppercase; padding: 0 8px; margin: 16px 0 6px; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; cursor: pointer; font-size: 14px; color: #94a3b8; font-weight: 500; text-decoration: none; transition: all 0.15s; margin-bottom: 2px; }
+    .nav-item:hover { background: rgba(255,255,255,0.08); color: white; }
+    .nav-item.active { background: #00A896; color: white; font-weight: 600; }
+    .nav-item .nav-icon { font-size: 16px; width: 20px; text-align: center; }
+    .sidebar-user { padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; }
+    .user-avatar-sm { width: 36px; height: 36px; background: #00A896; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: white; }
+    .user-name { font-size: 13px; font-weight: 600; color: white; }
+    .user-role { font-size: 11px; color: #64748b; }
+
+    /* Main layout */
+    .main { margin-left: 240px; flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+    .topbar { background: white; padding: 0 24px; height: 60px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 5; }
+    .topbar-left { display: flex; align-items: center; gap: 12px; }
+    .topbar-back { font-size: 13px; color: #64748b; text-decoration: none; display: flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 6px; border: 1px solid #e2e8f0; transition: all 0.15s; }
+    .topbar-back:hover { background: #F3F6F9; color: #0B2340; }
+    .topbar-title { font-size: 17px; font-weight: 700; }
+
+    /* DM two-panel layout */
+    .dm-layout { display: flex; flex: 1; height: calc(100vh - 60px); overflow: hidden; }
+
+    /* Conversation list */
+    .conv-list { width: 340px; border-right: 1px solid #e2e8f0; display: flex; flex-direction: column; background: white; overflow: hidden; flex-shrink: 0; }
+    .conv-list-header { padding: 18px 20px; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+    .conv-list-title { font-size: 16px; font-weight: 700; }
+    .btn-new-dm { background: #00A896; color: white; border: none; border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Poppins', sans-serif; }
+    .conv-search { padding: 12px 16px; border-bottom: 1px solid #f1f5f9; flex-shrink: 0; }
+    .conv-search input { width: 100%; border: 1px solid #e2e8f0; border-radius: 8px; padding: 8px 12px; font-size: 13px; color: #0B2340; font-family: 'Poppins', sans-serif; outline: none; transition: border-color 0.15s; background: #f8fafc; }
+    .conv-search input:focus { border-color: #00A896; background: white; }
+    .conv-items { overflow-y: auto; flex: 1; }
+    .conv-item { padding: 14px 20px; border-bottom: 1px solid #f1f5f9; cursor: pointer; transition: background 0.1s; display: flex; align-items: center; gap: 12px; }
+    .conv-item:hover { background: #f8fafc; }
+    .conv-item.selected { background: #D6F5F1; border-left: 3px solid #00A896; padding-left: 17px; }
+    .conv-avatar { width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; color: white; flex-shrink: 0; }
+    .av-navy { background: #0B2340; }
+    .av-teal { background: #00A896; }
+    .av-green { background: #059669; }
+    .av-orange { background: #F0A500; }
+    .av-purple { background: #7c3aed; }
+    .av-red { background: #dc2626; }
+    .conv-info { flex: 1; min-width: 0; }
+    .conv-name { font-size: 14px; font-weight: 700; color: #0B2340; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .conv-snippet { font-size: 12px; color: #64748b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
+    .conv-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
+    .conv-time { font-size: 11px; color: #94a3b8; white-space: nowrap; }
+    .unread-badge { background: #00A896; color: white; border-radius: 10px; font-size: 11px; font-weight: 700; padding: 2px 7px; line-height: 1.4; }
+
+    /* Chat panel */
+    .chat-panel { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: #f8fafc; }
+    .chat-header { padding: 16px 24px; border-bottom: 1px solid #e2e8f0; background: white; display: flex; align-items: center; gap: 14px; flex-shrink: 0; }
+    .chat-avatar { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; color: white; flex-shrink: 0; }
+    .chat-header-info { flex: 1; }
+    .chat-header-name { font-size: 16px; font-weight: 700; color: #0B2340; }
+    .chat-header-meta { display: flex; align-items: center; gap: 6px; margin-top: 2px; }
+    .online-dot { width: 8px; height: 8px; background: #00A896; border-radius: 50%; display: inline-block; }
+    .online-label { font-size: 11px; color: #00A896; }
+    .badge { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; }
+    .badge-director { background: #D6F5F1; color: #00A896; }
+    .badge-profesional { background: #d1fae5; color: #059669; }
+    .badge-admin { background: #e8eef6; color: #0B2340; }
+
+    /* Messages */
+    .messages { flex: 1; overflow-y: auto; padding: 20px 24px; display: flex; flex-direction: column; gap: 12px; }
+    .date-sep { text-align: center; font-size: 11px; color: #94a3b8; font-weight: 600; margin: 4px 0 8px; display: flex; align-items: center; gap: 8px; }
+    .date-sep::before, .date-sep::after { content: ''; flex: 1; height: 1px; background: #e2e8f0; }
+    .msg-row { display: flex; gap: 10px; align-items: flex-end; max-width: 100%; }
+    .msg-row.mine { flex-direction: row-reverse; }
+    .msg-avatar-sm { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: white; flex-shrink: 0; }
+    .bubble-wrap { display: flex; flex-direction: column; max-width: 60%; }
+    .msg-row.mine .bubble-wrap { align-items: flex-end; }
+    .bubble { padding: 10px 16px; border-radius: 18px; font-size: 14px; line-height: 1.5; color: #0B2340; word-wrap: break-word; }
+    .bubble.theirs { background: white; border: 1px solid #e2e8f0; border-bottom-left-radius: 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+    .bubble.mine { background: #00A896; color: white; border-bottom-right-radius: 4px; }
+    .msg-time { font-size: 10px; color: #94a3b8; margin-top: 3px; padding: 0 4px; }
+    .msg-row.mine .msg-time { text-align: right; }
+
+    /* Reply input */
+    .reply-area { padding: 16px 24px; border-top: 1px solid #e2e8f0; background: white; flex-shrink: 0; display: flex; gap: 10px; align-items: flex-end; }
+    .reply-input { flex: 1; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 14px; font-size: 14px; color: #0B2340; resize: none; font-family: 'Poppins', inherit; outline: none; transition: border-color 0.15s; }
+    .reply-input:focus { border-color: #00A896; }
+    .btn-send { background: #00A896; color: white; border: none; border-radius: 8px; padding: 10px 20px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'Poppins', sans-serif; white-space: nowrap; transition: background 0.15s; }
+    .btn-send:hover { background: #0e7490; }
+
+    /* Empty state */
+    .empty-state { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #94a3b8; gap: 12px; }
+    .empty-state svg { opacity: 0.3; }
+    .empty-state p { font-size: 14px; }
+  </style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <img src="assets/logo-dark.png" alt="VitaCore" style="height:30px;width:auto;display:block;margin-bottom:4px;">
+    <div style="font-size:11px;color:#9CA3AF;letter-spacing:0.3px;">CMRB | WRHMS</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-label">Principal</div>
+    <a href="admin-dashboard.html" class="nav-item">
+      <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="18" y="3" width="4" height="18" rx="1"/><rect x="10" y="8" width="4" height="13" rx="1"/><rect x="2" y="13" width="4" height="8" rx="1"/></svg></span> Dashboard
+    </a>
+    <a href="admin-communications.html" class="nav-item">
+      <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 11 18-5v12L3 13v-2z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg></span> Comunicaciones
+    </a>
+    <a href="admin-foro.html" class="nav-item">
+      <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span> Foro
+    </a>
+    <a href="admin-dms.html" class="nav-item active">
+      <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span> DMs
+    </a>
+    <a href="admin-documentos.html" class="nav-item">
+      <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span> Documentos
+    </a>
+    <div class="nav-label">Gestión</div>
+    <a href="admin-members.html" class="nav-item">
+      <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span> Miembros
+    </a>
+    <a href="admin-agenda.html" class="nav-item">
+      <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span> Agenda
+    </a>
+    <a href="admin-contactos.html" class="nav-item">
+      <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="23" y2="8"/><line x1="19" y1="11" x2="23" y2="11"/><line x1="19" y1="14" x2="23" y2="14"/></svg></span> Contactos
+    </a>
+    <a href="admin-facturacion.html" class="nav-item">
+      <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></span> Facturación
+    </a>
+    <a href="admin-reminders.html" class="nav-item">
+      <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></span> Reminders
+    </a>
+    <div class="nav-label">Institucional</div>
+    <a href="admin-board.html" class="nav-item">
+      <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg></span> Comisión Directiva
+    </a>
+    <a href="admin-obras-sociales.html" class="nav-item">
+      <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></span> Obras Sociales
+    </a>
+  </nav>
+  <div class="sidebar-user">
+    <div class="user-avatar-sm">AS</div>
+    <div>
+      <div class="user-name">Admin Sistema</div>
+      <div class="user-role">admin</div>
+    </div>
+  </div>
+</aside>
+
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <a href="index.html" class="topbar-back">← Mocks</a>
+      <span class="topbar-title">Mensajes Directos</span>
+    </div>
+    <div style="font-size:13px;color:#64748b;">6 conversaciones · 2 sin leer</div>
+  </div>
+
+  <div class="dm-layout">
+
+    <!-- Conversation list -->
+    <div class="conv-list">
+      <div class="conv-list-header">
+        <span class="conv-list-title">Conversaciones</span>
+        <button class="btn-new-dm">+ Nuevo DM</button>
+      </div>
+      <div class="conv-search">
+        <input type="text" placeholder="Buscar conversación...">
+      </div>
+      <div class="conv-items">
+
+        <div class="conv-item selected">
+          <div class="conv-avatar av-navy">RR</div>
+          <div class="conv-info">
+            <div class="conv-name">Dr. Roberto Ramírez</div>
+            <div class="conv-snippet">Sí, el jueves a las 16hs me viene bien.</div>
+          </div>
+          <div class="conv-meta">
+            <span class="conv-time">09:30</span>
+          </div>
+        </div>
+
+        <div class="conv-item">
+          <div class="conv-avatar av-teal">AL</div>
+          <div class="conv-info">
+            <div class="conv-name">Analía Leiva</div>
+            <div class="conv-snippet">El turno quedó confirmado para el lunes.</div>
+          </div>
+          <div class="conv-meta">
+            <span class="conv-time">Hace 1h</span>
+            <span class="unread-badge">2</span>
+          </div>
+        </div>
+
+        <div class="conv-item">
+          <div class="conv-avatar av-orange">PK</div>
+          <div class="conv-info">
+            <div class="conv-name">Pablo Kasprzycki</div>
+            <div class="conv-snippet">Revisé la liquidación de OSDE, hay una diferencia.</div>
+          </div>
+          <div class="conv-meta">
+            <span class="conv-time">Ayer</span>
+            <span class="unread-badge">1</span>
+          </div>
+        </div>
+
+        <div class="conv-item">
+          <div class="conv-avatar av-green">MR</div>
+          <div class="conv-info">
+            <div class="conv-name">Marcela Riva</div>
+            <div class="conv-snippet">El informe mensual ya está en la carpeta compartida.</div>
+          </div>
+          <div class="conv-meta">
+            <span class="conv-time">Ayer</span>
+          </div>
+        </div>
+
+        <div class="conv-item">
+          <div class="conv-avatar av-purple">CF</div>
+          <div class="conv-info">
+            <div class="conv-name">Dra. Carmen Fuentes</div>
+            <div class="conv-snippet">Gracias, ya coordiné con secretaría.</div>
+          </div>
+          <div class="conv-meta">
+            <span class="conv-time">Hace 2d</span>
+          </div>
+        </div>
+
+        <div class="conv-item">
+          <div class="conv-avatar av-red">PF</div>
+          <div class="conv-info">
+            <div class="conv-name">Pablo Ferrando</div>
+            <div class="conv-snippet">El comunicado de prensa quedó listo para revisar.</div>
+          </div>
+          <div class="conv-meta">
+            <span class="conv-time">Hace 3d</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Chat panel -->
+    <div class="chat-panel">
+      <div class="chat-header">
+        <div class="chat-avatar av-navy">RR</div>
+        <div class="chat-header-info">
+          <div class="chat-header-name">Dr. Roberto Ramírez</div>
+          <div class="chat-header-meta">
+            <span class="badge badge-director">director</span>
+            <span class="online-dot"></span>
+            <span class="online-label">En línea</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="messages">
+        <div class="date-sep">Hoy, 21 de marzo</div>
+
+        <!-- Admin → Ramírez -->
+        <div class="msg-row mine">
+          <div class="msg-avatar-sm av-teal">AS</div>
+          <div class="bubble-wrap">
+            <div class="bubble mine">Dr. Ramírez, quería consultarle sobre el caso de IPROSS que mencionó en el foro.</div>
+            <div class="msg-time">9:12</div>
+          </div>
+        </div>
+
+        <!-- Ramírez → Admin -->
+        <div class="msg-row">
+          <div class="msg-avatar-sm av-navy">RR</div>
+          <div class="bubble-wrap">
+            <div class="bubble theirs">Claro, con gusto. Estamos coordinando la respuesta institucional. ¿En qué le puedo ayudar?</div>
+            <div class="msg-time">9:15</div>
+          </div>
+        </div>
+
+        <!-- Admin -->
+        <div class="msg-row mine">
+          <div class="msg-avatar-sm av-teal">AS</div>
+          <div class="bubble-wrap">
+            <div class="bubble mine">¿Tiene disponibilidad esta semana para una reunión con el equipo administrativo?</div>
+            <div class="msg-time">9:18</div>
+          </div>
+        </div>
+
+        <!-- Ramírez -->
+        <div class="msg-row">
+          <div class="msg-avatar-sm av-navy">RR</div>
+          <div class="bubble-wrap">
+            <div class="bubble theirs">Sí, el jueves a las 16hs me viene bien.</div>
+            <div class="msg-time">9:30</div>
+          </div>
+        </div>
+
+        <!-- Admin -->
+        <div class="msg-row mine">
+          <div class="msg-avatar-sm av-teal">AS</div>
+          <div class="bubble-wrap">
+            <div class="bubble mine">Perfecto, confirmado para el jueves 16hs. Muchas gracias, Dr. Ramírez.</div>
+            <div class="msg-time">9:32</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="reply-area">
+        <textarea class="reply-input" rows="2" placeholder="Escribir mensaje..."></textarea>
+        <button class="btn-send">Enviar</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="assets/feedback.js"></script>
+</body>
+</html>
