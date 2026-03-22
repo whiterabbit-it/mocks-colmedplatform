@@ -12,6 +12,7 @@
   const SUPABASE_URL = 'https://efuglxlxgbvhsaiecffs.supabase.co';
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVmdWdseGx4Z2J2aHNhaWVjZmZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxNDU0ODAsImV4cCI6MjA4OTcyMTQ4MH0.3w2rq_8vArsiuIY_Mx78gWROlrwXyIU0ciTRwFHkaiI';
   const TABLE = 'feedback_comments';
+  const ADMIN_EMAILS = ['lucas@whiterabbit.com.ar'];
 
   // ─── Helpers ─────────────────────────────────────────────────────────────
   const pagePath = window.location.pathname.split('/').pop() || 'index.html';
@@ -26,7 +27,7 @@
   }
   function isAdmin() {
     const u = getUser();
-    return u && u.is_admin === true;
+    return u && ADMIN_EMAILS.includes(u.email.toLowerCase());
   }
   function timeSince(dateStr) {
     const diff = (Date.now() - new Date(dateStr)) / 1000;
@@ -154,19 +155,14 @@
           <label for="fb-inp-email">Email</label>
           <input type="email" id="fb-inp-email" placeholder="tu@email.com" autocomplete="email">
         </div>
-        <label class="fb-admin-check">
-          <input type="checkbox" id="fb-inp-admin">
-          <span>Soy administrador de la demo (ver todos los comentarios)</span>
-        </label>
         <button class="fb-submit" id="fb-login-btn">Continuar →</button>
       </div>
     `;
     document.getElementById('fb-login-btn').addEventListener('click', () => {
       const name = document.getElementById('fb-inp-name').value.trim();
       const email = document.getElementById('fb-inp-email').value.trim();
-      const isAdm = document.getElementById('fb-inp-admin').checked;
       if (!name || !email) { alert('Por favor completá nombre y email.'); return; }
-      saveUser({ name, email, is_admin: isAdm });
+      saveUser({ name, email });
       renderDrawerBody();
     });
   }
