@@ -322,8 +322,6 @@
 
   // ─── Init ─────────────────────────────────────────────────────────────────
   function init() {
-    // Only show feedback toolbox to WR admins
-    if (!isAdmin()) return;
     buildUI();
     updateBadge();
   }
