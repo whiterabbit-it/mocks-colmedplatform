@@ -9,8 +9,8 @@
   'use strict';
 
   // ─── Config ──────────────────────────────────────────────────────────────
-  const SUPABASE_URL = 'https://YOUR_PROJECT_ID.supabase.co';
-  const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+  const SUPABASE_URL = 'https://efuglxlxgbvhsaiecffs.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVmdWdseGx4Z2J2aHNhaWVjZmZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxNDU0ODAsImV4cCI6MjA4OTcyMTQ4MH0.3w2rq_8vArsiuIY_Mx78gWROlrwXyIU0ciTRwFHkaiI';
   const TABLE = 'feedback_comments';
 
   // ─── Helpers ─────────────────────────────────────────────────────────────
