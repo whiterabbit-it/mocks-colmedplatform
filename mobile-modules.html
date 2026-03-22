@@ -3,10 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mobile Home — VitaCore WRHMS</title>
+  <title>Módulos — VitaCore WRHMS</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/feedback.css">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -64,14 +65,6 @@
       justify-content: space-between;
       flex-shrink: 0;
     }
-    .header-logo { display: flex; align-items: center; gap: 8px; }
-    .logo-badge {
-      width: 32px; height: 32px; background: #00A896; border-radius: 8px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 11px; font-weight: 800; color: white;
-    }
-    .logo-text-main { font-size: 17px; font-weight: 800; color: white; }
-    .logo-text-sub { font-size: 10px; color: #7dd3fc; }
     .notif-btn {
       width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.12);
       display: flex; align-items: center; justify-content: center;
@@ -86,36 +79,83 @@
     }
 
     /* Scroll area */
-    .scroll-area { flex: 1; overflow-y: auto; padding: 16px 16px 80px; }
+    .scroll-area { flex: 1; overflow-y: auto; padding: 16px 16px 88px; }
     .scroll-area::-webkit-scrollbar { display: none; }
 
     /* Section label */
-    .section-label { font-size: 11px; font-weight: 700; color: #64748b; letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 10px; margin-top: 4px; }
-
-    /* Communication cards */
-    .comm-card {
-      background: white; border-radius: 16px; padding: 16px;
-      margin-bottom: 12px; border: 1px solid #e2e8f0;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    .section-label {
+      font-size: 11px; font-weight: 700; color: #64748b;
+      letter-spacing: 0.8px; text-transform: uppercase;
+      margin-bottom: 14px; margin-top: 4px;
     }
-    .card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
-    .card-date { font-size: 11px; color: #94a3b8; }
-    .card-title { font-family: 'Lora', serif; font-size: 15px; font-weight: 700; color: #0B2340; line-height: 1.35; margin-bottom: 6px; }
-    .card-snippet { font-size: 13px; color: #64748b; line-height: 1.45; }
-    .card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; }
-    .card-author { font-size: 12px; color: #94a3b8; }
-    .read-more { font-size: 12px; color: #00A896; font-weight: 600; }
 
-    /* Badges */
-    .badge {
-      display: inline-flex; align-items: center; padding: 3px 10px;
-      border-radius: 12px; font-size: 11px; font-weight: 600;
+    /* Modules grid */
+    .modules-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
     }
-    .badge-cat-circular { background: #ede9fe; color: #7c3aed; }
-    .badge-cat-resolucion { background: #fce7f3; color: #be185d; }
-    .badge-cat-informativo { background: #D6F5F1; color: #00A896; }
-    .badge-cat-urgente { background: #fee2e2; color: #dc2626; }
-    .badge-cat-aviso { background: #fef3c7; color: #F0A500; }
+
+    /* Module card */
+    .module-card {
+      background: white;
+      border-radius: 16px;
+      padding: 18px 14px 14px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
+      position: relative;
+      transition: box-shadow 0.15s, transform 0.15s;
+    }
+    .module-card:hover {
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+      transform: translateY(-1px);
+    }
+
+    .module-icon {
+      font-size: 30px;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .module-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: #0B2340;
+      line-height: 1.25;
+    }
+
+    .module-desc {
+      font-size: 11px;
+      color: #64748b;
+      line-height: 1.35;
+    }
+
+    .module-arrow {
+      margin-top: auto;
+      align-self: flex-end;
+      color: #00A896;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    /* Badge on module card */
+    .module-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: #E8735A;
+      color: white;
+      font-size: 9px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 10px;
+      line-height: 1.4;
+    }
 
     /* Tab bar */
     .tab-bar {
@@ -163,71 +203,67 @@
   <!-- Scrollable content -->
   <div class="scroll-area">
 
-    <div class="section-label">Últimas comunicaciones</div>
+    <div class="section-label">Menú principal</div>
 
-    <div class="comm-card">
-      <div class="card-top">
-        <span class="badge badge-cat-circular">Circular</span>
-        <span class="card-date">18 mar</span>
-      </div>
-      <div class="card-title">Circular N° 12/2026 — Protocolo IPROSS actualizado</div>
-      <div class="card-snippet">Se informa a todos los asociados las nuevas disposiciones vigentes a partir del 1° de abril de 2026...</div>
-      <div class="card-footer">
-        <span class="card-author">Dr. Ramírez · director</span>
-        <span class="read-more">Leer más →</span>
-      </div>
-    </div>
+    <div class="modules-grid">
 
-    <div class="comm-card">
-      <div class="card-top">
-        <span class="badge badge-cat-resolucion">Resolución</span>
-        <span class="card-date">15 mar</span>
-      </div>
-      <div class="card-title">Resolución CD 04/2026 — Cuotas Anuales</div>
-      <div class="card-snippet">El Consejo Directivo resuelve fijar las cuotas para el período 2026 con un incremento del 18%...</div>
-      <div class="card-footer">
-        <span class="card-author">Admin Sistema · admin</span>
-        <span class="read-more">Leer más →</span>
-      </div>
-    </div>
+      <a href="mobile-home.html" class="module-card">
+        <span class="module-badge">5 nuevas</span>
+        <div class="module-icon">📢</div>
+        <div class="module-name">Comunicaciones</div>
+        <div class="module-desc">Circulares y avisos oficiales</div>
+        <div class="module-arrow">→</div>
+      </a>
 
-    <div class="comm-card">
-      <div class="card-top">
-        <span class="badge badge-cat-aviso">Aviso</span>
-        <span class="card-date">12 mar</span>
-      </div>
-      <div class="card-title">Cierre administrativo Semana Santa 2026</div>
-      <div class="card-snippet">Se comunica que las oficinas permanecerán cerradas del 2 al 6 de abril inclusive...</div>
-      <div class="card-footer">
-        <span class="card-author">Laura Sánchez · administrativo</span>
-        <span class="read-more">Leer más →</span>
-      </div>
-    </div>
+      <a href="mobile-foro.html" class="module-card">
+        <div class="module-icon">💬</div>
+        <div class="module-name">Foro</div>
+        <div class="module-desc">Hilos de debate y consultas</div>
+        <div class="module-arrow">→</div>
+      </a>
 
-    <div class="comm-card">
-      <div class="card-top">
-        <span class="badge badge-cat-informativo">Informativo</span>
-        <span class="card-date">08 mar</span>
-      </div>
-      <div class="card-title">Jornadas de Actualización Médica — Inscripción abierta</div>
-      <div class="card-snippet">Se invita a todos los profesionales matriculados a participar de las jornadas del 15 y 16 de abril...</div>
-      <div class="card-footer">
-        <span class="card-author">Dra. Fuentes · director</span>
-        <span class="read-more">Leer más →</span>
-      </div>
-    </div>
+      <a href="mobile-obras-sociales.html" class="module-card">
+        <div class="module-icon">🏥</div>
+        <div class="module-name">Obras Sociales</div>
+        <div class="module-desc">Convenios y aranceles</div>
+        <div class="module-arrow">→</div>
+      </a>
 
-    <div class="comm-card">
-      <div class="card-top">
-        <span class="badge badge-cat-urgente">Urgente</span>
-        <span class="card-date">05 mar</span>
-      </div>
-      <div class="card-title">Alerta: Cambio en sistema de facturación OSPRERA</div>
-      <div class="card-snippet">Se informa el cambio urgente en el sistema de facturación electrónica de OSPRERA con vigencia inmediata...</div>
-      <div class="card-footer">
-        <span class="card-author">Admin Sistema · admin</span>
-        <span class="read-more">Leer más →</span>
-      </div>
+      <a href="mobile-agenda.html" class="module-card">
+        <div class="module-icon">📅</div>
+        <div class="module-name">Agenda</div>
+        <div class="module-desc">Reuniones y eventos del CD</div>
+        <div class="module-arrow">→</div>
+      </a>
+
+      <a href="mobile-board.html" class="module-card">
+        <div class="module-icon">👥</div>
+        <div class="module-name">Comisión Directiva</div>
+        <div class="module-desc">Miembros y cargos</div>
+        <div class="module-arrow">→</div>
+      </a>
+
+      <a href="mobile-ai.html" class="module-card">
+        <div class="module-icon">🤖</div>
+        <div class="module-name">Asistente IA</div>
+        <div class="module-desc">Consultas sobre documentos</div>
+        <div class="module-arrow">→</div>
+      </a>
+
+      <a href="mobile-credencial.html" class="module-card">
+        <div class="module-icon">💳</div>
+        <div class="module-name">Credencial</div>
+        <div class="module-desc">Tu credencial digital QR</div>
+        <div class="module-arrow">→</div>
+      </a>
+
+      <a href="#" class="module-card">
+        <div class="module-icon">👤</div>
+        <div class="module-name">Mi Perfil</div>
+        <div class="module-desc">Datos personales y cuenta</div>
+        <div class="module-arrow">→</div>
+      </a>
+
     </div>
 
   </div>

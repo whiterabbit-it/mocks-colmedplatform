@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Documentos — VitaCore WRHMS Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/feedback.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Poppins', system-ui, sans-serif; background: #F3F6F9; color: #0B2340; display: flex; min-height: 100vh; }
+    .sidebar { width: 240px; min-height: 100vh; background: #0B2340; display: flex; flex-direction: column; flex-shrink: 0; position: fixed; top: 0; left: 0; bottom: 0; z-index: 10; }
+    .sidebar-logo { padding: 24px 20px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .sidebar-nav { padding: 16px 12px; flex: 1; overflow-y: auto; }
+    .nav-label { font-size: 10px; font-weight: 600; color: #64748b; letter-spacing: 0.8px; text-transform: uppercase; padding: 0 8px; margin: 16px 0 6px; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; font-size: 14px; color: #94a3b8; font-weight: 500; text-decoration: none; transition: all 0.15s; margin-bottom: 2px; }
+    .nav-item:hover { background: rgba(255,255,255,0.08); color: white; }
+    .nav-item.active { background: #00A896; color: white; font-weight: 600; }
+    .nav-item .nav-icon { font-size: 16px; width: 20px; text-align: center; }
+    .sidebar-user { padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; }
+    .user-avatar-sm { width: 36px; height: 36px; background: #00A896; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: white; }
+    .user-name { font-size: 13px; font-weight: 600; color: white; }
+    .user-role { font-size: 11px; color: #64748b; }
+    .main { margin-left: 240px; flex: 1; }
+    .topbar { background: white; padding: 0 32px; height: 60px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 5; }
+    .topbar-left { display: flex; align-items: center; gap: 12px; }
+    .topbar-back { font-size: 13px; color: #64748b; text-decoration: none; padding: 4px 10px; border-radius: 6px; border: 1px solid #e2e8f0; }
+    .topbar-back:hover { background: #F3F6F9; }
+    .topbar-title { font-size: 17px; font-weight: 700; }
+    .content { padding: 32px; max-width: 1100px; }
+
+    .page-header { margin-bottom: 28px; display: flex; align-items: flex-end; justify-content: space-between; }
+    .page-header h1 { font-family: 'Lora', serif; font-size: 24px; font-weight: 700; }
+    .page-header p { font-size: 14px; color: #64748b; margin-top: 6px; }
+    .btn-upload { background: #00A896; color: white; border: none; border-radius: 8px; padding: 10px 20px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Poppins', sans-serif; display: flex; align-items: center; gap: 6px; }
+    .btn-upload:hover { background: #0e7490; }
+
+    /* Filter tabs */
+    .filter-tabs { display: flex; gap: 4px; margin-bottom: 20px; }
+    .filter-tab { padding: 7px 16px; border-radius: 8px; font-size: 13px; font-weight: 500; cursor: pointer; border: 1px solid #e2e8f0; background: white; color: #64748b; transition: all 0.15s; }
+    .filter-tab:hover { border-color: #00A896; color: #00A896; }
+    .filter-tab.active { background: #0B2340; color: white; border-color: #0B2340; font-weight: 600; }
+
+    /* Doc grid */
+    .docs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+
+    .doc-card { background: white; border-radius: 14px; border: 1px solid #e2e8f0; padding: 20px; display: flex; flex-direction: column; gap: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); transition: box-shadow 0.15s; }
+    .doc-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+
+    .doc-icon-row { display: flex; align-items: center; gap: 12px; }
+    .doc-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .doc-icon-pdf { background: #fee2e2; }
+    .doc-icon-doc { background: #dbeafe; }
+    .doc-icon-xls { background: #d1fae5; }
+
+    .doc-meta { flex: 1; min-width: 0; }
+    .doc-name { font-size: 14px; font-weight: 700; color: #0B2340; line-height: 1.3; margin-bottom: 3px; }
+    .doc-cat { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 8px; display: inline-block; margin-bottom: 4px; }
+    .cat-circular { background: #ede9fe; color: #7c3aed; }
+    .cat-resolucion { background: #fce7f3; color: #be185d; }
+    .cat-acta { background: #D6F5F1; color: #00A896; }
+    .cat-reglamento { background: #fef3c7; color: #d97706; }
+    .cat-formulario { background: #e8eef6; color: #0B2340; }
+    .cat-convenio { background: #d1fae5; color: #059669; }
+
+    .doc-date { font-size: 11px; color: #94a3b8; }
+
+    .doc-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 12px; border-top: 1px solid #f1f5f9; }
+    .doc-size { font-size: 11px; color: #94a3b8; }
+    .doc-actions { display: flex; gap: 6px; }
+    .btn-dl { font-size: 12px; color: #00A896; text-decoration: none; padding: 5px 12px; border: 1px solid #00A896; border-radius: 6px; font-weight: 600; transition: all 0.15s; }
+    .btn-dl:hover { background: #D6F5F1; }
+    .btn-view { font-size: 12px; color: #475569; text-decoration: none; padding: 5px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-weight: 600; background: white; transition: all 0.15s; }
+    .btn-view:hover { background: #F3F6F9; }
+  </style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <img src="assets/logo-dark.png" alt="VitaCore" style="height:30px;width:auto;display:block;margin-bottom:4px;">
+    <div style="font-size:11px;color:#9CA3AF;letter-spacing:0.3px;">CMRB | WRHMS</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-label">Principal</div>
+    <a href="admin-dashboard.html" class="nav-item">
+      <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="18" y="3" width="4" height="18" rx="1"/><rect x="10" y="8" width="4" height="13" rx="1"/><rect x="2" y="13" width="4" height="8" rx="1"/></svg></span> Dashboard
+    </a>
+    <a href="admin-communications.html" class="nav-item">
+      <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 11 18-5v12L3 13v-2z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg></span> Comunicaciones
+    </a>
+    <a href="admin-foro.html" class="nav-item">
+      <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span> Foro
+    </a>
+    <a href="admin-documentos.html" class="nav-item active">
+      <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span> Documentos
+    </a>
+    <div class="nav-label">Gestión</div>
+    <a href="admin-members.html" class="nav-item">
+      <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span> Miembros
+    </a>
+    <a href="admin-agenda.html" class="nav-item">
+      <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span> Agenda
+    </a>
+    <a href="admin-contactos.html" class="nav-item">
+      <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="23" y2="8"/><line x1="19" y1="11" x2="23" y2="11"/><line x1="19" y1="14" x2="23" y2="14"/></svg></span> Contactos
+    </a>
+    <a href="admin-facturacion.html" class="nav-item">
+      <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></span> Facturación
+    </a>
+    <a href="admin-reminders.html" class="nav-item">
+      <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></span> Reminders
+    </a>
+    <div class="nav-label">Institucional</div>
+    <a href="admin-board.html" class="nav-item">
+      <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg></span> Comisión Directiva
+    </a>
+    <a href="admin-obras-sociales.html" class="nav-item">
+      <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></span> Obras Sociales
+    </a>
+  </nav>
+  <div class="sidebar-user">
+    <div class="user-avatar-sm">AS</div>
+    <div><div class="user-name">Admin Sistema</div><div class="user-role">admin</div></div>
+  </div>
+</aside>
+
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <a href="index.html" class="topbar-back">← Mocks</a>
+      <span class="topbar-title">Documentos</span>
+    </div>
+    <button class="btn-upload">
+      <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      Subir documento
+    </button>
+  </div>
+
+  <div class="content">
+    <div class="page-header">
+      <div>
+        <h1>Repositorio de Documentos</h1>
+        <p>Circulares, resoluciones, actas y documentos institucionales del CMRB</p>
+      </div>
+    </div>
+
+    <div class="filter-tabs">
+      <div class="filter-tab active">Todos (12)</div>
+      <div class="filter-tab">Circulares (4)</div>
+      <div class="filter-tab">Resoluciones (3)</div>
+      <div class="filter-tab">Actas (2)</div>
+      <div class="filter-tab">Reglamentos (2)</div>
+      <div class="filter-tab">Formularios (1)</div>
+    </div>
+
+    <div class="docs-grid">
+
+      <div class="doc-card">
+        <div class="doc-icon-row">
+          <div class="doc-icon doc-icon-pdf">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
+          <div class="doc-meta">
+            <div class="doc-name">Circular N° 12/2026 — Protocolo IPROSS actualizado</div>
+            <span class="doc-cat cat-circular">Circular</span>
+            <div class="doc-date">18 mar 2026 · Dr. Roberto Ramírez</div>
+          </div>
+        </div>
+        <div class="doc-footer">
+          <span class="doc-size">PDF · 248 KB</span>
+          <div class="doc-actions">
+            <a href="#" class="btn-view">Ver</a>
+            <a href="#" class="btn-dl">Descargar</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="doc-card">
+        <div class="doc-icon-row">
+          <div class="doc-icon doc-icon-pdf">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
+          <div class="doc-meta">
+            <div class="doc-name">Resolución CD 04/2026 — Cuotas Anuales 2026</div>
+            <span class="doc-cat cat-resolucion">Resolución</span>
+            <div class="doc-date">15 mar 2026 · Admin Sistema</div>
+          </div>
+        </div>
+        <div class="doc-footer">
+          <span class="doc-size">PDF · 136 KB</span>
+          <div class="doc-actions">
+            <a href="#" class="btn-view">Ver</a>
+            <a href="#" class="btn-dl">Descargar</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="doc-card">
+        <div class="doc-icon-row">
+          <div class="doc-icon doc-icon-doc">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
+          <div class="doc-meta">
+            <div class="doc-name">Acta Reunión Ordinaria — 18 de marzo 2026</div>
+            <span class="doc-cat cat-acta">Acta</span>
+            <div class="doc-date">19 mar 2026 · Dra. Eliana Guzman</div>
+          </div>
+        </div>
+        <div class="doc-footer">
+          <span class="doc-size">DOCX · 89 KB</span>
+          <div class="doc-actions">
+            <a href="#" class="btn-view">Ver</a>
+            <a href="#" class="btn-dl">Descargar</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="doc-card">
+        <div class="doc-icon-row">
+          <div class="doc-icon doc-icon-pdf">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
+          <div class="doc-meta">
+            <div class="doc-name">Reglamento Interno de Guardias — Versión 2026</div>
+            <span class="doc-cat cat-reglamento">Reglamento</span>
+            <div class="doc-date">01 mar 2026 · Dra. Carmen Fuentes</div>
+          </div>
+        </div>
+        <div class="doc-footer">
+          <span class="doc-size">PDF · 512 KB</span>
+          <div class="doc-actions">
+            <a href="#" class="btn-view">Ver</a>
+            <a href="#" class="btn-dl">Descargar</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="doc-card">
+        <div class="doc-icon-row">
+          <div class="doc-icon doc-icon-pdf">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
+          <div class="doc-meta">
+            <div class="doc-name">Circular N° 08/2025 — Actualización datos AFIP</div>
+            <span class="doc-cat cat-circular">Circular</span>
+            <div class="doc-date">15 dic 2025 · Admin Sistema</div>
+          </div>
+        </div>
+        <div class="doc-footer">
+          <span class="doc-size">PDF · 94 KB</span>
+          <div class="doc-actions">
+            <a href="#" class="btn-view">Ver</a>
+            <a href="#" class="btn-dl">Descargar</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="doc-card">
+        <div class="doc-icon-row">
+          <div class="doc-icon doc-icon-doc">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
+          <div class="doc-meta">
+            <div class="doc-name">Acta Reunión Extraordinaria — 11 de marzo 2026</div>
+            <span class="doc-cat cat-acta">Acta</span>
+            <div class="doc-date">12 mar 2026 · Dra. Daniela Gonzalez</div>
+          </div>
+        </div>
+        <div class="doc-footer">
+          <span class="doc-size">DOCX · 76 KB</span>
+          <div class="doc-actions">
+            <a href="#" class="btn-view">Ver</a>
+            <a href="#" class="btn-dl">Descargar</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="doc-card">
+        <div class="doc-icon-row">
+          <div class="doc-icon doc-icon-pdf">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
+          <div class="doc-meta">
+            <div class="doc-name">Resolución CD 01/2026 — Elección autoridades subcomisión</div>
+            <span class="doc-cat cat-resolucion">Resolución</span>
+            <div class="doc-date">10 feb 2026 · Admin Sistema</div>
+          </div>
+        </div>
+        <div class="doc-footer">
+          <span class="doc-size">PDF · 112 KB</span>
+          <div class="doc-actions">
+            <a href="#" class="btn-view">Ver</a>
+            <a href="#" class="btn-dl">Descargar</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="doc-card">
+        <div class="doc-icon-row">
+          <div class="doc-icon doc-icon-xls">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
+          <div class="doc-meta">
+            <div class="doc-name">Formulario Declaración Jurada — Actividad Profesional</div>
+            <span class="doc-cat cat-formulario">Formulario</span>
+            <div class="doc-date">01 ene 2026 · Admin Sistema</div>
+          </div>
+        </div>
+        <div class="doc-footer">
+          <span class="doc-size">XLSX · 58 KB</span>
+          <div class="doc-actions">
+            <a href="#" class="btn-view">Ver</a>
+            <a href="#" class="btn-dl">Descargar</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="doc-card">
+        <div class="doc-icon-row">
+          <div class="doc-icon doc-icon-pdf">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
+          <div class="doc-meta">
+            <div class="doc-name">Circular N° 03/2026 — Protocolo COVID actualizado</div>
+            <span class="doc-cat cat-circular">Circular</span>
+            <div class="doc-date">20 ene 2026 · Dra. Carmen Fuentes</div>
+          </div>
+        </div>
+        <div class="doc-footer">
+          <span class="doc-size">PDF · 183 KB</span>
+          <div class="doc-actions">
+            <a href="#" class="btn-view">Ver</a>
+            <a href="#" class="btn-dl">Descargar</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="doc-card">
+        <div class="doc-icon-row">
+          <div class="doc-icon doc-icon-pdf">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
+          <div class="doc-meta">
+            <div class="doc-name">Reglamento de Ética Profesional — CMRB 2025</div>
+            <span class="doc-cat cat-reglamento">Reglamento</span>
+            <div class="doc-date">15 nov 2025 · Dr. Roberto Ramírez</div>
+          </div>
+        </div>
+        <div class="doc-footer">
+          <span class="doc-size">PDF · 420 KB</span>
+          <div class="doc-actions">
+            <a href="#" class="btn-view">Ver</a>
+            <a href="#" class="btn-dl">Descargar</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="doc-card">
+        <div class="doc-icon-row">
+          <div class="doc-icon doc-icon-pdf">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
+          <div class="doc-meta">
+            <div class="doc-name">Resolución CD 11/2025 — Aprobación presupuesto anual</div>
+            <span class="doc-cat cat-resolucion">Resolución</span>
+            <div class="doc-date">05 dic 2025 · Admin Sistema</div>
+          </div>
+        </div>
+        <div class="doc-footer">
+          <span class="doc-size">PDF · 201 KB</span>
+          <div class="doc-actions">
+            <a href="#" class="btn-view">Ver</a>
+            <a href="#" class="btn-dl">Descargar</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="doc-card">
+        <div class="doc-icon-row">
+          <div class="doc-icon doc-icon-pdf">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
+          <div class="doc-meta">
+            <div class="doc-name">Circular N° 01/2026 — Nuevo sistema de credenciales</div>
+            <span class="doc-cat cat-circular">Circular</span>
+            <div class="doc-date">05 ene 2026 · Admin Sistema</div>
+          </div>
+        </div>
+        <div class="doc-footer">
+          <span class="doc-size">PDF · 167 KB</span>
+          <div class="doc-actions">
+            <a href="#" class="btn-view">Ver</a>
+            <a href="#" class="btn-dl">Descargar</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="assets/feedback.js"></script>
+</body>
+</html>
