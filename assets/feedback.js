@@ -12,7 +12,8 @@
   const SUPABASE_URL = 'https://efuglxlxgbvhsaiecffs.supabase.co';
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVmdWdseGx4Z2J2aHNhaWVjZmZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxNDU0ODAsImV4cCI6MjA4OTcyMTQ4MH0.3w2rq_8vArsiuIY_Mx78gWROlrwXyIU0ciTRwFHkaiI';
   const TABLE = 'feedback_comments';
-  const ADMIN_EMAILS = ['lucas@whiterabbit.com.ar'];
+  const ADMIN_EMAILS = ['lucas@whiterabbit.com.ar', 'hernan@whiterabbit.com.ar', 'damian@whiterabbit.com.ar'];
+  const ADMIN_PASSWORD = 'followtherabbit!';
 
   // ─── Helpers ─────────────────────────────────────────────────────────────
   const pagePath = window.location.pathname.split('/').pop() || 'index.html';
@@ -143,26 +144,41 @@
 
   function renderLoginForm(container) {
     container.innerHTML = `
-      <div style="font-size:13px;color:#64748b;margin-bottom:4px;">
-        Ingresá tu nombre y email para dejar comentarios. Se guardará en este navegador.
+      <div style="font-size:13px;color:#64748b;margin-bottom:12px;">
+        Dejá tu nombre y tu comentario. Si sos del equipo WhiteRabbit, ingresá tu email y contraseña.
       </div>
       <div class="fb-login-form" id="fb-login-form">
         <div>
-          <label for="fb-inp-name">Nombre</label>
+          <label for="fb-inp-name">Nombre *</label>
           <input type="text" id="fb-inp-name" placeholder="Ej: Damián García" autocomplete="name">
         </div>
         <div>
-          <label for="fb-inp-email">Email</label>
-          <input type="email" id="fb-inp-email" placeholder="tu@email.com" autocomplete="email">
+          <label for="fb-inp-email">Email del equipo <span style="font-weight:400;color:#94a3b8">(opcional)</span></label>
+          <input type="email" id="fb-inp-email" placeholder="tu@whiterabbit.com.ar" autocomplete="email">
+        </div>
+        <div id="fb-pwd-wrap" style="display:none;">
+          <label for="fb-inp-pwd">Contraseña del equipo</label>
+          <input type="password" id="fb-inp-pwd" placeholder="••••••••••••••••">
         </div>
         <button class="fb-submit" id="fb-login-btn">Continuar →</button>
       </div>
     `;
+    // Show password field when admin email is typed
+    document.getElementById('fb-inp-email').addEventListener('input', function () {
+      const isAdminEmail = ADMIN_EMAILS.includes(this.value.trim().toLowerCase());
+      document.getElementById('fb-pwd-wrap').style.display = isAdminEmail ? '' : 'none';
+    });
     document.getElementById('fb-login-btn').addEventListener('click', () => {
       const name = document.getElementById('fb-inp-name').value.trim();
-      const email = document.getElementById('fb-inp-email').value.trim();
-      if (!name || !email) { alert('Por favor completá nombre y email.'); return; }
-      saveUser({ name, email });
+      const email = document.getElementById('fb-inp-email').value.trim().toLowerCase();
+      if (!name) { alert('Por favor ingresá tu nombre.'); return; }
+      if (email && ADMIN_EMAILS.includes(email)) {
+        const pwd = document.getElementById('fb-inp-pwd').value;
+        if (pwd !== ADMIN_PASSWORD) { alert('Contraseña incorrecta.'); return; }
+        saveUser({ name, email });
+      } else {
+        saveUser({ name, email: email || '' });
+      }
       renderDrawerBody();
     });
   }
@@ -173,7 +189,7 @@
         <div class="fb-user-logged">
           <div>
             <div class="fb-user-name">${escHtml(user.name)}</div>
-            <div class="fb-user-email">${escHtml(user.email)}${user.is_admin ? ' · <strong style="color:#00A896">admin</strong>' : ''}</div>
+            <div class="fb-user-email">${user.email ? escHtml(user.email) : ''}${isAdmin() ? ' · <strong style="color:#00A896">admin</strong>' : ''}</div>
           </div>
           <button class="fb-change-link" id="fb-change-user">Cambiar</button>
         </div>
