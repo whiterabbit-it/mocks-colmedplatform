@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel de Feedback — VitaCore Mocks</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Poppins', system-ui, sans-serif; background: #0B2340; color: white; min-height: 100vh; }
+    .header { background: rgba(255,255,255,0.05); padding: 0 32px; height: 60px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .header-logo { display: flex; align-items: center; gap: 10px; }
+    .logo-icon { width: 32px; height: 32px; background: #00A896; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+    .logo-text { font-size: 16px; font-weight: 700; }
+    .logo-sub { font-size: 11px; color: #64748b; margin-top: 1px; }
+    .header-badge { font-size: 12px; color: #94a3b8; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 4px 12px; border-radius: 12px; }
+    .main { max-width: 1000px; margin: 0 auto; padding: 32px 24px; }
+    .page-title { font-family: 'Lora', serif; font-size: 24px; font-weight: 700; margin-bottom: 6px; }
+    .page-desc { font-size: 13px; color: #64748b; margin-bottom: 28px; }
+
+    /* Filters */
+    .filters { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; align-items: center; }
+    .filter-select { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); color: white; border-radius: 8px; padding: 8px 12px; font-size: 13px; font-family: 'Poppins', sans-serif; outline: none; }
+    .filter-select option { background: #0B2340; color: white; }
+    .filter-label { font-size: 13px; color: #64748b; }
+    .btn-refresh { background: #00A896; color: white; border: none; border-radius: 8px; padding: 8px 16px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Poppins', sans-serif; margin-left: auto; }
+
+    /* Stats row */
+    .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
+    .stat-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 16px 18px; }
+    .stat-num { font-size: 28px; font-weight: 800; color: white; line-height: 1; margin-bottom: 4px; }
+    .stat-num.teal { color: #00A896; }
+    .stat-label { font-size: 11px; color: #64748b; font-weight: 500; }
+
+    /* Comments list */
+    .section-label { font-size: 12px; font-weight: 600; color: #64748b; letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 12px; margin-top: 4px; }
+    .comment-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 16px 18px; margin-bottom: 10px; }
+    .comment-card.is-new { border-color: #00A896; background: rgba(0,168,150,0.08); }
+    .comment-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+    .comment-user { font-size: 14px; font-weight: 700; color: white; }
+    .comment-email { font-size: 11px; color: #64748b; margin-top: 1px; }
+    .comment-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
+    .comment-time { font-size: 11px; color: #64748b; }
+    .new-badge { background: #00A896; color: white; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 8px; }
+    .page-tag { display: inline-flex; align-items: center; gap: 4px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 4px 10px; font-size: 11px; color: #94a3b8; margin-bottom: 8px; }
+    .page-tag a { color: #00A896; text-decoration: none; }
+    .page-tag a:hover { text-decoration: underline; }
+    .element-hint { font-size: 12px; color: #64748b; font-style: italic; margin-bottom: 6px; }
+    .comment-text { font-size: 14px; color: #e2e8f0; line-height: 1.6; }
+
+    /* Empty state */
+    .empty-state { text-align: center; padding: 48px 24px; color: #64748b; }
+    .empty-state .icon { font-size: 48px; margin-bottom: 16px; }
+    .empty-state h3 { font-size: 18px; font-weight: 700; color: white; margin-bottom: 8px; }
+    .empty-state p { font-size: 14px; line-height: 1.5; }
+
+    /* Loading */
+    .loading { text-align: center; padding: 40px; color: #64748b; font-size: 14px; }
+
+    /* Group header */
+    .group-header { display: flex; align-items: center; justify-content: space-between; margin-top: 20px; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .group-title { font-size: 14px; font-weight: 700; color: white; }
+    .group-count { font-size: 12px; color: #64748b; background: rgba(255,255,255,0.05); padding: 2px 8px; border-radius: 8px; }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-logo">
+    <div class="logo-icon">💬</div>
+    <div>
+      <div class="logo-text">Panel de Feedback</div>
+      <div class="logo-sub">VitaCore Mocks — Uso interno del equipo</div>
+    </div>
+  </div>
+  <div class="header-badge">Solo equipo</div>
+</div>
+
+<div class="main">
+  <div class="page-title">Comentarios del equipo</div>
+  <div class="page-desc">Todos los feedbacks dejados en las pantallas de los mocks. Agrupados por página.</div>
+
+  <!-- Stats -->
+  <div class="stats-row" id="stats-row">
+    <div class="stat-card"><div class="stat-num teal" id="stat-total">—</div><div class="stat-label">Total comentarios</div></div>
+    <div class="stat-card"><div class="stat-num" id="stat-hoy">—</div><div class="stat-label">Últimas 24 horas</div></div>
+    <div class="stat-card"><div class="stat-num" id="stat-pages">—</div><div class="stat-label">Páginas con feedback</div></div>
+    <div class="stat-card"><div class="stat-num" id="stat-users">—</div><div class="stat-label">Revisores</div></div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters">
+    <span class="filter-label">Filtrar:</span>
+    <select class="filter-select" id="filter-user">
+      <option value="">Todos los usuarios</option>
+    </select>
+    <select class="filter-select" id="filter-page">
+      <option value="">Todas las páginas</option>
+    </select>
+    <button class="btn-refresh" onclick="loadAll()">Actualizar</button>
+  </div>
+
+  <!-- Comments -->
+  <div id="comments-container">
+    <div class="loading">Cargando comentarios...</div>
+  </div>
+
+</div>
+
+<script>
+  const SUPABASE_URL = 'https://YOUR_PROJECT_ID.supabase.co';
+  const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+  const TABLE = 'feedback_comments';
+
+  function timeSince(dateStr) {
+    const diff = (Date.now() - new Date(dateStr)) / 1000;
+    if (diff < 60) return 'ahora mismo';
+    if (diff < 3600) return Math.floor(diff / 60) + 'm atrás';
+    if (diff < 86400) return Math.floor(diff / 3600) + 'h atrás';
+    return Math.floor(diff / 86400) + 'd atrás';
+  }
+  function isNew(dateStr) { return (Date.now() - new Date(dateStr)) < 86400000; }
+  function escHtml(str) {
+    if (!str) return '';
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  async function loadAll() {
+    const container = document.getElementById('comments-container');
+    container.innerHTML = '<div class="loading">Cargando comentarios desde Supabase...</div>';
+
+    const userFilter = document.getElementById('filter-user').value;
+    const pageFilter = document.getElementById('filter-page').value;
+
+    let url = `${SUPABASE_URL}/rest/v1/${TABLE}?order=created_at.desc`;
+    if (userFilter) url += `&user_email=eq.${encodeURIComponent(userFilter)}`;
+    if (pageFilter) url += `&page_path=eq.${encodeURIComponent(pageFilter)}`;
+
+    try {
+      const res = await fetch(url, {
+        headers: {
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+        }
+      });
+      if (!res.ok) throw new Error('Error ' + res.status);
+      const comments = await res.json();
+      renderComments(comments);
+    } catch (e) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <div class="icon">⚠️</div>
+          <h3>No se pudo cargar</h3>
+          <p>Verificá que la URL y ANON_KEY de Supabase estén configuradas en este archivo.<br><br>
+          Error: ${e.message}</p>
+        </div>
+      `;
+    }
+  }
+
+  function renderComments(comments) {
+    const container = document.getElementById('comments-container');
+
+    // Update stats
+    const now24h = comments.filter(c => isNew(c.created_at)).length;
+    const pages = [...new Set(comments.map(c => c.page_path))];
+    const users = [...new Set(comments.map(c => c.user_email))];
+    document.getElementById('stat-total').textContent = comments.length;
+    document.getElementById('stat-hoy').textContent = now24h;
+    document.getElementById('stat-pages').textContent = pages.length;
+    document.getElementById('stat-users').textContent = users.length;
+
+    // Populate filters
+    const userSel = document.getElementById('filter-user');
+    const pageSel = document.getElementById('filter-page');
+    const curUser = userSel.value;
+    const curPage = pageSel.value;
+    userSel.innerHTML = '<option value="">Todos los usuarios</option>';
+    pageSel.innerHTML = '<option value="">Todas las páginas</option>';
+    users.forEach(u => { const o = document.createElement('option'); o.value = u; o.textContent = u; if (u === curUser) o.selected = true; userSel.appendChild(o); });
+    pages.forEach(p => { const o = document.createElement('option'); o.value = p; o.textContent = p; if (p === curPage) o.selected = true; pageSel.appendChild(o); });
+
+    if (comments.length === 0) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <div class="icon">💬</div>
+          <h3>Sin comentarios aún</h3>
+          <p>Cuando el equipo deje feedback en los mocks, aparecerá aquí agrupado por página.</p>
+        </div>
+      `;
+      return;
+    }
+
+    // Group by page
+    const grouped = {};
+    comments.forEach(c => {
+      if (!grouped[c.page_path]) grouped[c.page_path] = [];
+      grouped[c.page_path].push(c);
+    });
+
+    let html = '';
+    Object.entries(grouped).forEach(([page, items]) => {
+      html += `
+        <div class="group-header">
+          <span class="group-title">${escHtml(page)}</span>
+          <span class="group-count">${items.length} comentario${items.length !== 1 ? 's' : ''}</span>
+        </div>
+      `;
+      items.forEach(c => {
+        html += `
+          <div class="comment-card${isNew(c.created_at) ? ' is-new' : ''}">
+            <div class="comment-header">
+              <div>
+                <div class="comment-user">${escHtml(c.user_name)}</div>
+                <div class="comment-email">${escHtml(c.user_email)}</div>
+              </div>
+              <div class="comment-meta">
+                <span class="comment-time">${timeSince(c.created_at)}</span>
+                ${isNew(c.created_at) ? '<span class="new-badge">nuevo</span>' : ''}
+              </div>
+            </div>
+            <div class="page-tag">
+              📄 ${escHtml(c.page_title || c.page_path)}
+              <a href="${escHtml(c.page_path)}" target="_blank">abrir →</a>
+            </div>
+            ${c.element_hint ? `<div class="element-hint">Sobre: ${escHtml(c.element_hint)}</div>` : ''}
+            <div class="comment-text">${escHtml(c.comment)}</div>
+          </div>
+        `;
+      });
+    });
+
+    container.innerHTML = html;
+  }
+
+  // Init
+  loadAll();
+  document.getElementById('filter-user').addEventListener('change', loadAll);
+  document.getElementById('filter-page').addEventListener('change', loadAll);
+</script>
+</body>
+</html>

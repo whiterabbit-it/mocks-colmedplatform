@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mobile Comisión Directiva — VitaCore WRHMS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/feedback.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Poppins', system-ui, sans-serif; background: #cbd5e1; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 32px 16px; }
+    .back-link { align-self: flex-start; margin-bottom: 16px; margin-left: calc(50% - 195px); font-size: 13px; color: #475569; text-decoration: none; display: flex; align-items: center; gap: 4px; background: white; padding: 6px 14px; border-radius: 8px; border: 1px solid #e2e8f0; font-weight: 500; }
+    .phone { width: 390px; height: 844px; background: #F3F6F9; border-radius: 48px; overflow: hidden; box-shadow: 0 32px 64px rgba(0,0,0,0.28), 0 0 0 2px #94a3b8; display: flex; flex-direction: column; position: relative; }
+    .status-bar { background: #0B2340; padding: 12px 24px 8px; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
+    .status-time { font-size: 15px; font-weight: 700; color: white; }
+    .status-icons { display: flex; align-items: center; gap: 6px; font-size: 13px; color: white; }
+    .screen-header { background: #0B2340; padding: 14px 20px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; }
+    .screen-title { font-family: 'Lora', serif; font-size: 18px; font-weight: 700; color: white; }
+    .header-link { font-size: 12px; color: #00A896; text-decoration: none; display: flex; align-items: center; gap: 4px; }
+    .scroll-area { flex: 1; overflow-y: auto; padding: 16px 16px 100px; }
+    .scroll-area::-webkit-scrollbar { display: none; }
+
+    /* Presidenta card */
+    .presidenta-mobile { background: white; border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 16px; border: 2px solid #00A896; }
+    .pres-avatar { width: 64px; height: 64px; border-radius: 50%; background: linear-gradient(135deg, #0B2340, #00A896); margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 800; color: white; }
+    .pres-name { font-weight: 700; font-size: 15px; color: #0B2340; margin-bottom: 2px; }
+    .pres-cargo { font-size: 12px; color: #00A896; font-weight: 600; margin-bottom: 10px; }
+    .pres-btn { background: #0B2340; color: white; border: none; border-radius: 8px; padding: 8px 20px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: 'Poppins', sans-serif; }
+
+    /* Section title */
+    .section-label { font-size: 11px; font-weight: 600; color: #64748b; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 10px; margin-top: 4px; }
+
+    /* Member card compact */
+    .member-card { background: white; border-radius: 12px; padding: 12px 14px; margin-bottom: 8px; border: 1px solid #e2e8f0; }
+    .area-label { font-size: 10px; font-weight: 600; color: #64748b; letter-spacing: 0.4px; text-transform: uppercase; margin-bottom: 8px; }
+    .member-row { display: flex; align-items: center; gap: 10px; padding: 6px 0; }
+    .member-row:not(:last-child) { border-bottom: 1px solid #f8fafc; }
+    .mem-avatar { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: white; flex-shrink: 0; }
+    .av-titular { background: #0B2340; }
+    .av-suplente { background: #94a3b8; }
+    .mem-info { flex: 1; min-width: 0; }
+    .mem-name { font-size: 12px; font-weight: 700; color: #0B2340; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .mem-type { font-size: 10px; color: #64748b; }
+    .btn-dm-mobile { background: #0B2340; color: white; border: none; border-radius: 6px; padding: 5px 10px; font-size: 11px; font-weight: 600; cursor: pointer; font-family: 'Poppins', sans-serif; white-space: nowrap; flex-shrink: 0; }
+    .btn-dm-mobile:hover { background: #00A896; }
+
+    /* Tab bar */
+    .tab-bar { position: absolute; bottom: 0; left: 0; right: 0; background: white; border-top: 1px solid #e2e8f0; display: flex; height: 72px; box-shadow: 0 -4px 12px rgba(0,0,0,0.06); }
+    .tab-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; cursor: pointer; padding: 8px 0; font-size: 10px; font-weight: 600; color: #94a3b8; text-decoration: none; }
+    .tab-item.active { color: #00A896; }
+    .tab-icon { font-size: 20px; }
+  </style>
+</head>
+<body>
+
+<a href="index.html" class="back-link">← Volver a mocks</a>
+
+<div class="phone">
+  <div class="status-bar">
+    <span class="status-time">9:41</span>
+    <div class="status-icons"><span>●●●●</span><span>WiFi</span><span>🔋</span></div>
+  </div>
+  <div class="screen-header">
+    <span class="screen-title">Comisión Directiva</span>
+    <a href="assets/estatuto_cmrb.pdf" class="header-link" target="_blank">📄 Estatuto</a>
+  </div>
+
+  <div class="scroll-area">
+
+    <!-- Presidenta -->
+    <div class="presidenta-mobile">
+      <div class="pres-avatar">EL</div>
+      <div class="pres-name">Dra. Elisabeth Litwiller</div>
+      <div class="pres-cargo">Presidenta</div>
+      <button class="pres-btn">DM a Presidenta</button>
+    </div>
+
+    <div class="section-label">Vocales</div>
+
+    <div class="member-card">
+      <div class="area-label">Finanzas</div>
+      <div class="member-row">
+        <div class="mem-avatar av-titular">AB</div>
+        <div class="mem-info"><div class="mem-name">Dr. Adrian Bergesio</div><div class="mem-type">Titular</div></div>
+        <button class="btn-dm-mobile">DM</button>
+      </div>
+      <div class="member-row">
+        <div class="mem-avatar av-suplente">RP</div>
+        <div class="mem-info"><div class="mem-name">Dr. Raul Fabian Puchy</div><div class="mem-type">Suplente</div></div>
+        <button class="btn-dm-mobile">DM</button>
+      </div>
+    </div>
+
+    <div class="member-card">
+      <div class="area-label">Actas</div>
+      <div class="member-row">
+        <div class="mem-avatar av-titular">EG</div>
+        <div class="mem-info"><div class="mem-name">Dra. Eliana Guzman</div><div class="mem-type">Titular</div></div>
+        <button class="btn-dm-mobile">DM</button>
+      </div>
+      <div class="member-row">
+        <div class="mem-avatar av-suplente">SL</div>
+        <div class="mem-info"><div class="mem-name">Dr. Sergio Lindenbaum</div><div class="mem-type">Suplente</div></div>
+        <button class="btn-dm-mobile">DM</button>
+      </div>
+    </div>
+
+    <div class="member-card">
+      <div class="area-label">Secretaría General</div>
+      <div class="member-row">
+        <div class="mem-avatar av-titular">DG</div>
+        <div class="mem-info"><div class="mem-name">Dra. Daniela Gonzalez</div><div class="mem-type">Titular</div></div>
+        <button class="btn-dm-mobile">DM</button>
+      </div>
+      <div class="member-row">
+        <div class="mem-avatar av-suplente">FN</div>
+        <div class="mem-info"><div class="mem-name">Dr. Fernando Nazzetta</div><div class="mem-type">Suplente</div></div>
+        <button class="btn-dm-mobile">DM</button>
+      </div>
+    </div>
+
+    <div class="member-card">
+      <div class="area-label">Gremial</div>
+      <div class="member-row">
+        <div class="mem-avatar av-titular">AL</div>
+        <div class="mem-info"><div class="mem-name">Dr. Arturo Lopez Rivera</div><div class="mem-type">Titular</div></div>
+        <button class="btn-dm-mobile">DM</button>
+      </div>
+      <div class="member-row">
+        <div class="mem-avatar av-suplente">FR</div>
+        <div class="mem-info"><div class="mem-name">Dr. Fernando Risso</div><div class="mem-type">Suplente</div></div>
+        <button class="btn-dm-mobile">DM</button>
+      </div>
+    </div>
+
+    <div class="member-card">
+      <div class="area-label">Prensa y RRPP</div>
+      <div class="member-row">
+        <div class="mem-avatar av-titular">MS</div>
+        <div class="mem-info"><div class="mem-name">Dr. Marcelo Sandoval</div><div class="mem-type">Titular</div></div>
+        <button class="btn-dm-mobile">DM</button>
+      </div>
+      <div class="member-row">
+        <div class="mem-avatar av-suplente">ML</div>
+        <div class="mem-info"><div class="mem-name">Dra. Moira Laiolo</div><div class="mem-type">Suplente</div></div>
+        <button class="btn-dm-mobile">DM</button>
+      </div>
+    </div>
+
+    <div class="member-card">
+      <div class="area-label">Médico Científico</div>
+      <div class="member-row">
+        <div class="mem-avatar av-titular">LC</div>
+        <div class="mem-info"><div class="mem-name">Dr. Luis Chioconni</div><div class="mem-type">Titular</div></div>
+        <button class="btn-dm-mobile">DM</button>
+      </div>
+      <div class="member-row">
+        <div class="mem-avatar av-suplente">RA</div>
+        <div class="mem-info"><div class="mem-name">Dr. Rodrigo Albero</div><div class="mem-type">Suplente</div></div>
+        <button class="btn-dm-mobile">DM</button>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="tab-bar">
+    <a href="mobile-home.html" class="tab-item">
+      <span class="tab-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>Inicio
+    </a>
+    <a href="mobile-foro.html" class="tab-item">
+      <span class="tab-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>Foro
+    </a>
+    <a href="mobile-ai.html" class="tab-item">
+      <span class="tab-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M12 11V7"/><circle cx="12" cy="5" r="2"/></svg></span>IA
+    </a>
+    <a href="mobile-credencial.html" class="tab-item">
+      <span class="tab-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="8" cy="12" r="2"/></svg></span>Credencial
+    </a>
+    <a href="#" class="tab-item active">
+      <span class="tab-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>Perfil
+    </a>
+  </div>
+</div>
+
+<script src="assets/feedback.js"></script>
+</body>
+</html>

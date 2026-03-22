@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contactos Institucionales — VitaCore WRHMS Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/feedback.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Poppins', system-ui, sans-serif; background: #F3F6F9; color: #0B2340; display: flex; min-height: 100vh; }
+    .sidebar { width: 240px; min-height: 100vh; background: #0B2340; display: flex; flex-direction: column; flex-shrink: 0; position: fixed; top: 0; left: 0; bottom: 0; z-index: 10; }
+    .sidebar-logo { padding: 24px 20px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .sidebar-nav { padding: 16px 12px; flex: 1; overflow-y: auto; }
+    .nav-label { font-size: 10px; font-weight: 600; color: #64748b; letter-spacing: 0.8px; text-transform: uppercase; padding: 0 8px; margin: 16px 0 6px; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; font-size: 14px; color: #94a3b8; font-weight: 500; text-decoration: none; transition: all 0.15s; margin-bottom: 2px; }
+    .nav-item:hover { background: rgba(255,255,255,0.08); color: white; }
+    .nav-item.active { background: #00A896; color: white; font-weight: 600; }
+    .nav-item .nav-icon { font-size: 16px; width: 20px; text-align: center; }
+    .sidebar-user { padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; }
+    .user-avatar-sm { width: 36px; height: 36px; background: #00A896; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: white; }
+    .user-name { font-size: 13px; font-weight: 600; color: white; }
+    .user-role { font-size: 11px; color: #64748b; }
+    .main { margin-left: 240px; flex: 1; }
+    .topbar { background: white; padding: 0 32px; height: 60px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 5; }
+    .topbar-back { font-size: 13px; color: #64748b; text-decoration: none; display: flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 6px; border: 1px solid #e2e8f0; }
+    .topbar-back:hover { background: #F3F6F9; }
+    .topbar-title { font-size: 17px; font-weight: 700; }
+    .content { padding: 32px; max-width: 1100px; }
+
+    .page-header { margin-bottom: 28px; }
+    .page-header h1 { font-family: 'Lora', serif; font-size: 24px; font-weight: 700; }
+    .page-header p { font-size: 14px; color: #64748b; margin-top: 6px; }
+
+    .contacts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+    .contact-card { background: white; border-radius: 14px; padding: 20px 22px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+    .contact-area { font-size: 11px; font-weight: 600; color: #64748b; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 12px; }
+    .contact-person { display: flex; align-items: flex-start; gap: 12px; }
+    .contact-avatar { width: 44px; height: 44px; border-radius: 10px; background: #e8eef6; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700; color: #0B2340; flex-shrink: 0; }
+    .contact-info { flex: 1; }
+    .contact-name { font-size: 14px; font-weight: 700; color: #0B2340; margin-bottom: 4px; }
+    .contact-secondary { font-size: 12px; color: #64748b; margin-bottom: 4px; }
+    .contact-email { font-size: 12px; color: #00A896; text-decoration: none; display: flex; align-items: center; gap: 4px; }
+    .contact-email:hover { text-decoration: underline; }
+    .contact-actions { display: flex; gap: 8px; margin-top: 14px; padding-top: 12px; border-top: 1px solid #f1f5f9; }
+    .btn-email { flex: 1; padding: 8px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 12px; font-weight: 600; color: #0B2340; background: white; cursor: pointer; font-family: 'Poppins', sans-serif; text-decoration: none; text-align: center; transition: all 0.15s; }
+    .btn-email:hover { background: #F3F6F9; border-color: #cbd5e1; }
+    .btn-dm-contact { flex: 1; padding: 8px; border: none; border-radius: 8px; font-size: 12px; font-weight: 600; color: white; background: #0B2340; cursor: pointer; font-family: 'Poppins', sans-serif; text-align: center; transition: all 0.15s; }
+    .btn-dm-contact:hover { background: #00A896; }
+
+    /* DM Modal */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(11,35,64,0.4); z-index: 9000; align-items: center; justify-content: center; }
+    .modal-overlay.open { display: flex; }
+    .modal { background: white; border-radius: 16px; padding: 28px; width: 100%; max-width: 440px; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
+    .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+    .modal-header h3 { font-size: 18px; font-weight: 700; }
+    .modal-close { background: none; border: none; font-size: 20px; cursor: pointer; color: #64748b; }
+    .modal-to { font-size: 13px; color: #64748b; margin-bottom: 4px; }
+    .modal-recipient { font-size: 15px; font-weight: 700; color: #0B2340; margin-bottom: 16px; }
+    .modal-textarea { width: 100%; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px; font-size: 14px; font-family: 'Poppins', sans-serif; resize: vertical; min-height: 100px; outline: none; transition: border-color 0.15s; }
+    .modal-textarea:focus { border-color: #00A896; }
+    .modal-actions { display: flex; gap: 10px; margin-top: 16px; }
+    .btn-cancel { flex: 1; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Poppins', sans-serif; background: white; }
+    .btn-send-dm { flex: 1; padding: 10px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Poppins', sans-serif; background: #00A896; color: white; }
+  </style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <img src="assets/logo-dark.png" alt="VitaCore" style="height:30px;width:auto;display:block;margin-bottom:4px;">
+    <div style="font-size:11px;color:#9CA3AF;letter-spacing:0.3px;">CMRB | WRHMS</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-label">Principal</div>
+    <a href="admin-dashboard.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="18" y="3" width="4" height="18" rx="1"/><rect x="10" y="8" width="4" height="13" rx="1"/><rect x="2" y="13" width="4" height="8" rx="1"/></svg></span> Dashboard</a>
+    <a href="admin-communications.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 11 18-5v12L3 13v-2z"/></svg></span> Comunicaciones</a>
+    <a href="admin-foro.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span> Foro</a>
+    <a href="#" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span> Documentos</a>
+    <div class="nav-label">Gestión</div>
+    <a href="admin-members.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></span> Miembros</a>
+    <a href="admin-agenda.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span> Agenda</a>
+    <a href="admin-contactos.html" class="nav-item active"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.72 12"/></svg></span> Contactos</a>
+    <a href="admin-facturacion.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></span> Facturación</a>
+    <a href="admin-reminders.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/></svg></span> Reminders</a>
+    <div class="nav-label">Institucional</div>
+    <a href="admin-board.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg></span> Comisión Directiva</a>
+    <a href="admin-obras-sociales.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></span> Obras Sociales</a>
+  </nav>
+  <div class="sidebar-user">
+    <div class="user-avatar-sm">AS</div>
+    <div><div class="user-name">Admin Sistema</div><div class="user-role">admin</div></div>
+  </div>
+</aside>
+
+<div class="main">
+  <div class="topbar">
+    <a href="index.html" class="topbar-back">← Mocks</a>
+    <span class="topbar-title">Contactos Institucionales</span>
+  </div>
+
+  <div class="content">
+    <div class="page-header">
+      <h1>Contactos del CMRB</h1>
+      <p>Personal administrativo y de contacto del Colegio Médico de Río Negro. Podés enviar un DM directamente desde aquí.</p>
+    </div>
+
+    <div class="contacts-grid">
+
+      <div class="contact-card">
+        <div class="contact-area">Recepción</div>
+        <div class="contact-person">
+          <div class="contact-avatar">AL</div>
+          <div class="contact-info">
+            <div class="contact-name">Analía Leiva</div>
+            <div class="contact-secondary">Recepcionista</div>
+            <a href="mailto:a.leiva@cmrb.com.ar" class="contact-email">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              a.leiva@cmrb.com.ar
+            </a>
+          </div>
+        </div>
+        <div class="contact-actions">
+          <a href="mailto:a.leiva@cmrb.com.ar" class="btn-email">Enviar email</a>
+          <button class="btn-dm-contact" onclick="openDM('Analía Leiva')">Enviar DM</button>
+        </div>
+      </div>
+
+      <div class="contact-card">
+        <div class="contact-area">Facturación</div>
+        <div class="contact-person">
+          <div class="contact-avatar">PK</div>
+          <div class="contact-info">
+            <div class="contact-name">Pablo Kasprzycki</div>
+            <div class="contact-secondary">Facturación a Obras Sociales</div>
+            <a href="mailto:facturacion@cmrb.com.ar" class="contact-email">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              facturacion@cmrb.com.ar
+            </a>
+          </div>
+        </div>
+        <div class="contact-actions">
+          <a href="mailto:facturacion@cmrb.com.ar" class="btn-email">Enviar email</a>
+          <button class="btn-dm-contact" onclick="openDM('Pablo Kasprzycki')">Enviar DM</button>
+        </div>
+      </div>
+
+      <div class="contact-card">
+        <div class="contact-area">Cobranzas y Pagos</div>
+        <div class="contact-person">
+          <div class="contact-avatar">CC</div>
+          <div class="contact-info">
+            <div class="contact-name">Constanza Caceres / Andrea Zuppi</div>
+            <div class="contact-secondary">Cobranzas y gestión de pagos</div>
+            <a href="mailto:cobranzas@cmrb.com.ar" class="contact-email">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              cobranzas@cmrb.com.ar
+            </a>
+          </div>
+        </div>
+        <div class="contact-actions">
+          <a href="mailto:cobranzas@cmrb.com.ar" class="btn-email">Enviar email</a>
+          <button class="btn-dm-contact" onclick="openDM('Cobranzas y Pagos')">Enviar DM</button>
+        </div>
+      </div>
+
+      <div class="contact-card">
+        <div class="contact-area">Administración</div>
+        <div class="contact-person">
+          <div class="contact-avatar">MR</div>
+          <div class="contact-info">
+            <div class="contact-name">Marcela Riva</div>
+            <div class="contact-secondary">Administración general</div>
+            <a href="mailto:administracion@cmrb.com.ar" class="contact-email">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              administracion@cmrb.com.ar
+            </a>
+          </div>
+        </div>
+        <div class="contact-actions">
+          <a href="mailto:administracion@cmrb.com.ar" class="btn-email">Enviar email</a>
+          <button class="btn-dm-contact" onclick="openDM('Marcela Riva')">Enviar DM</button>
+        </div>
+      </div>
+
+      <div class="contact-card">
+        <div class="contact-area">Prensa y Comunicación</div>
+        <div class="contact-person">
+          <div class="contact-avatar">PF</div>
+          <div class="contact-info">
+            <div class="contact-name">Pablo Ferrando</div>
+            <div class="contact-secondary">Prensa institucional</div>
+            <a href="mailto:prensa@cmrb.com.ar" class="contact-email">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-02 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              prensa@cmrb.com.ar
+            </a>
+          </div>
+        </div>
+        <div class="contact-actions">
+          <a href="mailto:prensa@cmrb.com.ar" class="btn-email">Enviar email</a>
+          <button class="btn-dm-contact" onclick="openDM('Pablo Ferrando')">Enviar DM</button>
+        </div>
+      </div>
+
+      <div class="contact-card">
+        <div class="contact-area">Auditoría Médica</div>
+        <div class="contact-person">
+          <div class="contact-avatar">AU</div>
+          <div class="contact-info">
+            <div class="contact-name">Equipo de Auditoría</div>
+            <div class="contact-secondary">
+              Dra. Fernanda Pérez Catan<br>
+              Dr. Mariani Signoretta<br>
+              Dr. Martín Vallone
+            </div>
+          </div>
+        </div>
+        <div class="contact-actions">
+          <a href="mailto:auditoria@cmrb.com.ar" class="btn-email">Enviar email</a>
+          <button class="btn-dm-contact" onclick="openDM('Auditoría Médica')">Enviar DM</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- DM Modal -->
+<div class="modal-overlay" id="dm-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Enviar Mensaje Directo</h3>
+      <button class="modal-close" onclick="closeDM()">✕</button>
+    </div>
+    <div class="modal-to">Para:</div>
+    <div class="modal-recipient" id="dm-recipient">—</div>
+    <textarea class="modal-textarea" placeholder="Escribí tu mensaje..."></textarea>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeDM()">Cancelar</button>
+      <button class="btn-send-dm" onclick="closeDM()">Enviar DM</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  function openDM(name) {
+    document.getElementById('dm-recipient').textContent = name;
+    document.getElementById('dm-modal').classList.add('open');
+  }
+  function closeDM() {
+    document.getElementById('dm-modal').classList.remove('open');
+  }
+  document.getElementById('dm-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeDM();
+  });
+</script>
+<script src="assets/feedback.js"></script>
+</body>
+</html>

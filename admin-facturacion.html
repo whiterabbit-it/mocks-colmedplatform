@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Facturación — VitaCore WRHMS Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/feedback.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Poppins', system-ui, sans-serif; background: #F3F6F9; color: #0B2340; display: flex; min-height: 100vh; }
+    .sidebar { width: 240px; min-height: 100vh; background: #0B2340; display: flex; flex-direction: column; flex-shrink: 0; position: fixed; top: 0; left: 0; bottom: 0; z-index: 10; }
+    .sidebar-logo { padding: 24px 20px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .sidebar-nav { padding: 16px 12px; flex: 1; overflow-y: auto; }
+    .nav-label { font-size: 10px; font-weight: 600; color: #64748b; letter-spacing: 0.8px; text-transform: uppercase; padding: 0 8px; margin: 16px 0 6px; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; font-size: 14px; color: #94a3b8; font-weight: 500; text-decoration: none; transition: all 0.15s; margin-bottom: 2px; }
+    .nav-item:hover { background: rgba(255,255,255,0.08); color: white; }
+    .nav-item.active { background: #00A896; color: white; font-weight: 600; }
+    .nav-item .nav-icon { font-size: 16px; width: 20px; text-align: center; }
+    .sidebar-user { padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; }
+    .user-avatar-sm { width: 36px; height: 36px; background: #00A896; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: white; }
+    .user-name { font-size: 13px; font-weight: 600; color: white; }
+    .user-role { font-size: 11px; color: #64748b; }
+    .main { margin-left: 240px; flex: 1; }
+    .topbar { background: white; padding: 0 32px; height: 60px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 5; }
+    .topbar-back { font-size: 13px; color: #64748b; text-decoration: none; padding: 4px 10px; border-radius: 6px; border: 1px solid #e2e8f0; }
+    .topbar-back:hover { background: #F3F6F9; }
+    .topbar-title { font-size: 17px; font-weight: 700; }
+    .content { padding: 40px 48px; max-width: 800px; margin: 0 auto; }
+
+    /* Proximamente banner */
+    .prox-banner {
+      background: linear-gradient(135deg, #0B2340 0%, #1a3a5c 100%);
+      border-radius: 20px; padding: 40px; color: white; text-align: center; margin-bottom: 40px;
+    }
+    .prox-icon { font-size: 56px; margin-bottom: 16px; }
+    .prox-tag { display: inline-block; background: rgba(0,168,150,0.3); border: 1px solid #00A896; color: #00A896; font-size: 11px; font-weight: 700; padding: 4px 14px; border-radius: 12px; letter-spacing: 0.5px; margin-bottom: 16px; }
+    .prox-title { font-family: 'Lora', serif; font-size: 28px; font-weight: 700; margin-bottom: 12px; }
+    .prox-desc { font-size: 15px; color: #94a3b8; line-height: 1.6; max-width: 500px; margin: 0 auto 24px; }
+    .prox-context { font-size: 13px; color: #64748b; background: rgba(255,255,255,0.05); border-radius: 10px; padding: 14px 20px; display: inline-block; max-width: 500px; }
+
+    /* Workflow */
+    .workflow-section { margin-bottom: 40px; }
+    .workflow-title { font-size: 18px; font-weight: 700; margin-bottom: 20px; }
+    .workflow-steps { display: flex; flex-direction: column; gap: 0; }
+    .step { display: flex; gap: 16px; align-items: flex-start; }
+    .step-line { display: flex; flex-direction: column; align-items: center; }
+    .step-dot { width: 36px; height: 36px; background: #0B2340; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 14px; font-weight: 700; flex-shrink: 0; }
+    .step-connector { width: 2px; height: 40px; background: #e2e8f0; margin: 4px 0; }
+    .step:last-child .step-connector { display: none; }
+    .step-content { padding-top: 6px; padding-bottom: 24px; }
+    .step-name { font-size: 15px; font-weight: 700; color: #0B2340; margin-bottom: 4px; }
+    .step-desc { font-size: 13px; color: #64748b; line-height: 1.5; }
+
+    /* CTA */
+    .cta-section { background: white; border-radius: 16px; padding: 28px; border: 1px solid #e2e8f0; }
+    .cta-title { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+    .cta-desc { font-size: 13px; color: #64748b; margin-bottom: 20px; }
+    .cta-form { display: flex; flex-direction: column; gap: 12px; max-width: 400px; }
+    .cta-input { border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 14px; font-size: 13px; font-family: 'Poppins', sans-serif; outline: none; }
+    .cta-input:focus { border-color: #00A896; }
+    .cta-btn { background: #00A896; color: white; border: none; border-radius: 8px; padding: 12px 24px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'Poppins', sans-serif; }
+    .cta-btn:hover { background: #0e7490; }
+  </style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <img src="assets/logo-dark.png" alt="VitaCore" style="height:30px;width:auto;display:block;margin-bottom:4px;">
+    <div style="font-size:11px;color:#9CA3AF;letter-spacing:0.3px;">CMRB | WRHMS</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-label">Principal</div>
+    <a href="admin-dashboard.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="18" y="3" width="4" height="18" rx="1"/><rect x="10" y="8" width="4" height="13" rx="1"/><rect x="2" y="13" width="4" height="8" rx="1"/></svg></span> Dashboard</a>
+    <a href="admin-communications.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 11 18-5v12L3 13v-2z"/></svg></span> Comunicaciones</a>
+    <a href="admin-foro.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span> Foro</a>
+    <a href="#" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span> Documentos</a>
+    <div class="nav-label">Gestión</div>
+    <a href="admin-members.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></span> Miembros</a>
+    <a href="admin-agenda.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span> Agenda</a>
+    <a href="admin-contactos.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.72 12"/></svg></span> Contactos</a>
+    <a href="admin-facturacion.html" class="nav-item active"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></span> Facturación</a>
+    <a href="admin-reminders.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/></svg></span> Reminders</a>
+    <div class="nav-label">Institucional</div>
+    <a href="admin-board.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg></span> Comisión Directiva</a>
+    <a href="admin-obras-sociales.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></span> Obras Sociales</a>
+  </nav>
+  <div class="sidebar-user">
+    <div class="user-avatar-sm">AS</div>
+    <div><div class="user-name">Admin Sistema</div><div class="user-role">admin</div></div>
+  </div>
+</aside>
+
+<div class="main">
+  <div class="topbar">
+    <a href="index.html" class="topbar-back">← Mocks</a>
+    <span class="topbar-title">Facturación</span>
+  </div>
+
+  <div class="content">
+
+    <div class="prox-banner">
+      <div class="prox-icon">🧾</div>
+      <div class="prox-tag">PRÓXIMAMENTE</div>
+      <div class="prox-title">Módulo de Facturación Digital</div>
+      <div class="prox-desc">Cargá tus prestaciones online, verificá contra el físico y resolvé inconsistencias sin salir de la plataforma.</div>
+      <div class="prox-context">
+        Actualmente trabajando con <strong>EVWEB</strong> — este módulo complementa el circuito de facturación a obras sociales con verificación digital end-to-end.
+      </div>
+    </div>
+
+    <div class="workflow-section">
+      <div class="workflow-title">¿Cómo va a funcionar?</div>
+      <div class="workflow-steps">
+        <div class="step">
+          <div class="step-line">
+            <div class="step-dot">1</div>
+            <div class="step-connector"></div>
+          </div>
+          <div class="step-content">
+            <div class="step-name">Médico carga formulario digitalmente</div>
+            <div class="step-desc">Ingresás tus prestaciones del mes directamente en la plataforma. Sin papel, sin errores de transcripción.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-line">
+            <div class="step-dot">2</div>
+            <div class="step-connector"></div>
+          </div>
+          <div class="step-content">
+            <div class="step-name">Secretaría verifica contra el físico</div>
+            <div class="step-desc">El equipo de facturación del CMRB contrasta la carga digital con el comprobante físico de obras sociales.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-line">
+            <div class="step-dot">3</div>
+            <div class="step-connector"></div>
+          </div>
+          <div class="step-content">
+            <div class="step-name">Inconsistencias → notificación instantánea</div>
+            <div class="step-desc">Si hay diferencias, recibís una notificación con el detalle. Podés resolverlo online sin ir al Colegio.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-line">
+            <div class="step-dot">4</div>
+            <div class="step-connector"></div>
+          </div>
+          <div class="step-content">
+            <div class="step-name">Presentación y liquidación</div>
+            <div class="step-desc">Una vez validado, la información se presenta a la obra social. Seguimiento de estado de liquidación en tiempo real.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta-section">
+      <div class="cta-title">Quiero ser notificado cuando esté disponible</div>
+      <div class="cta-desc">Te avisamos cuando el módulo esté listo para usar. Podés seguir usando EVWEB mientras tanto.</div>
+      <div class="cta-form">
+        <input type="text" class="cta-input" placeholder="Tu nombre">
+        <input type="email" class="cta-input" placeholder="tu@email.com">
+        <button class="cta-btn">Anotarme en la lista ✓</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="assets/feedback.js"></script>
+</body>
+</html>

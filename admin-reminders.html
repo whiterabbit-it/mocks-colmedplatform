@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reminders — VitaCore WRHMS Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/feedback.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Poppins', system-ui, sans-serif; background: #F3F6F9; color: #0B2340; display: flex; min-height: 100vh; }
+    .sidebar { width: 240px; min-height: 100vh; background: #0B2340; display: flex; flex-direction: column; flex-shrink: 0; position: fixed; top: 0; left: 0; bottom: 0; z-index: 10; }
+    .sidebar-logo { padding: 24px 20px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .sidebar-nav { padding: 16px 12px; flex: 1; overflow-y: auto; }
+    .nav-label { font-size: 10px; font-weight: 600; color: #64748b; letter-spacing: 0.8px; text-transform: uppercase; padding: 0 8px; margin: 16px 0 6px; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; font-size: 14px; color: #94a3b8; font-weight: 500; text-decoration: none; transition: all 0.15s; margin-bottom: 2px; }
+    .nav-item:hover { background: rgba(255,255,255,0.08); color: white; }
+    .nav-item.active { background: #00A896; color: white; font-weight: 600; }
+    .nav-item .nav-icon { font-size: 16px; width: 20px; text-align: center; }
+    .sidebar-user { padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; }
+    .user-avatar-sm { width: 36px; height: 36px; background: #00A896; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: white; }
+    .user-name { font-size: 13px; font-weight: 600; color: white; }
+    .user-role { font-size: 11px; color: #64748b; }
+    .main { margin-left: 240px; flex: 1; }
+    .topbar { background: white; padding: 0 32px; height: 60px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 5; }
+    .topbar-left { display: flex; align-items: center; gap: 12px; }
+    .topbar-back { font-size: 13px; color: #64748b; text-decoration: none; padding: 4px 10px; border-radius: 6px; border: 1px solid #e2e8f0; }
+    .topbar-back:hover { background: #F3F6F9; }
+    .topbar-title { font-size: 17px; font-weight: 700; }
+    .content { padding: 32px; max-width: 800px; }
+
+    .btn-new { background: #00A896; color: white; border: none; border-radius: 8px; padding: 9px 18px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Poppins', sans-serif; }
+
+    /* Example from WhatsApp */
+    .wa-example { background: #d9f7be; border-radius: 12px; padding: 16px 20px; margin-bottom: 28px; border-left: 4px solid #52c41a; }
+    .wa-label { font-size: 11px; font-weight: 600; color: #52c41a; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 8px; }
+    .wa-msg { font-size: 13px; color: #1d2c1d; line-height: 1.6; white-space: pre-line; font-family: sans-serif; }
+
+    .reminders-list { display: flex; flex-direction: column; gap: 10px; }
+    .reminder-card { background: white; border-radius: 12px; padding: 18px 20px; border: 1px solid #e2e8f0; display: flex; align-items: flex-start; gap: 14px; }
+    .reminder-card.active-soon { border-color: #F0A500; background: #fffbeb; }
+    .rem-icon { font-size: 24px; flex-shrink: 0; margin-top: 2px; }
+    .rem-content { flex: 1; }
+    .rem-header { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 4px; }
+    .rem-title { font-size: 15px; font-weight: 700; color: #0B2340; }
+    .rem-date { font-size: 12px; color: #64748b; }
+    .rem-desc { font-size: 13px; color: #64748b; margin-bottom: 8px; line-height: 1.5; }
+    .rem-footer { display: flex; gap: 8px; align-items: center; }
+    .rem-badge { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 10px; }
+    .badge-todos { background: #D6F5F1; color: #00A896; }
+    .badge-pami { background: #dbeafe; color: #2563eb; }
+    .badge-ipross { background: #ede9fe; color: #7c3aed; }
+    .rem-actions { margin-left: auto; display: flex; gap: 6px; }
+    .btn-edit { font-size: 11px; color: #64748b; padding: 4px 10px; border: 1px solid #e2e8f0; border-radius: 6px; cursor: pointer; background: white; }
+    .btn-delete { font-size: 11px; color: #E8735A; padding: 4px 10px; border: 1px solid #fca5a5; border-radius: 6px; cursor: pointer; background: white; }
+
+    /* Modal */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(11,35,64,0.4); z-index: 9000; align-items: center; justify-content: center; }
+    .modal-overlay.open { display: flex; }
+    .modal { background: white; border-radius: 16px; padding: 28px; width: 100%; max-width: 480px; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
+    .modal h3 { font-size: 18px; font-weight: 700; margin-bottom: 20px; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+    .form-label { font-size: 12px; font-weight: 600; color: #374151; }
+    .form-input, .form-select, .form-textarea { border: 1px solid #e2e8f0; border-radius: 8px; padding: 9px 12px; font-size: 13px; font-family: 'Poppins', sans-serif; color: #0B2340; outline: none; width: 100%; }
+    .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: #00A896; }
+    .form-textarea { resize: vertical; min-height: 80px; }
+    .modal-actions { display: flex; gap: 10px; margin-top: 8px; }
+    .btn-cancel { flex: 1; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Poppins', sans-serif; background: white; }
+    .btn-save { flex: 1; padding: 10px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Poppins', sans-serif; background: #00A896; color: white; }
+  </style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <img src="assets/logo-dark.png" alt="VitaCore" style="height:30px;width:auto;display:block;margin-bottom:4px;">
+    <div style="font-size:11px;color:#9CA3AF;letter-spacing:0.3px;">CMRB | WRHMS</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-label">Principal</div>
+    <a href="admin-dashboard.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="18" y="3" width="4" height="18" rx="1"/><rect x="10" y="8" width="4" height="13" rx="1"/><rect x="2" y="13" width="4" height="8" rx="1"/></svg></span> Dashboard</a>
+    <a href="admin-communications.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 11 18-5v12L3 13v-2z"/></svg></span> Comunicaciones</a>
+    <a href="admin-foro.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span> Foro</a>
+    <a href="#" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span> Documentos</a>
+    <div class="nav-label">Gestión</div>
+    <a href="admin-members.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></span> Miembros</a>
+    <a href="admin-agenda.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span> Agenda</a>
+    <a href="admin-contactos.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.72 12"/></svg></span> Contactos</a>
+    <a href="admin-facturacion.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></span> Facturación</a>
+    <a href="admin-reminders.html" class="nav-item active"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/></svg></span> Reminders</a>
+    <div class="nav-label">Institucional</div>
+    <a href="admin-board.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg></span> Comisión Directiva</a>
+    <a href="admin-obras-sociales.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></span> Obras Sociales</a>
+  </nav>
+  <div class="sidebar-user">
+    <div class="user-avatar-sm">AS</div>
+    <div><div class="user-name">Admin Sistema</div><div class="user-role">admin</div></div>
+  </div>
+</aside>
+
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <a href="index.html" class="topbar-back">← Mocks</a>
+      <span class="topbar-title">Reminders Automáticos</span>
+    </div>
+    <button class="btn-new" onclick="document.getElementById('new-reminder-modal').classList.add('open')">+ Nuevo Reminder</button>
+  </div>
+
+  <div class="content">
+
+    <!-- Ejemplo real de WhatsApp -->
+    <div class="wa-example">
+      <div class="wa-label">Ejemplo real — mensaje tipo WhatsApp</div>
+      <div class="wa-msg">📋 <strong>Recordatorio CMRB — Facturación</strong>
+
+Les recuerdo que el día 31/3 vence la facturación de PAMI correspondiente al mes de MARZO.
+
+Para presentar necesitan:
+• Formularios físicos firmados
+• Copia digital en sistema
+• N° de matrícula actualizado
+
+Cualquier consulta comuníquese con Pablo: facturacion@cmrb.com.ar
+
+— Secretaría CMRB</div>
+    </div>
+
+    <div class="reminders-list">
+
+      <div class="reminder-card active-soon">
+        <div class="rem-icon">⏰</div>
+        <div class="rem-content">
+          <div class="rem-header">
+            <span class="rem-title">Cierre Facturación PAMI — Marzo</span>
+            <span class="rem-date">Envío: 26/03/2026 · 09:00 hs</span>
+          </div>
+          <div class="rem-desc">📋 Recordatorio: el 31/3 vence la facturación de PAMI correspondiente al mes de MARZO. Presentar formularios físicos + digital antes de las 17hs.</div>
+          <div class="rem-footer">
+            <span class="rem-badge badge-pami">PAMI</span>
+            <span class="rem-badge badge-todos">Todos</span>
+            <div class="rem-actions">
+              <button class="btn-edit">Editar</button>
+              <button class="btn-delete">Eliminar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="reminder-card">
+        <div class="rem-icon">⏰</div>
+        <div class="rem-content">
+          <div class="rem-header">
+            <span class="rem-title">Cierre Facturación IPROSS — Marzo</span>
+            <span class="rem-date">Envío: 01/04/2026 · 09:00 hs</span>
+          </div>
+          <div class="rem-desc">Recordatorio: el 05/04 vence la entrega de prestaciones IPROSS de marzo. Formularios F-22 y F-23 disponibles en Recursos → Obras Sociales.</div>
+          <div class="rem-footer">
+            <span class="rem-badge badge-ipross">IPROSS</span>
+            <span class="rem-badge badge-todos">Todos</span>
+            <div class="rem-actions">
+              <button class="btn-edit">Editar</button>
+              <button class="btn-delete">Eliminar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="reminder-card">
+        <div class="rem-icon">📅</div>
+        <div class="rem-content">
+          <div class="rem-header">
+            <span class="rem-title">Reunión Comisión Directiva — Semanal</span>
+            <span class="rem-date">Cada Miércoles · 16:00 hs</span>
+          </div>
+          <div class="rem-desc">Próxima reunión ordinaria de la Comisión Directiva. Revisar temario publicado en Agenda antes de concurrir.</div>
+          <div class="rem-footer">
+            <span class="rem-badge badge-todos">Todos</span>
+            <div class="rem-actions">
+              <button class="btn-edit">Editar</button>
+              <button class="btn-delete">Eliminar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="reminder-card">
+        <div class="rem-icon">🔔</div>
+        <div class="rem-content">
+          <div class="rem-header">
+            <span class="rem-title">Actualización matrícula — Anual</span>
+            <span class="rem-date">Envío: 01/04/2026 · 08:00 hs</span>
+          </div>
+          <div class="rem-desc">Recordatorio anual para que todos los profesionales actualicen sus datos de matrícula en el sistema antes del cierre del período.</div>
+          <div class="rem-footer">
+            <span class="rem-badge badge-todos">Todos</span>
+            <div class="rem-actions">
+              <button class="btn-edit">Editar</button>
+              <button class="btn-delete">Eliminar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Modal nuevo reminder -->
+<div class="modal-overlay" id="new-reminder-modal">
+  <div class="modal">
+    <h3>Nuevo Reminder</h3>
+    <div class="form-group">
+      <label class="form-label">Título</label>
+      <input type="text" class="form-input" placeholder="Ej: Cierre Facturación PAMI">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Fecha de envío</label>
+      <input type="datetime-local" class="form-input">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Audiencia</label>
+      <select class="form-select">
+        <option>Todos los socios</option>
+        <option>Solo PAMI</option>
+        <option>Solo IPROSS</option>
+        <option>Solo Directores</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Mensaje</label>
+      <textarea class="form-textarea" placeholder="Contenido del mensaje de recordatorio..."></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="document.getElementById('new-reminder-modal').classList.remove('open')">Cancelar</button>
+      <button class="btn-save" onclick="document.getElementById('new-reminder-modal').classList.remove('open')">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.getElementById('new-reminder-modal').addEventListener('click', function(e) {
+    if (e.target === this) this.classList.remove('open');
+  });
+</script>
+<script src="assets/feedback.js"></script>
+</body>
+</html>
