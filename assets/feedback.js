@@ -13,7 +13,6 @@
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVmdWdseGx4Z2J2aHNhaWVjZmZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxNDU0ODAsImV4cCI6MjA4OTcyMTQ4MH0.3w2rq_8vArsiuIY_Mx78gWROlrwXyIU0ciTRwFHkaiI';
   const TABLE = 'feedback_comments';
   const VISITS_TABLE = 'page_visits';
-  const VISIT_THROTTLE = 5 * 60 * 1000; // no re-registrar la misma página en 5 min
   const ADMIN_EMAILS = ['lucas@whiterabbit.com.ar', 'hernan@whiterabbit.com.ar', 'damian@whiterabbit.com.ar'];
   const ADMIN_PASSWORD = 'followtherabbit!';
 
@@ -94,11 +93,10 @@
     const user = getUser();
     if (!user || !user.email) return;
 
-    // Throttle: no registrar la misma página dos veces en 5 minutos
+    // Registrar solo la primera visita por usuario+página
     const key = 'pv_' + user.email + '_' + pagePath;
-    const last = parseInt(localStorage.getItem(key) || '0', 10);
-    if (Date.now() - last < VISIT_THROTTLE) return;
-    localStorage.setItem(key, Date.now().toString());
+    if (localStorage.getItem(key)) return;
+    localStorage.setItem(key, '1');
 
     // Fire-and-forget
     fetch(`${SUPABASE_URL}/rest/v1/${VISITS_TABLE}`, {
