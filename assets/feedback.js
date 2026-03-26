@@ -19,7 +19,19 @@
   const pagePath = window.location.pathname.split('/').pop() || 'index.html';
   const pageTitle = document.title;
 
+  const SESSION_KEY = 'mocks_auth_session';
+
   function getUser() {
+    // Try Supabase magic link session first
+    try {
+      const sb = JSON.parse(localStorage.getItem(SESSION_KEY));
+      if (sb && sb.email) {
+        if (!sb.expires_at || Date.now() / 1000 < sb.expires_at) {
+          return { name: sb.name || sb.email.split('@')[0], email: sb.email };
+        }
+      }
+    } catch {}
+    // Fallback: legacy feedback_user
     try { return JSON.parse(localStorage.getItem('feedback_user')) || null; }
     catch { return null; }
   }
@@ -143,9 +155,29 @@
   }
 
   function renderLoginForm(container) {
+    // Check if sbAuth is available (magic link flow)
+    const hasSbAuth = typeof window.sbAuth !== 'undefined';
+    if (hasSbAuth) {
+      container.innerHTML = `
+        <div style="text-align:center;padding:20px 0;">
+          <div style="font-size:32px;margin-bottom:12px;">🔐</div>
+          <div style="font-size:14px;font-weight:600;color:#0B2340;margin-bottom:8px;">Acceso requerido</div>
+          <div style="font-size:13px;color:#64748b;line-height:1.5;margin-bottom:20px;">
+            Para dejar comentarios necesitás ingresar primero desde la pantalla principal.
+          </div>
+          <a href="index.html" style="
+            display:inline-block;background:#0B2340;color:white;
+            text-decoration:none;padding:10px 20px;border-radius:8px;
+            font-size:13px;font-weight:600;font-family:'Poppins',sans-serif;
+          ">Ir a la pantalla principal →</a>
+        </div>
+      `;
+      return;
+    }
+    // Fallback: legacy form (direct access without sbAuth)
     container.innerHTML = `
       <div style="font-size:13px;color:#64748b;margin-bottom:12px;">
-        Dejá tu nombre y tu comentario. Si sos del equipo WhiteRabbit, ingresá tu email y contraseña.
+        Dejá tu nombre y tu comentario.
       </div>
       <div class="fb-login-form" id="fb-login-form">
         <div>
@@ -153,32 +185,17 @@
           <input type="text" id="fb-inp-name" placeholder="Ej: Damián García" autocomplete="name">
         </div>
         <div>
-          <label for="fb-inp-email">Email del equipo <span style="font-weight:400;color:#94a3b8">(opcional)</span></label>
-          <input type="email" id="fb-inp-email" placeholder="tu@whiterabbit.com.ar" autocomplete="email">
-        </div>
-        <div id="fb-pwd-wrap" style="display:none;">
-          <label for="fb-inp-pwd">Contraseña del equipo</label>
-          <input type="password" id="fb-inp-pwd" placeholder="••••••••••••••••">
+          <label for="fb-inp-email">Email <span style="font-weight:400;color:#94a3b8">(opcional)</span></label>
+          <input type="email" id="fb-inp-email" placeholder="tu@email.com" autocomplete="email">
         </div>
         <button class="fb-submit" id="fb-login-btn">Continuar →</button>
       </div>
     `;
-    // Show password field when admin email is typed
-    document.getElementById('fb-inp-email').addEventListener('input', function () {
-      const isAdminEmail = ADMIN_EMAILS.includes(this.value.trim().toLowerCase());
-      document.getElementById('fb-pwd-wrap').style.display = isAdminEmail ? '' : 'none';
-    });
     document.getElementById('fb-login-btn').addEventListener('click', () => {
       const name = document.getElementById('fb-inp-name').value.trim();
-      const email = document.getElementById('fb-inp-email').value.trim().toLowerCase();
       if (!name) { alert('Por favor ingresá tu nombre.'); return; }
-      if (email && ADMIN_EMAILS.includes(email)) {
-        const pwd = document.getElementById('fb-inp-pwd').value;
-        if (pwd !== ADMIN_PASSWORD) { alert('Contraseña incorrecta.'); return; }
-        saveUser({ name, email });
-      } else {
-        saveUser({ name, email: email || '' });
-      }
+      const email = document.getElementById('fb-inp-email').value.trim().toLowerCase();
+      saveUser({ name, email: email || '' });
       renderDrawerBody();
     });
   }
