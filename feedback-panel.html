@@ -109,23 +109,15 @@
 </head>
 <body>
 
-<!-- Auth gate — shown until admin logs in -->
-<div id="auth-gate" style="display:none;position:fixed;inset:0;background:#0B2340;z-index:999;display:flex;align-items:center;justify-content:center;">
-  <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:16px;padding:36px 40px;width:360px;">
-    <div style="font-size:22px;font-weight:800;color:white;margin-bottom:6px;">Panel de Feedback</div>
-    <div style="font-size:13px;color:#64748b;margin-bottom:24px;">Acceso exclusivo para el equipo WhiteRabbit.</div>
-    <div style="display:flex;flex-direction:column;gap:12px;">
-      <div>
-        <label style="font-size:12px;font-weight:600;color:#94a3b8;display:block;margin-bottom:4px;">Email</label>
-        <input id="gate-email" type="email" placeholder="tu@whiterabbit.com.ar" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);border-radius:8px;padding:10px 12px;color:white;font-size:14px;font-family:'Poppins',sans-serif;outline:none;">
-      </div>
-      <div>
-        <label style="font-size:12px;font-weight:600;color:#94a3b8;display:block;margin-bottom:4px;">Contraseña</label>
-        <input id="gate-pwd" type="password" placeholder="••••••••••••••••" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);border-radius:8px;padding:10px 12px;color:white;font-size:14px;font-family:'Poppins',sans-serif;outline:none;">
-      </div>
-      <div id="gate-error" style="font-size:12px;color:#f87171;display:none;">Email o contraseña incorrectos.</div>
-      <button id="gate-btn" onclick="checkAuth()" style="background:#00A896;color:white;border:none;border-radius:8px;padding:11px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Poppins',sans-serif;margin-top:4px;">Entrar →</button>
-    </div>
+<!-- Auth gate — shown if no valid WR session -->
+<div id="auth-gate" style="display:none;position:fixed;inset:0;background:#0B2340;z-index:999;align-items:center;justify-content:center;">
+  <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:16px;padding:36px 40px;width:360px;text-align:center;">
+    <div style="font-size:32px;margin-bottom:16px;">🔐</div>
+    <div style="font-size:18px;font-weight:800;color:white;margin-bottom:8px;">Acceso restringido</div>
+    <div id="gate-msg" style="font-size:13px;color:#64748b;margin-bottom:24px;line-height:1.6;">Acceso exclusivo para el equipo WhiteRabbit.</div>
+    <a href="index.html" style="display:inline-block;background:#00A896;color:white;text-decoration:none;padding:10px 24px;border-radius:8px;font-size:14px;font-weight:600;font-family:'Poppins',sans-serif;">
+      Ir al panel principal →
+    </a>
   </div>
 </div>
 
@@ -419,18 +411,6 @@
 
 <script>
   const PANEL_ADMINS = ['lucas@whiterabbit.com.ar', 'hernan@whiterabbit.com.ar', 'damian@whiterabbit.com.ar'];
-  const PANEL_PASSWORD = 'followtherabbit!';
-
-  function checkAuth() {
-    const email = document.getElementById('gate-email').value.trim().toLowerCase();
-    const pwd = document.getElementById('gate-pwd').value;
-    if (PANEL_ADMINS.includes(email) && pwd === PANEL_PASSWORD) {
-      sessionStorage.setItem('panel_auth', '1');
-      showPanel();
-    } else {
-      document.getElementById('gate-error').style.display = '';
-    }
-  }
 
   function showPanel() {
     document.getElementById('auth-gate').style.display = 'none';
@@ -438,16 +418,27 @@
     initPanel();
   }
 
-  // Allow Enter key on password field
-  document.getElementById('gate-pwd').addEventListener('keydown', e => { if (e.key === 'Enter') checkAuth(); });
-  document.getElementById('gate-email').addEventListener('keydown', e => { if (e.key === 'Enter') checkAuth(); });
-
-  // Check if already authenticated this session
-  if (sessionStorage.getItem('panel_auth') === '1') {
-    showPanel();
-  } else {
-    document.getElementById('auth-gate').style.display = 'flex';
+  function showGate(msg) {
+    const gate = document.getElementById('auth-gate');
+    gate.style.display = 'flex';
+    if (msg) document.getElementById('gate-msg').textContent = msg;
   }
+
+  // Auth via Supabase session (mocks_auth_session)
+  (function () {
+    try {
+      const session = JSON.parse(localStorage.getItem('mocks_auth_session'));
+      if (session && session.email && (!session.expires_at || Date.now() / 1000 < session.expires_at)) {
+        if (PANEL_ADMINS.includes(session.email.toLowerCase())) {
+          showPanel();
+          return;
+        }
+        showGate('Tu cuenta (' + session.email + ') no tiene acceso a este panel.');
+        return;
+      }
+    } catch {}
+    showGate('Ingresá desde el panel principal con tu cuenta WhiteRabbit para acceder.');
+  })();
 </script>
 </body>
 </html>
