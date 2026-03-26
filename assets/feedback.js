@@ -1,5 +1,5 @@
 /**
- * Feedback Toolbox — VitaCore Mocks
+ * Feedback Toolbox — CMRB App
  * Drop-in script for all mock pages.
  *
  * Config: replace SUPABASE_URL and SUPABASE_ANON_KEY with your project values.
