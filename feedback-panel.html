@@ -63,6 +63,48 @@
     .group-header { display: flex; align-items: center; justify-content: space-between; margin-top: 20px; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.08); }
     .group-title { font-size: 14px; font-weight: 700; color: white; }
     .group-count { font-size: 12px; color: #64748b; background: rgba(255,255,255,0.05); padding: 2px 8px; border-radius: 8px; }
+
+    /* Tabs */
+    .tabs { display: flex; gap: 0; margin-bottom: 24px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .tab-btn {
+      padding: 10px 20px; font-size: 14px; font-weight: 600;
+      color: #64748b; background: none; border: none; cursor: pointer;
+      font-family: 'Poppins', sans-serif; border-bottom: 2px solid transparent;
+      margin-bottom: -1px; transition: all 0.15s;
+    }
+    .tab-btn.active { color: #00A896; border-bottom-color: #00A896; }
+    .tab-btn:hover:not(.active) { color: white; }
+
+    /* Journey cards */
+    .journey-card {
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px; padding: 18px 20px; margin-bottom: 14px;
+    }
+    .journey-user { font-size: 15px; font-weight: 700; color: white; margin-bottom: 2px; }
+    .journey-email { font-size: 12px; color: #64748b; margin-bottom: 14px; }
+    .journey-progress { margin-bottom: 14px; }
+    .journey-progress-bar-bg {
+      height: 6px; background: rgba(255,255,255,0.08);
+      border-radius: 3px; overflow: hidden; margin-top: 6px;
+    }
+    .journey-progress-bar { height: 100%; background: #00A896; border-radius: 3px; transition: width 0.3s; }
+    .journey-progress-label { font-size: 11px; color: #64748b; }
+    .journey-steps { display: flex; flex-direction: column; gap: 6px; }
+    .journey-step {
+      display: flex; align-items: flex-start; gap: 10px;
+      font-size: 12px; color: #94a3b8;
+    }
+    .journey-step-time { font-size: 11px; color: #475569; white-space: nowrap; flex-shrink: 0; width: 44px; }
+    .journey-step-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: #00A896; flex-shrink: 0; margin-top: 3px;
+    }
+    .journey-step-page { color: #e2e8f0; font-weight: 500; }
+    .journey-step-title { color: #64748b; }
+    .journey-connector {
+      width: 1px; height: 14px; background: rgba(255,255,255,0.1);
+      margin-left: 3px; margin-top: -4px; margin-bottom: -4px;
+    }
   </style>
 </head>
 <body>
@@ -105,28 +147,49 @@
   <div class="page-desc">Todos los feedbacks dejados en las pantallas de los mocks. Agrupados por página.</div>
 
   <!-- Stats -->
-  <div class="stats-row" id="stats-row">
-    <div class="stat-card"><div class="stat-num teal" id="stat-total">—</div><div class="stat-label">Total comentarios</div></div>
-    <div class="stat-card"><div class="stat-num" id="stat-hoy">—</div><div class="stat-label">Últimas 24 horas</div></div>
+  <div class="stats-row" id="stats-row" style="grid-template-columns: repeat(5, 1fr);">
+    <div class="stat-card"><div class="stat-num teal" id="stat-total">—</div><div class="stat-label">Comentarios</div></div>
+    <div class="stat-card"><div class="stat-num" id="stat-hoy">—</div><div class="stat-label">Últimas 24 h</div></div>
     <div class="stat-card"><div class="stat-num" id="stat-pages">—</div><div class="stat-label">Páginas con feedback</div></div>
     <div class="stat-card"><div class="stat-num" id="stat-users">—</div><div class="stat-label">Revisores</div></div>
+    <div class="stat-card"><div class="stat-num teal" id="stat-visits">—</div><div class="stat-label">Pantallas visitadas</div></div>
   </div>
 
-  <!-- Filters -->
-  <div class="filters">
-    <span class="filter-label">Filtrar:</span>
-    <select class="filter-select" id="filter-user">
-      <option value="">Todos los usuarios</option>
-    </select>
-    <select class="filter-select" id="filter-page">
-      <option value="">Todas las páginas</option>
-    </select>
-    <button class="btn-refresh" onclick="loadAll()">Actualizar</button>
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab-btn active" id="tab-comments" onclick="switchTab('comments')">💬 Comentarios</button>
+    <button class="tab-btn" id="tab-journeys" onclick="switchTab('journeys')">🗺️ Recorridos</button>
   </div>
 
-  <!-- Comments -->
-  <div id="comments-container">
-    <div class="loading">Cargando comentarios...</div>
+  <!-- Tab: Comentarios -->
+  <div id="panel-comments">
+    <div class="filters">
+      <span class="filter-label">Filtrar:</span>
+      <select class="filter-select" id="filter-user">
+        <option value="">Todos los usuarios</option>
+      </select>
+      <select class="filter-select" id="filter-page">
+        <option value="">Todas las páginas</option>
+      </select>
+      <button class="btn-refresh" onclick="loadAll()">Actualizar</button>
+    </div>
+    <div id="comments-container">
+      <div class="loading">Cargando comentarios...</div>
+    </div>
+  </div>
+
+  <!-- Tab: Recorridos -->
+  <div id="panel-journeys" style="display:none;">
+    <div class="filters">
+      <span class="filter-label">Revisores:</span>
+      <select class="filter-select" id="filter-journey-user">
+        <option value="">Todos</option>
+      </select>
+      <button class="btn-refresh" onclick="loadJourneys()">Actualizar</button>
+    </div>
+    <div id="journeys-container">
+      <div class="loading">Cargando recorridos...</div>
+    </div>
   </div>
 
 </div>
@@ -135,6 +198,8 @@
   const SUPABASE_URL = 'https://efuglxlxgbvhsaiecffs.supabase.co';
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVmdWdseGx4Z2J2aHNhaWVjZmZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxNDU0ODAsImV4cCI6MjA4OTcyMTQ4MH0.3w2rq_8vArsiuIY_Mx78gWROlrwXyIU0ciTRwFHkaiI';
   const TABLE = 'feedback_comments';
+  const VISITS_TABLE = 'page_visits';
+  const TOTAL_PAGES = 24; // total de páginas de mocks
 
   function timeSince(dateStr) {
     const diff = (Date.now() - new Date(dateStr)) / 1000;
@@ -143,15 +208,28 @@
     if (diff < 86400) return Math.floor(diff / 3600) + 'h atrás';
     return Math.floor(diff / 86400) + 'd atrás';
   }
+  function timeShort(dateStr) {
+    const d = new Date(dateStr);
+    return d.toLocaleDateString('es-AR', { day:'2-digit', month:'2-digit' }) +
+      ' ' + d.toLocaleTimeString('es-AR', { hour:'2-digit', minute:'2-digit' });
+  }
   function isNew(dateStr) { return (Date.now() - new Date(dateStr)) < 86400000; }
   function escHtml(str) {
     if (!str) return '';
     return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 
+  function switchTab(tab) {
+    document.getElementById('panel-comments').style.display = tab === 'comments' ? '' : 'none';
+    document.getElementById('panel-journeys').style.display = tab === 'journeys' ? '' : 'none';
+    document.getElementById('tab-comments').classList.toggle('active', tab === 'comments');
+    document.getElementById('tab-journeys').classList.toggle('active', tab === 'journeys');
+    if (tab === 'journeys') loadJourneys();
+  }
+
   async function loadAll() {
     const container = document.getElementById('comments-container');
-    container.innerHTML = '<div class="loading">Cargando comentarios desde Supabase...</div>';
+    container.innerHTML = '<div class="loading">Cargando comentarios...</div>';
 
     const userFilter = document.getElementById('filter-user').value;
     const pageFilter = document.getElementById('filter-page').value;
@@ -162,30 +240,123 @@
 
     try {
       const res = await fetch(url, {
-        headers: {
-          'apikey': SUPABASE_ANON_KEY,
-          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-        }
+        headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
       });
       if (!res.ok) throw new Error('Error ' + res.status);
       const comments = await res.json();
       renderComments(comments);
+      loadVisitStats();
     } catch (e) {
+      container.innerHTML = `<div class="empty-state"><div class="icon">⚠️</div><h3>No se pudo cargar</h3><p>${e.message}</p></div>`;
+    }
+  }
+
+  async function loadVisitStats() {
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/${VISITS_TABLE}?select=user_email,page_path`, {
+        headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
+      });
+      if (!res.ok) return;
+      const visits = await res.json();
+      const uniquePages = new Set(visits.map(v => v.page_path)).size;
+      document.getElementById('stat-visits').textContent = uniquePages;
+    } catch {}
+  }
+
+  async function loadJourneys() {
+    const container = document.getElementById('journeys-container');
+    container.innerHTML = '<div class="loading">Cargando recorridos...</div>';
+
+    const userFilter = document.getElementById('filter-journey-user').value;
+    let url = `${SUPABASE_URL}/rest/v1/${VISITS_TABLE}?order=visited_at.asc`;
+    if (userFilter) url += `&user_email=eq.${encodeURIComponent(userFilter)}`;
+
+    try {
+      const res = await fetch(url, {
+        headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
+      });
+      if (!res.ok) throw new Error('Error ' + res.status);
+      const visits = await res.json();
+      renderJourneys(visits);
+    } catch (e) {
+      container.innerHTML = `<div class="empty-state"><div class="icon">⚠️</div><h3>No se pudo cargar</h3><p>${e.message}</p></div>`;
+    }
+  }
+
+  function renderJourneys(visits) {
+    const container = document.getElementById('journeys-container');
+
+    if (visits.length === 0) {
       container.innerHTML = `
         <div class="empty-state">
-          <div class="icon">⚠️</div>
-          <h3>No se pudo cargar</h3>
-          <p>Verificá que la URL y ANON_KEY de Supabase estén configuradas en este archivo.<br><br>
-          Error: ${e.message}</p>
+          <div class="icon">🗺️</div>
+          <h3>Sin recorridos aún</h3>
+          <p>Cuando los revisores naveguen por los mocks, sus recorridos aparecerán aquí.</p>
+        </div>`;
+      return;
+    }
+
+    // Group by user
+    const byUser = {};
+    visits.forEach(v => {
+      if (!byUser[v.user_email]) byUser[v.user_email] = { name: v.user_name, visits: [] };
+      byUser[v.user_email].visits.push(v);
+    });
+
+    // Populate filter
+    const sel = document.getElementById('filter-journey-user');
+    const cur = sel.value;
+    sel.innerHTML = '<option value="">Todos</option>';
+    Object.keys(byUser).forEach(email => {
+      const o = document.createElement('option');
+      o.value = email;
+      o.textContent = byUser[email].name || email;
+      if (email === cur) o.selected = true;
+      sel.appendChild(o);
+    });
+
+    let html = '';
+    Object.entries(byUser).forEach(([email, data]) => {
+      const uniquePages = new Set(data.visits.map(v => v.page_path)).size;
+      const pct = Math.round((uniquePages / TOTAL_PAGES) * 100);
+
+      let stepsHtml = '';
+      data.visits.forEach((v, i) => {
+        stepsHtml += `
+          <div class="journey-step">
+            <span class="journey-step-time">${timeShort(v.visited_at).split(' ')[1]}</span>
+            <div>
+              <div class="journey-step-dot"></div>
+              ${i < data.visits.length - 1 ? '<div class="journey-connector"></div>' : ''}
+            </div>
+            <div>
+              <span class="journey-step-page">${escHtml(v.page_title || v.page_path)}</span>
+              <span class="journey-step-title"> · ${escHtml(v.page_path)}</span>
+            </div>
+          </div>
+        `;
+      });
+
+      html += `
+        <div class="journey-card">
+          <div class="journey-user">${escHtml(data.name || email.split('@')[0])}</div>
+          <div class="journey-email">${escHtml(email)}</div>
+          <div class="journey-progress">
+            <div class="journey-progress-label">${uniquePages} de ${TOTAL_PAGES} pantallas visitadas (${pct}%)</div>
+            <div class="journey-progress-bar-bg">
+              <div class="journey-progress-bar" style="width:${pct}%"></div>
+            </div>
+          </div>
+          <div class="journey-steps">${stepsHtml}</div>
         </div>
       `;
-    }
+    });
+
+    container.innerHTML = html;
   }
 
   function renderComments(comments) {
     const container = document.getElementById('comments-container');
-
-    // Update stats
     const now24h = comments.filter(c => isNew(c.created_at)).length;
     const pages = [...new Set(comments.map(c => c.page_path))];
     const users = [...new Set(comments.map(c => c.user_email))];
@@ -194,28 +365,19 @@
     document.getElementById('stat-pages').textContent = pages.length;
     document.getElementById('stat-users').textContent = users.length;
 
-    // Populate filters
     const userSel = document.getElementById('filter-user');
     const pageSel = document.getElementById('filter-page');
-    const curUser = userSel.value;
-    const curPage = pageSel.value;
+    const curUser = userSel.value; const curPage = pageSel.value;
     userSel.innerHTML = '<option value="">Todos los usuarios</option>';
     pageSel.innerHTML = '<option value="">Todas las páginas</option>';
     users.forEach(u => { const o = document.createElement('option'); o.value = u; o.textContent = u; if (u === curUser) o.selected = true; userSel.appendChild(o); });
     pages.forEach(p => { const o = document.createElement('option'); o.value = p; o.textContent = p; if (p === curPage) o.selected = true; pageSel.appendChild(o); });
 
     if (comments.length === 0) {
-      container.innerHTML = `
-        <div class="empty-state">
-          <div class="icon">💬</div>
-          <h3>Sin comentarios aún</h3>
-          <p>Cuando el equipo deje feedback en los mocks, aparecerá aquí agrupado por página.</p>
-        </div>
-      `;
+      container.innerHTML = `<div class="empty-state"><div class="icon">💬</div><h3>Sin comentarios aún</h3><p>Cuando el equipo deje feedback en los mocks, aparecerá aquí agrupado por página.</p></div>`;
       return;
     }
 
-    // Group by page
     const grouped = {};
     comments.forEach(c => {
       if (!grouped[c.page_path]) grouped[c.page_path] = [];
@@ -224,44 +386,32 @@
 
     let html = '';
     Object.entries(grouped).forEach(([page, items]) => {
-      html += `
-        <div class="group-header">
-          <span class="group-title">${escHtml(page)}</span>
-          <span class="group-count">${items.length} comentario${items.length !== 1 ? 's' : ''}</span>
-        </div>
-      `;
+      html += `<div class="group-header"><span class="group-title">${escHtml(page)}</span><span class="group-count">${items.length} comentario${items.length !== 1 ? 's' : ''}</span></div>`;
       items.forEach(c => {
         html += `
           <div class="comment-card${isNew(c.created_at) ? ' is-new' : ''}">
             <div class="comment-header">
-              <div>
-                <div class="comment-user">${escHtml(c.user_name)}</div>
-                <div class="comment-email">${escHtml(c.user_email)}</div>
-              </div>
+              <div><div class="comment-user">${escHtml(c.user_name)}</div><div class="comment-email">${escHtml(c.user_email)}</div></div>
               <div class="comment-meta">
                 <span class="comment-time">${timeSince(c.created_at)}</span>
                 ${isNew(c.created_at) ? '<span class="new-badge">nuevo</span>' : ''}
               </div>
             </div>
-            <div class="page-tag">
-              📄 ${escHtml(c.page_title || c.page_path)}
-              <a href="${escHtml(c.page_path)}" target="_blank">abrir →</a>
-            </div>
+            <div class="page-tag">📄 ${escHtml(c.page_title || c.page_path)} <a href="${escHtml(c.page_path)}" target="_blank">abrir →</a></div>
             ${c.element_hint ? `<div class="element-hint">Sobre: ${escHtml(c.element_hint)}</div>` : ''}
             <div class="comment-text">${escHtml(c.comment)}</div>
           </div>
         `;
       });
     });
-
     container.innerHTML = html;
   }
 
-  // Init — called after auth
   function initPanel() {
     loadAll();
     document.getElementById('filter-user').addEventListener('change', loadAll);
     document.getElementById('filter-page').addEventListener('change', loadAll);
+    document.getElementById('filter-journey-user').addEventListener('change', loadJourneys);
   }
 </script>
 
