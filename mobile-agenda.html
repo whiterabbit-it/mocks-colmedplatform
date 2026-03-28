@@ -61,10 +61,73 @@
   </div>
   <div class="screen-header">
     <span class="screen-title">Agenda</span>
-    <span style="font-size:12px;color:#64748b;">Marzo 2026</span>
+    <div style="display:flex;gap:6px;align-items:center;">
+      <span style="font-size:12px;color:#64748b;">Marzo 2026</span>
+      <button onclick="toggleView(this)" style="background:#f1f5f9;border:1px solid #e2e8f0;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:600;color:#0B2340;cursor:pointer;font-family:'Poppins',sans-serif;">📅 Calendario</button>
+    </div>
   </div>
 
   <div class="scroll-area">
+
+    <!-- Vista calendario (oculta por default) -->
+    <div id="calendar-view" style="display:none;background:white;border-radius:14px;border:1px solid #e2e8f0;padding:14px;margin-bottom:16px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <span style="font-size:13px;font-weight:700;color:#0B2340;">Marzo 2026</span>
+        <div style="display:flex;gap:6px;">
+          <button style="background:none;border:1px solid #e2e8f0;border-radius:6px;padding:3px 8px;font-size:12px;cursor:pointer;">‹</button>
+          <button style="background:none;border:1px solid #e2e8f0;border-radius:6px;padding:3px 8px;font-size:12px;cursor:pointer;">›</button>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center;">
+        <div style="font-size:9px;font-weight:700;color:#64748b;padding:4px 0;">L</div>
+        <div style="font-size:9px;font-weight:700;color:#64748b;padding:4px 0;">M</div>
+        <div style="font-size:9px;font-weight:700;color:#64748b;padding:4px 0;">X</div>
+        <div style="font-size:9px;font-weight:700;color:#64748b;padding:4px 0;">J</div>
+        <div style="font-size:9px;font-weight:700;color:#64748b;padding:4px 0;">V</div>
+        <div style="font-size:9px;font-weight:700;color:#64748b;padding:4px 0;">S</div>
+        <div style="font-size:9px;font-weight:700;color:#64748b;padding:4px 0;">D</div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div style="font-size:11px;color:#64748b;padding:4px 2px;">1</div>
+        <div style="font-size:11px;color:#64748b;padding:4px 2px;">2</div>
+        <div style="font-size:11px;color:#64748b;padding:4px 2px;">3</div>
+        <div style="font-size:11px;color:#64748b;padding:4px 2px;">4</div>
+        <div style="font-size:11px;color:#64748b;padding:4px 2px;">5</div>
+        <div style="font-size:11px;color:#64748b;padding:4px 2px;">6</div>
+        <div style="font-size:11px;color:#64748b;padding:4px 2px;">7</div>
+        <div style="font-size:11px;color:#64748b;padding:4px 2px;">8</div>
+        <div style="font-size:11px;color:#64748b;padding:4px 2px;">9</div>
+        <div style="font-size:11px;color:#64748b;padding:4px 2px;">10</div>
+        <div style="font-size:11px;color:#64748b;padding:4px 2px;">11</div>
+        <div style="font-size:11px;color:#64748b;padding:4px 2px;">12</div>
+        <div style="font-size:11px;color:#64748b;padding:4px 2px;">13</div>
+        <div style="font-size:11px;padding:4px 2px;background:#D6F5F1;border-radius:6px;color:#00A896;font-weight:700;">14</div>
+        <div style="font-size:11px;color:#64748b;padding:4px 2px;">15</div>
+        <div style="font-size:11px;color:#64748b;padding:4px 2px;">16</div>
+        <div style="font-size:11px;color:#64748b;padding:4px 2px;">17</div>
+        <div style="font-size:11px;color:#64748b;padding:4px 2px;">18</div>
+        <div style="font-size:11px;color:#64748b;padding:4px 2px;">19</div>
+        <div style="font-size:11px;color:#64748b;padding:4px 2px;">20</div>
+        <div style="font-size:11px;color:#64748b;padding:4px 2px;">21</div>
+        <div style="font-size:11px;color:#64748b;padding:4px 2px;">22</div>
+        <div style="font-size:11px;color:#64748b;padding:4px 2px;">23</div>
+        <div style="font-size:11px;color:#64748b;padding:4px 2px;">24</div>
+        <div style="font-size:11px;padding:4px 2px;background:#0B2340;border-radius:6px;color:white;font-weight:700;">25</div>
+        <div style="font-size:11px;color:#64748b;padding:4px 2px;">26</div>
+        <div style="font-size:11px;padding:4px 2px;background:#fef3c7;border-radius:6px;color:#d97706;font-weight:700;">27</div>
+        <div style="font-size:11px;color:#64748b;padding:4px 2px;">28</div>
+        <div style="font-size:11px;color:#64748b;padding:4px 2px;">29</div>
+        <div style="font-size:11px;color:#64748b;padding:4px 2px;">30</div>
+        <div style="font-size:11px;color:#64748b;padding:4px 2px;">31</div>
+      </div>
+      <div style="margin-top:8px;display:flex;gap:8px;font-size:10px;">
+        <span style="display:flex;align-items:center;gap:3px;"><span style="width:10px;height:10px;border-radius:3px;background:#0B2340;display:inline-block;"></span> Ordinaria</span>
+        <span style="display:flex;align-items:center;gap:3px;"><span style="width:10px;height:10px;border-radius:3px;background:#fef3c7;border:1px solid #d97706;display:inline-block;"></span> Extraordinaria</span>
+      </div>
+    </div>
 
     <div class="next-card">
       <div class="next-label">Próxima Reunión</div>
@@ -143,7 +206,7 @@
     </a>
     <a href="mobile-dms.html" class="tab-item">
       <span class="tab-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block;vertical-align:middle"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
-      DMs
+      Chat
     </a>
     <a href="mobile-perfil.html" class="tab-item">
       <span class="tab-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block;vertical-align:middle"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
@@ -152,6 +215,18 @@
   </div>
 </div>
 
+<script>
+function toggleView(btn) {
+  var cal = document.getElementById('calendar-view');
+  if (cal.style.display === 'none') {
+    cal.style.display = 'block';
+    btn.textContent = '📋 Lista';
+  } else {
+    cal.style.display = 'none';
+    btn.textContent = '📅 Calendario';
+  }
+}
+</script>
 <script src="assets/feedback.js"></script>
 </body>
 </html>
