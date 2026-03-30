@@ -25,6 +25,8 @@
       const data = JSON.parse(localStorage.getItem(SESSION_KEY));
       if (!data || !data.email) return null;
       if (data.expires_at && Date.now() / 1000 > data.expires_at) {
+        // Persist name before removing expired session
+        if (data.name) localStorage.setItem('mocks_saved_name_' + data.email, data.name);
         localStorage.removeItem(SESSION_KEY);
         return null;
       }
@@ -35,9 +37,10 @@
   function storeSession(session, existingName) {
     if (!session || !session.user) return;
     const prev = getStoredSession();
+    const savedName = localStorage.getItem('mocks_saved_name_' + session.user.email);
     localStorage.setItem(SESSION_KEY, JSON.stringify({
       email: session.user.email,
-      name: existingName || (prev && prev.name) || null,
+      name: existingName || (prev && prev.name) || savedName || null,
       user_id: session.user.id,
       expires_at: session.expires_at
     }));
@@ -68,6 +71,7 @@
     if (!stored) return;
     stored.name = name;
     localStorage.setItem(SESSION_KEY, JSON.stringify(stored));
+    localStorage.setItem('mocks_saved_name_' + stored.email, name);
   }
 
   async function signOut() {

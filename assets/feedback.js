@@ -28,7 +28,10 @@
       const sb = JSON.parse(localStorage.getItem(SESSION_KEY));
       if (sb && sb.email) {
         if (!sb.expires_at || Date.now() / 1000 < sb.expires_at) {
-          return { name: sb.name || sb.email.split('@')[0], email: sb.email };
+          const user = { name: sb.name || sb.email.split('@')[0], email: sb.email };
+          // Sync to feedback_user to prevent stale credentials from other users polluting the badge
+          localStorage.setItem('feedback_user', JSON.stringify(user));
+          return user;
         }
       }
     } catch {}

@@ -187,7 +187,12 @@
     </div>
     <div id="auth-sent" style="display:none;">
       <div class="auth-sent-box">
-        <div style="font-size:32px;margin-bottom:8px;">📬</div>
+        <div style="margin-bottom:12px;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#00A896" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="4" width="20" height="16" rx="2"/>
+            <path d="m2 7 10 6 10-6"/>
+          </svg>
+        </div>
         <div style="font-size:15px;font-weight:700;color:#0B2340;margin-bottom:4px;">Revisá tu email</div>
         <div style="font-size:13px;color:#475569;line-height:1.5;">Hacé click en el botón del email para ingresar a los mocks.</div>
       </div>
@@ -496,7 +501,14 @@
 
     // Name prompt if no name set yet
     if (!user.name) {
-      document.getElementById('name-prompt').style.display = 'flex';
+      const savedName = localStorage.getItem('mocks_saved_name_' + user.email);
+      if (savedName) {
+        window.sbAuth.saveName(savedName);
+        document.getElementById('user-chip-avatar').textContent = savedName.charAt(0).toUpperCase();
+        document.getElementById('user-chip-name').textContent = savedName;
+      } else {
+        document.getElementById('name-prompt').style.display = 'flex';
+      }
     }
   }
 
