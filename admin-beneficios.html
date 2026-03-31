@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Beneficios para Socios — CMRB App — MocksAdmin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/feedback.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Poppins', system-ui, sans-serif; background: #F3F6F9; color: #0B2340; display: flex; min-height: 100vh; }
+
+    /* ===== SIDEBAR ===== */
+    .sidebar { width: 240px; min-height: 100vh; background: #0B2340; display: flex; flex-direction: column; flex-shrink: 0; position: fixed; top: 0; left: 0; bottom: 0; z-index: 10; }
+    .sidebar-logo { padding: 24px 20px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .sidebar-logo .logo-main { font-size: 20px; font-weight: 800; color: white; letter-spacing: -0.5px; }
+    .sidebar-logo .logo-sub { font-size: 11px; color: #64b5d9; margin-top: 2px; letter-spacing: 0.5px; }
+    .sidebar-logo .logo-tag { display: inline-block; margin-top: 8px; background: #00A896; color: white; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 10px; letter-spacing: 0.5px; }
+    .sidebar-nav { padding: 16px 12px; flex: 1; overflow-y: auto; }
+    .nav-label { font-size: 10px; font-weight: 600; color: #64748b; letter-spacing: 0.8px; text-transform: uppercase; padding: 0 8px; margin: 16px 0 6px; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; cursor: pointer; font-size: 14px; color: #94a3b8; font-weight: 500; text-decoration: none; transition: all 0.15s; margin-bottom: 2px; }
+    .nav-item:hover { background: rgba(255,255,255,0.08); color: white; }
+    .nav-item.active { background: #00A896; color: white; font-weight: 600; }
+    .nav-item .nav-icon { font-size: 16px; width: 20px; text-align: center; }
+    .sidebar-user { padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; }
+    .user-avatar-sm { width: 36px; height: 36px; background: #00A896; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: white; }
+    .user-name { font-size: 13px; font-weight: 600; color: white; }
+    .user-role { font-size: 11px; color: #64748b; }
+
+    /* ===== MAIN CONTENT ===== */
+    .main { margin-left: 240px; flex: 1; }
+    .topbar { background: white; padding: 0 32px; height: 60px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 5; }
+    .topbar-back { font-size: 13px; color: #64748b; text-decoration: none; display: flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 6px; border: 1px solid #e2e8f0; transition: all 0.15s; }
+    .topbar-back:hover { background: #F3F6F9; }
+    .topbar-title { font-size: 17px; font-weight: 700; }
+    .content { padding: 32px; max-width: 1100px; }
+
+    .page-header { margin-bottom: 28px; }
+    .page-header h1 { font-family: 'Lora', serif; font-size: 24px; font-weight: 700; }
+    .page-header p { font-size: 14px; color: #64748b; margin-top: 6px; }
+
+    /* ===== CONTROLS ===== */
+    .controls-row { display: flex; gap: 12px; align-items: center; margin-bottom: 20px; flex-wrap: wrap; }
+    .filter-group { display: flex; gap: 8px; align-items: center; }
+    .filter-select { padding: 8px 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 13px; font-family: 'Poppins', sans-serif; color: #0B2340; background: white; cursor: pointer; transition: all 0.15s; }
+    .filter-select:hover { border-color: #cbd5e1; background: #F3F6F9; }
+    .search-input { flex: 1; min-width: 200px; padding: 10px 14px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 13px; font-family: 'Poppins', sans-serif; color: #0B2340; transition: all 0.15s; }
+    .search-input:focus { outline: none; border-color: #00A896; box-shadow: 0 0 0 3px rgba(0,168,150,0.1); }
+    .btn-new-benefit { margin-left: auto; padding: 10px 16px; background: #00A896; color: white; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; font-family: 'Poppins', sans-serif; cursor: pointer; transition: all 0.15s; display: flex; align-items: center; gap: 6px; }
+    .btn-new-benefit:hover { background: #008B7A; }
+
+    /* ===== BENEFIT GRID ===== */
+    .benefits-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; margin-bottom: 28px; }
+
+    .benefit-card {
+      background: white;
+      border-radius: 14px;
+      border: 1px solid #e2e8f0;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+      transition: all 0.2s;
+    }
+    .benefit-card:hover {
+      border-color: #00A896;
+      box-shadow: 0 8px 16px rgba(0,168,150,0.12);
+    }
+
+    .benefit-image {
+      width: 100%;
+      height: 140px;
+      background: #F3F6F9;
+      border-radius: 10px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      color: #94a3b8;
+      overflow: hidden;
+    }
+    .benefit-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .benefit-title {
+      font-family: 'Lora', serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: #0B2340;
+      margin-bottom: 6px;
+      line-height: 1.35;
+    }
+
+    .benefit-desc {
+      font-size: 13px;
+      color: #64748b;
+      margin-bottom: 10px;
+      line-height: 1.45;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .benefit-meta {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .badge-category {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .badge-cat-descuentos { background: #D6F5F1; color: #00A896; }
+    .badge-cat-salud { background: #dbeafe; color: #0284c7; }
+    .badge-cat-educacion { background: #fce7f3; color: #be185d; }
+    .badge-cat-viajes { background: #fef3c7; color: #F0A500; }
+    .badge-cat-otros { background: #f3e8ff; color: #7c3aed; }
+
+    .badge-state {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .badge-disponible { background: #D6F5F1; color: #00A896; }
+    .badge-proximo { background: #fef3c7; color: #F0A500; }
+
+    .benefit-dates {
+      font-size: 12px;
+      color: #94a3b8;
+      margin-bottom: 12px;
+    }
+
+    .benefit-actions {
+      display: flex;
+      gap: 8px;
+    }
+    .btn-edit, .btn-delete {
+      flex: 1;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+      border: none;
+      transition: all 0.15s;
+    }
+    .btn-edit {
+      background: #E8EFF8;
+      color: #0B2340;
+    }
+    .btn-edit:hover {
+      background: #D1DFF2;
+    }
+    .btn-delete {
+      background: #fecaca;
+      color: #dc2626;
+    }
+    .btn-delete:hover {
+      background: #fca5a5;
+    }
+
+    /* ===== MODAL ===== */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(11,35,64,0.4);
+      z-index: 9000;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal {
+      background: white;
+      border-radius: 16px;
+      padding: 28px;
+      width: 100%;
+      max-width: 500px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .modal-header h3 {
+      font-size: 18px;
+      font-weight: 700;
+      color: #0B2340;
+    }
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: #64748b;
+      transition: color 0.15s;
+    }
+    .modal-close:hover {
+      color: #0B2340;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #0B2340;
+      margin-bottom: 6px;
+    }
+    .form-input, .form-textarea, .form-select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 13px;
+      font-family: 'Poppins', sans-serif;
+      color: #0B2340;
+      transition: all 0.15s;
+      box-sizing: border-box;
+    }
+    .form-input:focus, .form-textarea:focus, .form-select:focus {
+      outline: none;
+      border-color: #00A896;
+      box-shadow: 0 0 0 3px rgba(0,168,150,0.1);
+    }
+    .form-textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid #e2e8f0;
+    }
+    .btn-cancel {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+      background: white;
+      color: #0B2340;
+      transition: all 0.15s;
+    }
+    .btn-cancel:hover {
+      background: #F3F6F9;
+    }
+    .btn-save {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+      background: #00A896;
+      color: white;
+      transition: all 0.15s;
+    }
+    .btn-save:hover {
+      background: #008B7A;
+    }
+  </style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <span style="font-family:'Lora',serif;font-weight:700;font-size:20px;color:#fff;letter-spacing:2px;display:block;line-height:1.2;">CMRB</span>
+    <div style="font-size:11px;color:#9CA3AF;letter-spacing:0.3px;">CMRB | WRHMS</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-label">Principal</div>
+    <a href="admin-dashboard.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="18" y="3" width="4" height="18" rx="1"/><rect x="10" y="8" width="4" height="13" rx="1"/><rect x="2" y="13" width="4" height="8" rx="1"/></svg></span> Dashboard</a>
+    <a href="admin-communications.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 11 18-5v12L3 13v-2z"/></svg></span> Comunicaciones</a>
+    <a href="admin-foro.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span> Foro</a>
+    <a href="admin-dms.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span> Chat</a>
+    <a href="admin-documentos.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span> Documentos</a>
+    <div class="nav-label">Gestión</div>
+    <a href="admin-members.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span> Miembros</a>
+    <a href="admin-agenda.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span> Agenda</a>
+    <a href="admin-beneficios.html" class="nav-item active"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/></svg></span> Beneficios</a>
+    <a href="admin-contactos.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="23" y2="8"/><line x1="19" y1="11" x2="23" y2="11"/><line x1="19" y1="14" x2="23" y2="14"/></svg></span> Contactos</a>
+    <a href="admin-directorio.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M6 20c0-2 2-4 6-4s6 2 6 4"/><path d="M16 12c1.5 0 2.8.5 3.8 1.3"/><path d="M20 20c.5-1.5.8-3.2.8-5"/></svg></span> Directorio</a>
+    <a href="admin-facturacion.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></span> Facturación</a>
+    <a href="admin-reminders.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></span> Recordatorios</a>
+    <div class="nav-label">Institucional</div>
+    <a href="admin-board.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg></span> Comisión Directiva</a>
+    <a href="admin-obras-sociales.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></span> Obras Sociales</a>
+    <div class="nav-label">Mi Cuenta</div>
+    <a href="admin-perfil.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span> Mi Perfil</a>
+  </nav>
+  <div class="sidebar-user">
+    <div class="user-avatar-sm">AS</div>
+    <div><div class="user-name">Admin Sistema</div><div class="user-role">admin</div></div>
+  </div>
+</aside>
+
+<div class="main">
+  <div class="topbar">
+    <a href="index.html" class="topbar-back">← Mocks</a>
+    <span class="topbar-title">Beneficios para Socios</span>
+  </div>
+
+  <div class="content">
+    <div class="page-header">
+      <h1>Beneficios para Socios</h1>
+      <p>Gestiona descuentos, promociones y servicios exclusivos disponibles para los socios del CMRB. Publicá nuevos beneficios y controlá su disponibilidad.</p>
+    </div>
+
+    <div class="controls-row">
+      <div class="filter-group">
+        <select class="filter-select" id="filter-state">
+          <option value="">Estado: Todos</option>
+          <option value="disponible">Disponibles</option>
+          <option value="proximo">Próximamente</option>
+        </select>
+        <select class="filter-select" id="filter-category">
+          <option value="">Categoría: Todas</option>
+          <option value="descuentos">Descuentos</option>
+          <option value="salud">Salud</option>
+          <option value="educacion">Educación</option>
+          <option value="viajes">Viajes</option>
+          <option value="otros">Otros</option>
+        </select>
+      </div>
+      <input type="text" class="search-input" id="search-benefit" placeholder="Buscar beneficio...">
+      <button class="btn-new-benefit" onclick="openNewBenefit()">
+        <span style="font-size:16px;">+</span> Nuevo Beneficio
+      </button>
+    </div>
+
+    <div class="benefits-grid" id="benefits-grid">
+      <!-- Beneficios se generan aquí con JavaScript -->
+    </div>
+  </div>
+</div>
+
+<!-- Create/Edit Modal -->
+<div class="modal-overlay" id="benefit-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modal-title">Nuevo Beneficio</h3>
+      <button class="modal-close" onclick="closeBenefitModal()">✕</button>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="input-title">Título *</label>
+      <input type="text" class="form-input" id="input-title" placeholder="Ej: Descuento en Farmacias">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="input-description">Descripción *</label>
+      <textarea class="form-textarea" id="input-description" placeholder="Describe el beneficio en detalle..."></textarea>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="input-category">Categoría *</label>
+      <select class="form-select" id="input-category">
+        <option value="">Seleccionar categoría</option>
+        <option value="descuentos">Descuentos</option>
+        <option value="salud">Salud</option>
+        <option value="educacion">Educación</option>
+        <option value="viajes">Viajes</option>
+        <option value="otros">Otros</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="input-state">Estado *</label>
+      <select class="form-select" id="input-state">
+        <option value="disponible">Disponible</option>
+        <option value="proximo">Próximamente</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="input-fecha-desde">Fecha desde *</label>
+      <input type="date" class="form-input" id="input-fecha-desde">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="input-fecha-hasta">Fecha hasta (opcional)</label>
+      <input type="date" class="form-input" id="input-fecha-hasta">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="input-link">Link externo (opcional)</label>
+      <input type="url" class="form-input" id="input-link" placeholder="https://...">
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeBenefitModal()">Cancelar</button>
+      <button class="btn-save" onclick="saveBenefit()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ===== DATA =====
+  const beneficios = [
+    {
+      id: 1,
+      titulo: "Descuento en Farmacias Del Dr. Ahorro",
+      descripcion: "Hasta 30% de descuento en medicamentos y productos de parafarmacia en todas las sucursales de Bariloche.",
+      categoria: "descuentos",
+      estado: "disponible",
+      logo: "partner-farmacia.png",
+      link: "https://farmaciasdel.com.ar",
+      desde: "2026-01-15",
+      hasta: "2026-12-31"
+    },
+    {
+      id: 2,
+      titulo: "Cobertura Especial IOMA + Programa de Prevención",
+      descripcion: "Acceso prioritario a estudios preventivos y cobertura extendida en cirugías de riesgo. Coordinación directa con auditoría médica.",
+      categoria: "salud",
+      estado: "disponible",
+      logo: "partner-ioma.png",
+      link: "https://ioma.gob.ar",
+      desde: "2026-03-01",
+      hasta: null
+    },
+    {
+      id: 3,
+      titulo: "Capacitación Acreditada — IFCM",
+      descripcion: "Cursos de educación continua, talleres de actualización, congresos internacionales. Créditos para matrícula.",
+      categoria: "educacion",
+      estado: "proximo",
+      logo: "partner-ifcm.png",
+      link: "https://ifcm-bariloche.edu.ar",
+      desde: "2026-04-15",
+      hasta: null
+    },
+    {
+      id: 4,
+      titulo: "Descuento en Viajes — TravelMed",
+      descripcion: "Paquetes vacacionales con descuentos, seguros de viaje médico, asistencia al viajero 24/7.",
+      categoria: "viajes",
+      estado: "disponible",
+      logo: "partner-travelmed.png",
+      link: "https://travelmed.com.ar",
+      desde: "2025-06-01",
+      hasta: "2026-12-31"
+    },
+    {
+      id: 5,
+      titulo: "Seguros Especiales — Seguros Médicos CMRB",
+      descripcion: "Pólizas de responsabilidad civil, cobertura de incapacidad laboral, seguros de vida con primas reducidas.",
+      categoria: "otros",
+      estado: "disponible",
+      logo: "partner-seguros.png",
+      link: "https://segurosmedicos.com.ar",
+      desde: "2025-08-01",
+      hasta: "2027-07-31"
+    },
+    {
+      id: 6,
+      titulo: "Plataforma de Gestión Clínica — Vitacore",
+      descripcion: "Software de gestión médica con IA, auditoría inteligente, integración con histórico del paciente.",
+      categoria: "otros",
+      estado: "proximo",
+      logo: "partner-vitacore.png",
+      link: "https://vitacore.com.ar",
+      desde: "2026-05-01",
+      hasta: null
+    }
+  ];
+
+  let editingId = null;
+
+  // ===== RENDER =====
+  function renderBenefits() {
+    const grid = document.getElementById('benefits-grid');
+    const searchVal = document.getElementById('search-benefit').value.toLowerCase();
+    const stateFilter = document.getElementById('filter-state').value;
+    const catFilter = document.getElementById('filter-category').value;
+
+    const filtered = beneficios.filter(b => {
+      const matchSearch = b.titulo.toLowerCase().includes(searchVal) || b.descripcion.toLowerCase().includes(searchVal);
+      const matchState = !stateFilter || b.estado === stateFilter;
+      const matchCat = !catFilter || b.categoria === catFilter;
+      return matchSearch && matchState && matchCat;
+    });
+
+    grid.innerHTML = filtered.map(b => `
+      <div class="benefit-card">
+        <div class="benefit-image">[Logo: ${b.logo}]</div>
+        <h3 class="benefit-title">${b.titulo}</h3>
+        <p class="benefit-desc">${b.descripcion}</p>
+        <div class="benefit-meta">
+          <span class="badge-category badge-cat-${b.categoria}">${capitalizeFirst(b.categoria)}</span>
+          <span class="badge-state badge-${b.estado}">${b.estado === 'disponible' ? 'Disponible' : 'Próximamente'}</span>
+        </div>
+        <div class="benefit-dates">${formatDate(b.desde)}${b.hasta ? ' — ' + formatDate(b.hasta) : ' (sin vencimiento)'}</div>
+        <div class="benefit-actions">
+          <button class="btn-edit" onclick="openEditBenefit(${b.id})">Editar</button>
+          <button class="btn-delete" onclick="deleteBenefit(${b.id})">Eliminar</button>
+        </div>
+      </div>
+    `).join('');
+
+    if (filtered.length === 0) {
+      grid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #94a3b8;"><p style="font-size: 15px; font-weight: 600; margin-bottom: 8px;">No hay beneficios que coincidan</p><p>Ajustá los filtros o crear uno nuevo</p></div>';
+    }
+  }
+
+  function formatDate(dateStr) {
+    if (!dateStr) return '';
+    const date = new Date(dateStr);
+    const months = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+    return `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
+  }
+
+  function capitalizeFirst(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
+  // ===== MODAL FUNCTIONS =====
+  function openNewBenefit() {
+    editingId = null;
+    document.getElementById('modal-title').textContent = 'Nuevo Beneficio';
+    document.getElementById('input-title').value = '';
+    document.getElementById('input-description').value = '';
+    document.getElementById('input-category').value = '';
+    document.getElementById('input-state').value = 'disponible';
+    document.getElementById('input-fecha-desde').value = '';
+    document.getElementById('input-fecha-hasta').value = '';
+    document.getElementById('input-link').value = '';
+    document.getElementById('benefit-modal').classList.add('open');
+  }
+
+  function openEditBenefit(id) {
+    const b = beneficios.find(x => x.id === id);
+    if (!b) return;
+    editingId = id;
+    document.getElementById('modal-title').textContent = 'Editar Beneficio';
+    document.getElementById('input-title').value = b.titulo;
+    document.getElementById('input-description').value = b.descripcion;
+    document.getElementById('input-category').value = b.categoria;
+    document.getElementById('input-state').value = b.estado;
+    document.getElementById('input-fecha-desde').value = b.desde;
+    document.getElementById('input-fecha-hasta').value = b.hasta || '';
+    document.getElementById('input-link').value = b.link || '';
+    document.getElementById('benefit-modal').classList.add('open');
+  }
+
+  function closeBenefitModal() {
+    document.getElementById('benefit-modal').classList.remove('open');
+  }
+
+  function saveBenefit() {
+    const title = document.getElementById('input-title').value.trim();
+    const desc = document.getElementById('input-description').value.trim();
+    const cat = document.getElementById('input-category').value;
+    const state = document.getElementById('input-state').value;
+    const desde = document.getElementById('input-fecha-desde').value;
+    const hasta = document.getElementById('input-fecha-hasta').value;
+    const link = document.getElementById('input-link').value;
+
+    if (!title || !desc) {
+      alert('Completa título y descripción');
+      return;
+    }
+
+    if (editingId) {
+      const idx = beneficios.findIndex(x => x.id === editingId);
+      if (idx >= 0) {
+        beneficios[idx] = { ...beneficios[idx], titulo: title, descripcion: desc, categoria: cat, estado: state, desde, hasta, link };
+      }
+    } else {
+      const newId = Math.max(...beneficios.map(x => x.id), 0) + 1;
+      beneficios.push({ id: newId, titulo: title, descripcion: desc, categoria: cat, estado: state, desde, hasta: hasta || null, logo: 'partner.png', link });
+    }
+
+    renderBenefits();
+    closeBenefitModal();
+  }
+
+  function deleteBenefit(id) {
+    if (confirm('¿Confirmar eliminación de este beneficio?')) {
+      const idx = beneficios.findIndex(x => x.id === id);
+      if (idx >= 0) beneficios.splice(idx, 1);
+      renderBenefits();
+    }
+  }
+
+  // ===== EVENT LISTENERS =====
+  document.getElementById('search-benefit').addEventListener('input', renderBenefits);
+  document.getElementById('filter-state').addEventListener('change', renderBenefits);
+  document.getElementById('filter-category').addEventListener('change', renderBenefits);
+  document.getElementById('benefit-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeBenefitModal();
+  });
+
+  // ===== INIT =====
+  renderBenefits();
+</script>
+<script src="assets/feedback.js"></script>
+</body>
+</html>

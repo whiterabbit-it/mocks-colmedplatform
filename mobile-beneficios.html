@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mobile Beneficios — CMRB App</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Poppins', system-ui, sans-serif;
+      background: #cbd5e1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 32px 16px;
+    }
+
+    .back-link {
+      align-self: flex-start;
+      margin-bottom: 16px;
+      margin-left: calc(50% - 195px);
+      font-size: 13px;
+      color: #475569;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: white;
+      padding: 6px 14px;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+      font-weight: 500;
+      transition: all 0.15s;
+    }
+    .back-link:hover { background: #F3F6F9; }
+
+    .phone {
+      width: 390px;
+      height: 844px;
+      background: #F3F6F9;
+      border-radius: 48px;
+      overflow: hidden;
+      box-shadow: 0 32px 64px rgba(0,0,0,0.28), 0 0 0 2px #94a3b8, inset 0 0 0 1px rgba(255,255,255,0.3);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .status-bar {
+      background: #0B2340;
+      padding: 12px 24px 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .status-time { font-size: 15px; font-weight: 700; color: white; }
+    .status-icons { display: flex; align-items: center; gap: 6px; }
+    .status-icons span { font-size: 13px; color: white; }
+
+    .app-header {
+      background: #0B2340;
+      padding: 8px 20px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .header-logo { display: flex; align-items: center; gap: 8px; }
+    .logo-badge {
+      width: 32px;
+      height: 32px;
+      background: #00A896;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 800;
+      color: white;
+    }
+    .logo-text-main { font-size: 17px; font-weight: 800; color: white; }
+    .logo-text-sub { font-size: 10px; color: #7dd3fc; }
+
+    .scroll-area {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px 16px 80px;
+    }
+    .scroll-area::-webkit-scrollbar { display: none; }
+
+    .page-title {
+      font-family: 'Lora', serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: #0B2340;
+      margin-bottom: 20px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 20px 0 12px 0;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #00A896;
+    }
+    .section-header.proximo {
+      border-bottom-color: #F59E0B;
+    }
+
+    .section-title {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: #0B2340;
+    }
+
+    .section-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #00A896;
+    }
+    .section-dot.proximo {
+      background: #F59E0B;
+    }
+
+    .mobile-benefit-card {
+      background: white;
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 10px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .mobile-benefit-logo {
+      width: 56px;
+      height: 56px;
+      background: #F3F6F9;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 11px;
+      color: #94a3b8;
+      overflow: hidden;
+    }
+    .mobile-benefit-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .mobile-benefit-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .mobile-benefit-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #0B2340;
+      margin-bottom: 4px;
+      line-height: 1.35;
+    }
+
+    .mobile-benefit-desc {
+      font-size: 12px;
+      color: #64748b;
+      line-height: 1.4;
+      margin-bottom: 6px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .mobile-benefit-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      gap: 6px;
+    }
+
+    .mobile-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 10px;
+      font-weight: 600;
+    }
+    .mobile-badge-descuentos { background: #D6F5F1; color: #00A896; }
+    .mobile-badge-salud { background: #dbeafe; color: #0284c7; }
+    .mobile-badge-educacion { background: #fce7f3; color: #be185d; }
+    .mobile-badge-viajes { background: #fef3c7; color: #F0A500; }
+    .mobile-badge-otros { background: #f3e8ff; color: #7c3aed; }
+
+    .mobile-see-more {
+      color: #00A896;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .mobile-date-start {
+      color: #94a3b8;
+      font-size: 11px;
+      font-style: italic;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 24px;
+      color: #94a3b8;
+    }
+    .empty-icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+      opacity: 0.5;
+    }
+    .empty-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #0B2340;
+      margin-bottom: 6px;
+    }
+    .empty-text {
+      font-size: 13px;
+      color: #94a3b8;
+    }
+
+    /* Tab bar */
+    .tab-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      border-top: 1px solid #e2e8f0;
+      display: flex;
+      height: 72px;
+      box-shadow: 0 -4px 12px rgba(0,0,0,0.06);
+    }
+    .tab-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      cursor: pointer;
+      padding: 8px 0;
+      font-size: 10px;
+      font-weight: 600;
+      color: #94a3b8;
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .tab-item.active { color: #00A896; }
+    .tab-icon { font-size: 20px; }
+
+    /* Detail Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(11,35,64,0.4);
+      z-index: 9000;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal {
+      background: white;
+      border-radius: 16px;
+      padding: 28px;
+      width: 100%;
+      max-width: 440px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .modal-header h3 {
+      font-size: 18px;
+      font-weight: 700;
+    }
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: #64748b;
+    }
+
+    .modal-body {
+      margin-bottom: 20px;
+    }
+
+    .modal-section {
+      margin-bottom: 16px;
+    }
+
+    .modal-section-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+
+    .modal-section-content {
+      font-size: 14px;
+      color: #0B2340;
+      line-height: 1.5;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-visit {
+      flex: 1;
+      padding: 12px;
+      background: #00A896;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: 'Poppins', sans-serif;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-visit:active {
+      background: #008B7A;
+    }
+
+    .btn-close-modal {
+      flex: 1;
+      padding: 12px;
+      background: #F3F6F9;
+      color: #0B2340;
+      border: none;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: 'Poppins', sans-serif;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-close-modal:active {
+      background: #E8EFF8;
+    }
+  </style>
+</head>
+<body>
+
+<a href="index.html" class="back-link">← Volver a mocks</a>
+
+<div class="phone">
+  <div class="status-bar">
+    <span class="status-time">9:41</span>
+    <div class="status-icons">
+      <span><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+      <span><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span>
+      <span>4G</span>
+    </div>
+  </div>
+
+  <div class="app-header">
+    <div class="header-logo">
+      <div class="logo-badge">CR</div>
+      <div>
+        <div class="logo-text-main">CMRB</div>
+        <div class="logo-text-sub">Socios Médicos</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-area">
+    <h1 class="page-title">Beneficios</h1>
+
+    <div class="section-header">
+      <div class="section-dot"></div>
+      <span class="section-title">Disponibles Ahora</span>
+    </div>
+
+    <div id="available-benefits">
+      <!-- Cards generadas por JavaScript -->
+    </div>
+
+    <div class="section-header proximo">
+      <div class="section-dot proximo"></div>
+      <span class="section-title">Próximamente</span>
+    </div>
+
+    <div id="upcoming-benefits">
+      <!-- Cards generadas por JavaScript -->
+    </div>
+  </div>
+
+  <!-- Detail Modal -->
+  <div class="modal-overlay" id="detail-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="modal-title">Beneficio</h3>
+        <button class="modal-close" onclick="closeModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-section">
+          <div class="modal-section-title">Descripción</div>
+          <div class="modal-section-content" id="modal-desc"></div>
+        </div>
+        <div class="modal-section" id="modal-date-section">
+          <div class="modal-section-title">Disponible desde</div>
+          <div class="modal-section-content" id="modal-date"></div>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-visit" id="btn-visit-site" onclick="visitSite()">Visitar Sitio</button>
+        <button class="btn-close-modal" onclick="closeModal()">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab bar -->
+  <div class="tab-bar">
+    <a href="mobile-modules.html" class="tab-item">
+      <span class="tab-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></span>
+      Módulos
+    </a>
+    <a href="mobile-home.html" class="tab-item">
+      <span class="tab-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>
+      Home
+    </a>
+    <a href="mobile-dms.html" class="tab-item">
+      <span class="tab-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
+      Chats
+    </a>
+    <a href="mobile-beneficios.html" class="tab-item active">
+      <span class="tab-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/></svg></span>
+      Beneficios
+    </a>
+    <a href="mobile-perfil.html" class="tab-item">
+      <span class="tab-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+      Perfil
+    </a>
+  </div>
+</div>
+
+<script>
+  const beneficios = [
+    {
+      id: 1,
+      titulo: "Descuento en Farmacias Del Dr. Ahorro",
+      descripcion: "Hasta 30% de descuento en medicamentos y productos de parafarmacia en todas las sucursales de Bariloche.",
+      categoria: "descuentos",
+      estado: "disponible",
+      link: "https://farmaciasdel.com.ar",
+      desde: "2026-01-15",
+      hasta: "2026-12-31"
+    },
+    {
+      id: 2,
+      titulo: "Cobertura Especial IOMA + Programa de Prevención",
+      descripcion: "Acceso prioritario a estudios preventivos y cobertura extendida en cirugías de riesgo. Coordinación directa con auditoría médica.",
+      categoria: "salud",
+      estado: "disponible",
+      link: "https://ioma.gob.ar",
+      desde: "2026-03-01",
+      hasta: null
+    },
+    {
+      id: 3,
+      titulo: "Capacitación Acreditada — IFCM",
+      descripcion: "Cursos de educación continua, talleres de actualización, congresos internacionales. Créditos para matrícula.",
+      categoria: "educacion",
+      estado: "proximo",
+      link: "https://ifcm-bariloche.edu.ar",
+      desde: "2026-04-15",
+      hasta: null
+    },
+    {
+      id: 4,
+      titulo: "Descuento en Viajes — TravelMed",
+      descripcion: "Paquetes vacacionales con descuentos, seguros de viaje médico, asistencia al viajero 24/7.",
+      categoria: "viajes",
+      estado: "disponible",
+      link: "https://travelmed.com.ar",
+      desde: "2025-06-01",
+      hasta: "2026-12-31"
+    },
+    {
+      id: 5,
+      titulo: "Seguros Especiales — Seguros Médicos CMRB",
+      descripcion: "Pólizas de responsabilidad civil, cobertura de incapacidad laboral, seguros de vida con primas reducidas.",
+      categoria: "otros",
+      estado: "disponible",
+      link: "https://segurosmedicos.com.ar",
+      desde: "2025-08-01",
+      hasta: "2027-07-31"
+    },
+    {
+      id: 6,
+      titulo: "Plataforma de Gestión Clínica — Vitacore",
+      descripcion: "Software de gestión médica con IA, auditoría inteligente, integración con histórico del paciente.",
+      categoria: "otros",
+      estado: "proximo",
+      link: "https://vitacore.com.ar",
+      desde: "2026-05-01",
+      hasta: null
+    }
+  ];
+
+  let currentBenefit = null;
+
+  function getBadgeClass(cat) {
+    const map = {
+      'descuentos': 'mobile-badge-descuentos',
+      'salud': 'mobile-badge-salud',
+      'educacion': 'mobile-badge-educacion',
+      'viajes': 'mobile-badge-viajes',
+      'otros': 'mobile-badge-otros'
+    };
+    return map[cat] || 'mobile-badge-otros';
+  }
+
+  function formatDate(dateStr) {
+    if (!dateStr) return '';
+    const date = new Date(dateStr);
+    const months = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+    return `${date.getDate()} de ${months[date.getMonth()]} de ${date.getFullYear()}`;
+  }
+
+  function openModal(id) {
+    const b = beneficios.find(x => x.id === id);
+    if (!b) return;
+    currentBenefit = b;
+    document.getElementById('modal-title').textContent = b.titulo;
+    document.getElementById('modal-desc').textContent = b.descripcion;
+    const dateSection = document.getElementById('modal-date-section');
+    if (b.estado === 'proximo') {
+      dateSection.style.display = 'block';
+      document.getElementById('modal-date').textContent = formatDate(b.desde);
+    } else {
+      dateSection.style.display = 'none';
+    }
+    document.getElementById('detail-modal').classList.add('open');
+  }
+
+  function closeModal() {
+    document.getElementById('detail-modal').classList.remove('open');
+    currentBenefit = null;
+  }
+
+  function visitSite() {
+    if (currentBenefit && currentBenefit.link) {
+      window.open(currentBenefit.link, '_blank');
+    }
+  }
+
+  function renderBenefits() {
+    const available = beneficios.filter(b => b.estado === 'disponible');
+    const upcoming = beneficios.filter(b => b.estado === 'proximo');
+
+    document.getElementById('available-benefits').innerHTML = available.length
+      ? available.map(b => `
+          <div class="mobile-benefit-card" onclick="openModal(${b.id})">
+            <div class="mobile-benefit-logo">[Logo]</div>
+            <div class="mobile-benefit-content">
+              <div class="mobile-benefit-title">${b.titulo}</div>
+              <div class="mobile-benefit-desc">${b.descripcion}</div>
+              <div class="mobile-benefit-footer">
+                <span class="mobile-badge ${getBadgeClass(b.categoria)}">${b.categoria}</span>
+                <span class="mobile-see-more">Ver más →</span>
+              </div>
+            </div>
+          </div>
+        `).join('')
+      : '<div class="empty-state"><div class="empty-icon">○</div><div class="empty-title">Sin beneficios disponibles</div><div class="empty-text">Vuelve pronto para ver nuevas ofertas</div></div>';
+
+    document.getElementById('upcoming-benefits').innerHTML = upcoming.length
+      ? upcoming.map(b => `
+          <div class="mobile-benefit-card" onclick="openModal(${b.id})">
+            <div class="mobile-benefit-logo">[Logo]</div>
+            <div class="mobile-benefit-content">
+              <div class="mobile-benefit-title">${b.titulo}</div>
+              <div class="mobile-benefit-desc">${b.descripcion}</div>
+              <div class="mobile-benefit-footer">
+                <span class="mobile-badge ${getBadgeClass(b.categoria)}">${b.categoria}</span>
+                <span class="mobile-date-start">Desde ${formatDate(b.desde)}</span>
+              </div>
+            </div>
+          </div>
+        `).join('')
+      : '';
+  }
+
+  document.getElementById('detail-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+
+  renderBenefits();
+</script>
+</body>
+</html>

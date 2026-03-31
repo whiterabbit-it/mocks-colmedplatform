@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Directorio de Socios — CMRB App — MocksAdmin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/feedback.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Poppins', system-ui, sans-serif; background: #F3F6F9; color: #0B2340; display: flex; min-height: 100vh; }
+
+    .sidebar { width: 240px; min-height: 100vh; background: #0B2340; display: flex; flex-direction: column; flex-shrink: 0; position: fixed; top: 0; left: 0; bottom: 0; z-index: 10; }
+    .sidebar-logo { padding: 24px 20px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .sidebar-logo .logo-main { font-size: 20px; font-weight: 800; color: white; letter-spacing: -0.5px; }
+    .sidebar-logo .logo-sub { font-size: 11px; color: #64b5d9; margin-top: 2px; letter-spacing: 0.5px; }
+    .sidebar-nav { padding: 16px 12px; flex: 1; overflow-y: auto; }
+    .nav-label { font-size: 10px; font-weight: 600; color: #64748b; letter-spacing: 0.8px; text-transform: uppercase; padding: 0 8px; margin: 16px 0 6px; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; cursor: pointer; font-size: 14px; color: #94a3b8; font-weight: 500; text-decoration: none; transition: all 0.15s; margin-bottom: 2px; }
+    .nav-item:hover { background: rgba(255,255,255,0.08); color: white; }
+    .nav-item.active { background: #00A896; color: white; font-weight: 600; }
+    .nav-item .nav-icon { font-size: 16px; width: 20px; text-align: center; }
+    .sidebar-user { padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; }
+    .user-avatar-sm { width: 36px; height: 36px; background: #00A896; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: white; }
+    .user-name { font-size: 13px; font-weight: 600; color: white; }
+    .user-role { font-size: 11px; color: #64748b; }
+
+    .main { margin-left: 240px; flex: 1; }
+    .topbar { background: white; padding: 0 32px; height: 60px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 5; }
+    .topbar-back { font-size: 13px; color: #64748b; text-decoration: none; display: flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 6px; border: 1px solid #e2e8f0; transition: all 0.15s; }
+    .topbar-back:hover { background: #F3F6F9; }
+    .topbar-title { font-size: 17px; font-weight: 700; }
+    .content { padding: 32px; max-width: 1100px; }
+
+    .page-header { margin-bottom: 28px; }
+    .page-header h1 { font-family: 'Lora', serif; font-size: 24px; font-weight: 700; }
+    .page-header p { font-size: 14px; color: #64748b; margin-top: 6px; }
+
+    /* Search & Filters */
+    .search-row { display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; align-items: center; }
+    .search-input-socio { flex: 1; min-width: 220px; padding: 10px 14px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 13px; font-family: 'Poppins', sans-serif; color: #0B2340; }
+    .search-input-socio:focus { outline: none; border-color: #00A896; box-shadow: 0 0 0 3px rgba(0,168,150,0.1); }
+    .filter-select-socio { padding: 8px 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 13px; font-family: 'Poppins', sans-serif; color: #0B2340; background: white; cursor: pointer; }
+
+    .results-info {
+      font-size: 13px;
+      color: #64748b;
+      margin-bottom: 16px;
+      padding: 12px;
+      background: #F9FAFB;
+      border-radius: 8px;
+      border-left: 2px solid #e2e8f0;
+    }
+    .results-count { font-weight: 600; color: #0B2340; }
+
+    /* Grid */
+    .socios-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+
+    .socio-card {
+      background: white;
+      border-radius: 14px;
+      border: 1px solid #e2e8f0;
+      padding: 18px 20px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+      display: flex;
+      flex-direction: column;
+      transition: all 0.2s;
+    }
+    .socio-card:hover {
+      border-color: #00A896;
+      box-shadow: 0 8px 16px rgba(0,168,150,0.12);
+    }
+
+    .socio-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .socio-avatar {
+      width: 48px;
+      height: 48px;
+      background: #00A896;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: 700;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .socio-header-info { flex: 1; }
+
+    .socio-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: #0B2340;
+      margin-bottom: 2px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .socio-specialty {
+      font-size: 13px;
+      color: #64748b;
+      margin-bottom: 4px;
+    }
+
+    .socio-matricula {
+      font-size: 11px;
+      color: #94a3b8;
+      font-family: 'Courier New', monospace;
+    }
+
+    .badge-comision {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 8px;
+      background: #FEE2E2;
+      color: #DC2626;
+      border-radius: 10px;
+      font-size: 10px;
+      font-weight: 600;
+      gap: 3px;
+    }
+
+    .socio-contact {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-bottom: 12px;
+      padding: 10px;
+      background: #F9FAFB;
+      border-radius: 8px;
+      border-left: 2px solid #e2e8f0;
+    }
+
+    .contact-item {
+      font-size: 12px;
+      color: #0B2340;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .contact-label {
+      color: #94a3b8;
+      font-weight: 500;
+      min-width: 50px;
+    }
+
+    .contact-value {
+      color: #0B2340;
+      flex: 1;
+    }
+
+    .contact-email-link {
+      color: #00A896;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .contact-email-link:hover {
+      text-decoration: underline;
+    }
+
+    .socio-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-msg-socio {
+      flex: 1;
+      padding: 8px 10px;
+      background: #00A896;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      font-family: 'Poppins', sans-serif;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-msg-socio:hover {
+      background: #008B7A;
+    }
+
+    .btn-profile-socio {
+      flex: 1;
+      padding: 8px 10px;
+      background: white;
+      color: #0B2340;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      font-family: 'Poppins', sans-serif;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-profile-socio:hover {
+      background: #F3F6F9;
+      border-color: #cbd5e1;
+    }
+
+    .no-results {
+      text-align: center;
+      padding: 40px 24px;
+      grid-column: 1 / -1;
+    }
+    .no-results-icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+      opacity: 0.4;
+    }
+    .no-results-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #0B2340;
+      margin-bottom: 6px;
+    }
+    .no-results-text {
+      font-size: 13px;
+      color: #94a3b8;
+    }
+
+    /* DM Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(11,35,64,0.4);
+      z-index: 9000;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal {
+      background: white;
+      border-radius: 16px;
+      padding: 28px;
+      width: 100%;
+      max-width: 440px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .modal-header h3 {
+      font-size: 18px;
+      font-weight: 700;
+    }
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: #64748b;
+    }
+
+    .modal-to {
+      font-size: 13px;
+      color: #64748b;
+      margin-bottom: 4px;
+    }
+    .modal-recipient {
+      font-size: 15px;
+      font-weight: 700;
+      color: #0B2340;
+      margin-bottom: 16px;
+    }
+
+    .modal-textarea {
+      width: 100%;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 14px;
+      font-family: 'Poppins', sans-serif;
+      resize: vertical;
+      min-height: 100px;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .modal-textarea:focus {
+      border-color: #00A896;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .btn-cancel {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+      background: white;
+    }
+    .btn-send-dm {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+      background: #00A896;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <span style="font-family:'Lora',serif;font-weight:700;font-size:20px;color:#fff;letter-spacing:2px;display:block;line-height:1.2;">CMRB</span>
+    <div style="font-size:11px;color:#9CA3AF;letter-spacing:0.3px;">CMRB | WRHMS</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-label">Principal</div>
+    <a href="admin-dashboard.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="18" y="3" width="4" height="18" rx="1"/><rect x="10" y="8" width="4" height="13" rx="1"/><rect x="2" y="13" width="4" height="8" rx="1"/></svg></span> Dashboard</a>
+    <a href="admin-communications.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 11 18-5v12L3 13v-2z"/></svg></span> Comunicaciones</a>
+    <a href="admin-foro.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span> Foro</a>
+    <a href="admin-dms.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span> Chat</a>
+    <a href="admin-documentos.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span> Documentos</a>
+    <div class="nav-label">Gestión</div>
+    <a href="admin-members.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span> Miembros</a>
+    <a href="admin-agenda.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span> Agenda</a>
+    <a href="admin-beneficios.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/></svg></span> Beneficios</a>
+    <a href="admin-contactos.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="23" y2="8"/><line x1="19" y1="11" x2="23" y2="11"/><line x1="19" y1="14" x2="23" y2="14"/></svg></span> Contactos</a>
+    <a href="admin-directorio.html" class="nav-item active"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M6 20c0-2 2-4 6-4s6 2 6 4"/><path d="M16 12c1.5 0 2.8.5 3.8 1.3"/><path d="M20 20c.5-1.5.8-3.2.8-5"/></svg></span> Directorio</a>
+    <a href="admin-facturacion.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></span> Facturación</a>
+    <a href="admin-reminders.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></span> Recordatorios</a>
+    <div class="nav-label">Institucional</div>
+    <a href="admin-board.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg></span> Comisión Directiva</a>
+    <a href="admin-obras-sociales.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></span> Obras Sociales</a>
+    <div class="nav-label">Mi Cuenta</div>
+    <a href="admin-perfil.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span> Mi Perfil</a>
+  </nav>
+  <div class="sidebar-user">
+    <div class="user-avatar-sm">AS</div>
+    <div><div class="user-name">Admin Sistema</div><div class="user-role">admin</div></div>
+  </div>
+</aside>
+
+<div class="main">
+  <div class="topbar">
+    <a href="index.html" class="topbar-back">← Mocks</a>
+    <span class="topbar-title">Directorio de Socios</span>
+  </div>
+
+  <div class="content">
+    <div class="page-header">
+      <h1>Directorio de Socios</h1>
+      <p>Buscador interno de socios médicos del CMRB. Busca por nombre, especialidad o matrícula, y enviá mensajes directos.</p>
+    </div>
+
+    <div class="search-row">
+      <input type="text" class="search-input-socio" id="search-socio" placeholder="Buscar por nombre, especialidad o matrícula...">
+      <select class="filter-select-socio" id="filter-type">
+        <option value="">Tipo: Todos</option>
+        <option value="activo">Socios Activos</option>
+        <option value="comision">Miembros de Comisión</option>
+      </select>
+      <select class="filter-select-socio" id="filter-specialty">
+        <option value="">Especialidad: Todas</option>
+      </select>
+    </div>
+
+    <div class="results-info">
+      <span class="results-count" id="results-count">12</span> socios encontrados
+    </div>
+
+    <div class="socios-grid" id="socios-grid">
+      <!-- Grid se genera con JavaScript -->
+    </div>
+  </div>
+</div>
+
+<!-- DM Modal -->
+<div class="modal-overlay" id="dm-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Enviar Mensaje Directo</h3>
+      <button class="modal-close" onclick="closeDM()">✕</button>
+    </div>
+    <div class="modal-to">Para:</div>
+    <div class="modal-recipient" id="dm-recipient">—</div>
+    <textarea class="modal-textarea" placeholder="Escribí tu mensaje..."></textarea>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeDM()">Cancelar</button>
+      <button class="btn-send-dm" onclick="closeDM()">Enviar mensaje</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const socios = [
+    { id: 1, nombre: "Dr. Federico Martínez", especialidad: "Traumatología", matricula: "T-8841-ARG", email: "f.martinez@cmrb.com.ar", telefono: "+54 294 4428334", esComision: true },
+    { id: 2, nombre: "Dra. Gabriela Fernández", especialidad: "Cardiología", matricula: "C-7229-ARG", email: "g.fernandez@cmrb.com.ar", telefono: "+54 294 4456221", esComision: false },
+    { id: 3, nombre: "Dr. Andrés López Ramirez", especialidad: "Pediatría", matricula: "P-4502-ARG", email: "a.lopez.ramirez@cmrb.com.ar", telefono: "+54 294 4612339", esComision: true },
+    { id: 4, nombre: "Dra. Mariana Gómez", especialidad: "Oftalmología", matricula: "O-6891-ARG", email: "m.gomez@cmrb.com.ar", telefono: "+54 294 4734455", esComision: false },
+    { id: 5, nombre: "Dr. Carlos Sánchez Ruiz", especialidad: "Neurología", matricula: "N-5567-ARG", email: "c.sanchez.ruiz@cmrb.com.ar", telefono: "+54 294 4821676", esComision: false },
+    { id: 6, nombre: "Dra. María Paula Arrigoni", especialidad: "Dermatología", matricula: "D-3344-ARG", email: "m.arrigoni@cmrb.com.ar", telefono: "+54 294 4903442", esComision: false },
+    { id: 7, nombre: "Dr. Juan Carlos Monteros", especialidad: "Urología", matricula: "U-7721-ARG", email: "j.monteros@cmrb.com.ar", telefono: "+54 294 4541998", esComision: true },
+    { id: 8, nombre: "Dra. Susana Benítez", especialidad: "Oncología", matricula: "ON-2288-ARG", email: "s.benitez@cmrb.com.ar", telefono: "+54 294 4667833", esComision: false },
+    { id: 9, nombre: "Dr. Roberto Díaz Martínez", especialidad: "Cirugía General", matricula: "CG-9004-ARG", email: "r.diaz.martinez@cmrb.com.ar", telefono: "+54 294 4789123", esComision: false },
+    { id: 10, nombre: "Dra. Laura Vázquez García", especialidad: "Psiquiatría", matricula: "PS-5556-ARG", email: "l.vazquez.garcia@cmrb.com.ar", telefono: "+54 294 4850441", esComision: false },
+    { id: 11, nombre: "Dr. Javier González", especialidad: "Otorrinolaringología", matricula: "ORL-3312-ARG", email: "j.gonzalez@cmrb.com.ar", telefono: "+54 294 4925514", esComision: true },
+    { id: 12, nombre: "Dra. Constanza Vega", especialidad: "Gastroenterología", matricula: "G-8876-ARG", email: "c.vega@cmrb.com.ar", telefono: "+54 294 4612277", esComision: false }
+  ];
+
+  function getInitials(name) {
+    return name.split(' ').slice(0, 2).map(n => n[0]).join('').toUpperCase();
+  }
+
+  function renderSocios() {
+    const search = document.getElementById('search-socio').value.toLowerCase();
+    const typeFilter = document.getElementById('filter-type').value;
+    const specialtyFilter = document.getElementById('filter-specialty').value;
+
+    const filtered = socios.filter(s => {
+      const matchSearch = s.nombre.toLowerCase().includes(search) || s.especialidad.toLowerCase().includes(search) || s.matricula.toLowerCase().includes(search);
+      const matchType = !typeFilter || (typeFilter === 'activo' && !s.esComision) || (typeFilter === 'comision' && s.esComision);
+      const matchSpec = !specialtyFilter || s.especialidad === specialtyFilter;
+      return matchSearch && matchType && matchSpec;
+    });
+
+    const grid = document.getElementById('socios-grid');
+    document.getElementById('results-count').textContent = filtered.length;
+
+    if (filtered.length === 0) {
+      grid.innerHTML = '<div class="no-results" style="grid-column: 1 / -1;"><div class="no-results-icon">○</div><div class="no-results-title">No hay socios que coincidan</div><div class="no-results-text">Ajustá los filtros o la búsqueda</div></div>';
+      return;
+    }
+
+    grid.innerHTML = filtered.map(s => `
+      <div class="socio-card">
+        <div class="socio-header">
+          <div class="socio-avatar">${getInitials(s.nombre)}</div>
+          <div class="socio-header-info">
+            <div class="socio-name">
+              ${s.nombre}
+              ${s.esComision ? '<span class="badge-comision">Comisión</span>' : ''}
+            </div>
+            <div class="socio-specialty">${s.especialidad}</div>
+            <div class="socio-matricula">${s.matricula}</div>
+          </div>
+        </div>
+
+        <div class="socio-contact">
+          <div class="contact-item">
+            <span class="contact-label">Email:</span>
+            <a href="mailto:${s.email}" class="contact-email-link">${s.email}</a>
+          </div>
+          <div class="contact-item">
+            <span class="contact-label">Tel:</span>
+            <span class="contact-value">${s.telefono}</span>
+          </div>
+        </div>
+
+        <div class="socio-actions">
+          <button class="btn-msg-socio" onclick="openDM('${s.nombre}')">Enviar mensaje</button>
+          <button class="btn-profile-socio" onclick="viewProfile('${s.nombre}')">Ver perfil</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function populateSpecialties() {
+    const specialties = [...new Set(socios.map(s => s.especialidad))].sort();
+    const select = document.getElementById('filter-specialty');
+    specialties.forEach(spec => {
+      const opt = document.createElement('option');
+      opt.value = spec;
+      opt.textContent = spec;
+      select.appendChild(opt);
+    });
+  }
+
+  function openDM(name) {
+    document.getElementById('dm-recipient').textContent = name;
+    document.getElementById('dm-modal').classList.add('open');
+  }
+
+  function closeDM() {
+    document.getElementById('dm-modal').classList.remove('open');
+  }
+
+  function viewProfile(name) {
+    alert('Perfil de: ' + name);
+  }
+
+  document.getElementById('search-socio').addEventListener('input', renderSocios);
+  document.getElementById('filter-type').addEventListener('change', renderSocios);
+  document.getElementById('filter-specialty').addEventListener('change', renderSocios);
+  document.getElementById('dm-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeDM();
+  });
+
+  populateSpecialties();
+  renderSocios();
+</script>
+<script src="assets/feedback.js"></script>
+</body>
+</html>
