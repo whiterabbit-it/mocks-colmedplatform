@@ -11,7 +11,7 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Poppins', system-ui, sans-serif; background: #F3F6F9; color: #0B2340; display: flex; min-height: 100vh; }
-    .sidebar { width: 240px; min-height: 100vh; background: #0B2340; display: flex; flex-direction: column; flex-shrink: 0; position: fixed; top: 0; left: 0; bottom: 0; z-index: 10; }
+    .sidebar { width: 240px; min-height: 100vh; background: #1A4EA8; display: flex; flex-direction: column; flex-shrink: 0; position: fixed; top: 0; left: 0; bottom: 0; z-index: 10; }
     .sidebar-logo { padding: 24px 20px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
     .sidebar-nav { padding: 16px 12px; flex: 1; overflow-y: auto; }
     .nav-label { font-size: 10px; font-weight: 600; color: #64748b; letter-spacing: 0.8px; text-transform: uppercase; padding: 0 8px; margin: 16px 0 6px; }
@@ -69,8 +69,16 @@
 
 <aside class="sidebar">
   <div class="sidebar-logo">
-    <span style="font-family:'Lora',serif;font-weight:700;font-size:20px;color:#fff;letter-spacing:2px;display:block;line-height:1.2;">CMRB</span>
-    <div style="font-size:11px;color:#9CA3AF;letter-spacing:0.3px;">CMRB | WRHMS</div>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <div style="background:white;border-radius:50%;width:44px;height:44px;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,0.2);">
+      <img src="assets/logocmrb.jpg" alt="CMRB" style="width:42px;height:42px;border-radius:50%;object-fit:cover;">
+    </div>
+    <div>
+      <div style="font-family:'Lora',serif;font-weight:700;font-size:18px;color:#fff;letter-spacing:1px;line-height:1.1;">CMRB</div>
+      <div style="font-size:10px;color:#93c5fd;letter-spacing:0.3px;margin-top:1px;">CMRB | WRHMS</div>
+    </div>
+  </div>
+</div>
   </div>
   <nav class="sidebar-nav">
     <div class="nav-label">Principal</div>
@@ -85,8 +93,7 @@
     <a href="admin-members.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span> Miembros</a>
     <a href="admin-agenda.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span> Agenda</a>
     <a href="admin-beneficios.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12V22H4V12"/><path d="M22 7H2v5h20V7z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg></span> Beneficios</a>
-<a href="admin-contactos.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="23" y2="8"/><line x1="19" y1="11" x2="23" y2="11"/><line x1="19" y1="14" x2="23" y2="14"/></svg></span> Contactos</a>
-        <a href="admin-directorio.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M6 20c0-2 2-4 6-4s6 2 6 4"/><path d="M16 12c1.5 0 2.8.5 3.8 1.3"/><path d="M20 20c.5-1.5.8-3.2.8-5"/></svg></span> Directorio</a>
+        <a href="admin-directorio.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M6 20c0-2 2-4 6-4s6 2 6 4"/><path d="M16 12c1.5 0 2.8.5 3.8 1.3"/><path d="M20 20c.5-1.5.8-3.2.8-5"/></svg></span> Contactos</a>
     <a href="admin-facturacion.html" class="nav-item active"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></span> Facturación</a>
     <a href="admin-reminders.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></span> Recordatorios</a>
     <div class="nav-label">Institucional</div>
@@ -106,7 +113,7 @@
 <div class="main">
   <div class="topbar">
     <a href="index.html" class="topbar-back">← Mocks</a>
-    <img src="assets/logocmrb.jpg" alt="CMRB" style="height:36px;width:36px;border-radius:50%;object-fit:cover;border:1px solid #e2e8f0;">
+    
       <span class="topbar-title">Facturación</span>
   </div>
 
