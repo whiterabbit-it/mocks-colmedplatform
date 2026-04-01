@@ -14,10 +14,10 @@
     .sidebar { width: 240px; min-height: 100vh; background: #1A4EA8; display: flex; flex-direction: column; flex-shrink: 0; position: fixed; top: 0; left: 0; bottom: 0; z-index: 10; }
     .sidebar-logo { padding: 24px 20px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
     .sidebar-nav { padding: 16px 12px; flex: 1; overflow-y: auto; }
-    .nav-label { font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.45); letter-spacing: 0.8px; text-transform: uppercase; padding: 0 8px; margin: 16px 0 6px; }
-    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; font-size: 14px; color: #94a3b8; font-weight: 500; text-decoration: none; transition: all 0.15s; margin-bottom: 2px; }
+    .nav-label { font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.5); letter-spacing: 0.8px; text-transform: uppercase; padding: 0 8px; margin: 16px 0 6px; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; font-size: 14px; color: rgba(255,255,255,0.9); font-weight: 500; text-decoration: none; transition: all 0.15s; margin-bottom: 2px; }
     .nav-item:hover { background: rgba(255,255,255,0.08); color: white; }
-    .nav-item.active { background: #00A896; color: white; font-weight: 600; }
+    .nav-item.active { background: #1AB8D2; color: white; font-weight: 600; }
     .nav-item .nav-icon { font-size: 16px; width: 20px; text-align: center; }
     .sidebar-user { padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; }
     .user-avatar-sm { width: 36px; height: 36px; background: #00A896; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: white; }
@@ -68,18 +68,17 @@
 <body>
 
 <aside class="sidebar">
-  <div class="sidebar-logo">
+  <div class="sidebar-logo" style="padding:16px 20px;border-bottom:1px solid rgba(255,255,255,0.1);">
   <div style="display:flex;align-items:center;gap:10px;">
-    <div style="background:white;border-radius:50%;width:52px;height:52px;overflow:hidden;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,0.2);">
-      <img src="assets/logov2.png" alt="CMRB" style="width:52px;height:52px;object-fit:cover;display:block;">
+    <div style="background:white;border-radius:50%;width:48px;height:48px;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,0.2);">
+      <img src="assets/logov2.png" alt="CMRB" style="width:48px;height:48px;object-fit:contain;display:block;">
     </div>
     <div>
-      <div style="font-family:'Lora',serif;font-weight:700;font-size:18px;color:#fff;letter-spacing:1px;line-height:1.1;">CMRB</div>
-      <div style="font-size:10px;color:#93c5fd;letter-spacing:0.3px;margin-top:1px;">CMRB | WRHMS</div>
+      <div style="font-family:'Lora',serif;font-weight:700;font-size:17px;color:#fff;letter-spacing:1px;line-height:1.1;">CMRB</div>
+      <div style="font-size:10px;color:#93c5fd;letter-spacing:0.3px;margin-top:2px;">CMRB | WRHMS</div>
     </div>
   </div>
 </div>
-  </div>
   <nav class="sidebar-nav">
     <div class="nav-label">Principal</div>
     <a href="admin-dashboard.html" class="nav-item"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="18" y="3" width="4" height="18" rx="1"/><rect x="10" y="8" width="4" height="13" rx="1"/><rect x="2" y="13" width="4" height="8" rx="1"/></svg></span> Dashboard</a>
