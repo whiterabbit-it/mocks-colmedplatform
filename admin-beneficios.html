@@ -10,6 +10,16 @@
   <link rel="stylesheet" href="assets/feedback.css">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --space-xs: 4px; --space-sm: 8px; --space-md: 12px;
+      --space-lg: 16px; --space-xl: 24px; --space-2xl: 32px;
+      --radius-sm: 8px; --radius-md: 12px; --radius-lg: 16px;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.08);
+      --shadow-md: 0 2px 8px rgba(0,0,0,0.10);
+      --shadow-lg: 0 8px 16px rgba(0,0,0,0.12);
+      --primary: #00A896; --primary-hover: #008B7A; --primary-active: #00705E;
+      --text-primary: #0B2340; --text-secondary: #475569; --text-tertiary: #64748b;
+    }
     body { font-family: 'Poppins', system-ui, sans-serif; background: #F3F6F9; color: #0B2340; display: flex; min-height: 100vh; }
 
     /* ===== SIDEBAR ===== */
@@ -61,12 +71,13 @@
       padding: 16px;
       display: flex;
       flex-direction: column;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-      transition: all 0.2s;
+      box-shadow: var(--shadow-md);
+      transition: box-shadow 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
     }
     .benefit-card:hover {
       border-color: #00A896;
-      box-shadow: 0 8px 16px rgba(0,168,150,0.12);
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-1px);
     }
 
     .benefit-image {
@@ -135,12 +146,22 @@
       display: inline-flex;
       align-items: center;
       padding: 3px 10px;
-      border-radius: 12px;
+      border-radius: 6px;
       font-size: 11px;
       font-weight: 600;
     }
-    .badge-disponible { background: #D6F5F1; color: #00A896; }
-    .badge-proximo { background: #fef3c7; color: #F0A500; }
+    .badge-disponible   { background: #d6f5f1; color: #00705E; }
+    .badge-proximamente { background: #fef3c7; color: #92400e; }
+    .badge-proximo      { background: #fef3c7; color: #92400e; }
+
+    /* Transitions & Focus */
+    .benefit-card { transition: box-shadow 0.15s ease, border-color 0.15s ease, transform 0.15s ease; }
+    .benefit-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-1px); }
+    .btn-new-benefit, .btn-save { transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease; }
+    .btn-new-benefit:hover { background: var(--primary-hover) !important; box-shadow: 0 4px 12px rgba(0,168,150,0.2); }
+    *:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+    input:focus, textarea:focus, select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0,168,150,0.15); }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
 
     .benefit-dates {
       font-size: 12px;
@@ -183,7 +204,7 @@
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(11,35,64,0.4);
+      background: rgba(0,0,0,0.35);
       z-index: 9000;
       align-items: center;
       justify-content: center;
@@ -351,7 +372,7 @@
   <div class="content">
     <div class="page-header">
       <h1>Beneficios para Socios</h1>
-      <p>Gestiona descuentos, promociones y servicios exclusivos disponibles para los socios del CMRB. Publicá nuevos beneficios y controlá su disponibilidad.</p>
+      <p>Gestioná descuentos, promociones y servicios exclusivos disponibles para los socios del CMRB. Publicá nuevos beneficios y controlá su disponibilidad.</p>
     </div>
 
     <div class="controls-row">

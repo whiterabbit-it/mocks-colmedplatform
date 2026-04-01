@@ -9,6 +9,16 @@
   <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --space-xs: 4px; --space-sm: 8px; --space-md: 12px;
+      --space-lg: 16px; --space-xl: 24px; --space-2xl: 32px;
+      --radius-sm: 8px; --radius-md: 12px; --radius-lg: 16px;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.08);
+      --shadow-md: 0 2px 8px rgba(0,0,0,0.10);
+      --shadow-lg: 0 8px 16px rgba(0,0,0,0.12);
+      --primary: #00A896; --primary-hover: #008B7A; --primary-active: #00705E;
+      --text-primary: #0B2340; --text-secondary: #475569; --text-tertiary: #64748b;
+    }
     body { font-family: 'Poppins', system-ui, sans-serif; background: #F3F6F9; color: #0B2340; display: flex; min-height: 100vh; }
 
     /* Sidebar */
@@ -61,16 +71,17 @@
     .content-header {
       display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;
     }
-    .page-title { font-family: 'Lora', serif; font-size: 22px; font-weight: 700; color: #0B2340; }
-    .page-subtitle { font-size: 13px; color: #64748b; margin-top: 3px; }
+    .page-title { font-family: 'Lora', serif; font-size: 26px; font-weight: 700; color: var(--text-primary); }
+    .page-subtitle { font-size: 13px; color: var(--text-secondary); margin-top: 3px; }
     .btn-primary {
-      background: #00A896; color: white; border: none; border-radius: 8px;
+      background: var(--primary); color: white; border: none; border-radius: 8px;
       padding: 10px 20px; font-size: 14px; font-weight: 600; cursor: pointer;
       font-family: 'Poppins', sans-serif;
       display: flex; align-items: center; gap: 6px; text-decoration: none;
-      transition: background 0.15s;
+      transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
     }
-    .btn-primary:hover { background: #0e7490; }
+    .btn-primary:hover { background: var(--primary-hover) !important; box-shadow: 0 4px 12px rgba(0,168,150,0.2); }
+    .btn-primary:active { background: var(--primary-active) !important; transform: translateY(1px); }
 
     /* Filter tabs */
     .filter-tabs { display: flex; gap: 4px; margin-bottom: 20px; }
@@ -83,7 +94,7 @@
     .filter-tab.active { background: #0B2340; color: white; border-color: #0B2340; font-weight: 600; }
 
     /* Table */
-    .table-card { background: white; border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+    .table-card { background: white; border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden; box-shadow: var(--shadow-md); }
     table { width: 100%; border-collapse: collapse; }
     th {
       background: #f8fafc; padding: 11px 16px;
@@ -95,31 +106,78 @@
     tr:last-child td { border-bottom: none; }
     tr:hover td { background: #fafbfc; }
 
-    .title-cell { font-weight: 600; color: #0B2340; max-width: 260px; }
+    .title-cell { font-weight: 700; color: var(--text-primary); max-width: 260px; font-size: 14px; }
     .title-cell .title-text { display: block; }
-    .title-cell .snippet { font-size: 12px; color: #94a3b8; font-weight: 400; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 240px; }
+    .title-cell .snippet { font-size: 12px; color: var(--text-tertiary); font-weight: 400; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 240px; }
 
-    /* Badges */
-    .badge {
-      display: inline-flex; align-items: center; padding: 3px 10px;
-      border-radius: 12px; font-size: 11px; font-weight: 600; white-space: nowrap;
+    /* ===== BADGE SYSTEM ===== */
+    .badge { display:inline-flex; align-items:center; font-weight:600; border-radius:6px; white-space:nowrap; }
+
+    /* Estado de comunicación */
+    .badge-publicada  { font-size:11px; padding:3px 10px; background:#ecfdf5; color:#065f46; }
+    .badge-borrador   { font-size:11px; padding:3px 10px; background:#fffbeb; color:#78350f; }
+    .badge-archivada  { font-size:11px; padding:3px 10px; background:#f3f4f6; color:#4b5563; }
+
+    /* Categoría de comunicación */
+    .badge-circular    { font-size:10px; padding:3px 8px; background:#f3f0ff; color:#6b21a8; }
+    .badge-resolucion  { font-size:10px; padding:3px 8px; background:#fdf2f8; color:#831843; }
+    .badge-aviso       { font-size:10px; padding:3px 8px; background:#fef3c7; color:#92400e; }
+    .badge-informativo { font-size:10px; padding:3px 8px; background:#eff6ff; color:#1e40af; }
+    .badge-urgente     { font-size:10px; padding:3px 8px; background:#fee2e2; color:#7f1d1d; }
+
+    /* Alias para compatibilidad legacy */
+    .badge-cat-circular    { font-size:10px; padding:3px 8px; background:#f3f0ff; color:#6b21a8; }
+    .badge-cat-resolucion  { font-size:10px; padding:3px 8px; background:#fdf2f8; color:#831843; }
+    .badge-cat-aviso       { font-size:10px; padding:3px 8px; background:#fef3c7; color:#92400e; }
+    .badge-cat-informativo { font-size:10px; padding:3px 8px; background:#eff6ff; color:#1e40af; }
+    .badge-cat-urgente     { font-size:10px; padding:3px 8px; background:#fee2e2; color:#7f1d1d; }
+
+    /* Rol de usuario */
+    .badge-socio       { font-size:10px; padding:3px 8px; background:#f0f4ff; color:#3730a3; }
+    .badge-comision    { font-size:10px; padding:3px 8px; background:#e0f2fe; color:#0369a1; }
+    .badge-admin       { font-size:10px; padding:3px 8px; background:#d6f5f1; color:#00A896; }
+    .badge-staff       { font-size:10px; padding:3px 8px; background:#f3f4f6; color:#4b5563; }
+
+    /* Legacy rol badges */
+    .badge-super_admin { font-size:10px; padding:3px 8px; background:#f1f5f9; color:#334155; }
+    .badge-director    { font-size:10px; padding:3px 8px; background:#e0f2fe; color:#0369a1; }
+    .badge-profesional { font-size:10px; padding:3px 8px; background:#f0f4ff; color:#3730a3; }
+    .badge-administrativo { font-size:10px; padding:3px 8px; background:#f3f4f6; color:#4b5563; }
+
+    /* Estado de socio */
+    .badge-activo    { font-size:10px; padding:3px 8px; background:#ecfdf5; color:#065f46; }
+    .badge-inactivo  { font-size:10px; padding:3px 8px; background:#f3f4f6; color:#4b5563; }
+    .badge-pendiente { font-size:10px; padding:3px 8px; background:#fffbeb; color:#78350f; }
+
+    /* Beneficios */
+    .badge-disponible    { font-size:10px; padding:3px 8px; background:#d6f5f1; color:#00705E; }
+    .badge-proximamente  { font-size:10px; padding:3px 8px; background:#fef3c7; color:#92400e; }
+
+    /* Transitions */
+    .btn-action, .filter-tab {
+      transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
     }
-    .badge-super_admin { background: #f1f5f9; color: #334155; }
-    .badge-admin { background: #e8eef6; color: #0B2340; }
-    .badge-director { background: #D6F5F1; color: #00A896; }
-    .badge-profesional { background: #d1fae5; color: #059669; }
-    .badge-administrativo { background: #fef3c7; color: #F0A500; }
 
-    .badge-cat-circular { background: #ede9fe; color: #7c3aed; }
-    .badge-cat-resolucion { background: #fce7f3; color: #be185d; }
-    .badge-cat-informativo { background: #D6F5F1; color: #00A896; }
-    .badge-cat-urgente { background: #fee2e2; color: #dc2626; }
-    .badge-cat-aviso { background: #fef3c7; color: #F0A500; }
+    /* Focus visible */
+    *:focus-visible {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
 
-    .badge-publicada { background: #d1fae5; color: #059669; }
-    .badge-borrador { background: #fef3c7; color: #F0A500; }
-    .badge-archivada { background: #f1f5f9; color: #64748b; }
+    /* Inputs accesibles */
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(0,168,150,0.15);
+    }
 
+    /* Disabled */
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* Modal overlay */
     /* Actions */
     .actions { display: flex; gap: 6px; }
     .btn-action {
@@ -145,7 +203,7 @@
     /* Modal overlay */
     .modal-overlay {
       display: none; position: fixed; inset: 0;
-      background: rgba(11,35,64,0.5); z-index: 100;
+      background: rgba(0,0,0,0.35); z-index: 100;
       align-items: center; justify-content: center;
     }
     .modal-overlay.open { display: flex; }
@@ -319,7 +377,7 @@
             </td>
             <td><span class="badge badge-cat-circular">Circular</span></td>
             <td style="font-size:13px;color:#475569;">Dr. Roberto Ramírez</td>
-            <td><span class="badge badge-director">director</span></td>
+            <td><span class="badge badge-comision">Comisión Directiva</span></td>
             <td><span class="badge badge-publicada">Publicada</span></td>
             <td><span class="read-counter" onclick="openReads('circular-12')"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> 187 / 241</span></td>
             <td style="font-size:12px;color:#64748b;">18 mar 2026</td>
@@ -339,7 +397,7 @@
             </td>
             <td><span class="badge badge-cat-resolucion">Resolución</span></td>
             <td style="font-size:13px;color:#475569;">Admin Sistema</td>
-            <td><span class="badge badge-admin">admin</span></td>
+            <td><span class="badge badge-admin">Administración</span></td>
             <td><span class="badge badge-publicada">Publicada</span></td>
             <td><span class="read-counter" onclick="openReads('resolucion-04')"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> 214 / 241</span></td>
             <td style="font-size:12px;color:#64748b;">15 mar 2026</td>
@@ -359,7 +417,7 @@
             </td>
             <td><span class="badge badge-cat-aviso">Aviso</span></td>
             <td style="font-size:13px;color:#475569;">Laura Sánchez</td>
-            <td><span class="badge badge-administrativo">administrativo</span></td>
+            <td><span class="badge badge-staff">Staff</span></td>
             <td><span class="badge badge-publicada">Publicada</span></td>
             <td><span class="read-counter low" onclick="openReads('aviso-semanta-santa')"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> 89 / 241</span></td>
             <td style="font-size:12px;color:#64748b;">12 mar 2026</td>
@@ -379,7 +437,7 @@
             </td>
             <td><span class="badge badge-cat-informativo">Informativo</span></td>
             <td style="font-size:13px;color:#475569;">Dra. Carmen Fuentes</td>
-            <td><span class="badge badge-director">director</span></td>
+            <td><span class="badge badge-comision">Comisión Directiva</span></td>
             <td><span class="badge badge-publicada">Publicada</span></td>
             <td><span class="read-counter" onclick="openReads('jornadas')"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> 193 / 241</span></td>
             <td style="font-size:12px;color:#64748b;">08 mar 2026</td>
@@ -399,7 +457,7 @@
             </td>
             <td><span class="badge badge-cat-resolucion">Resolución</span></td>
             <td style="font-size:13px;color:#475569;">Laura Sánchez</td>
-            <td><span class="badge badge-administrativo">administrativo</span></td>
+            <td><span class="badge badge-staff">Staff</span></td>
             <td><span class="badge badge-borrador">Borrador</span></td>
             <td><span class="read-counter none">— / —</span></td>
             <td style="font-size:12px;color:#64748b;">20 mar 2026</td>
@@ -419,7 +477,7 @@
             </td>
             <td><span class="badge badge-cat-circular">Circular</span></td>
             <td style="font-size:13px;color:#475569;">Admin Sistema</td>
-            <td><span class="badge badge-admin">admin</span></td>
+            <td><span class="badge badge-admin">Administración</span></td>
             <td><span class="badge badge-archivada">Archivada</span></td>
             <td><span class="read-counter none">— / —</span></td>
             <td style="font-size:12px;color:#64748b;">15 dic 2025</td>

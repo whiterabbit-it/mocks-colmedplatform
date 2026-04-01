@@ -9,6 +9,16 @@
   <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --space-xs: 4px; --space-sm: 8px; --space-md: 12px;
+      --space-lg: 16px; --space-xl: 24px; --space-2xl: 32px;
+      --radius-sm: 8px; --radius-md: 12px; --radius-lg: 16px;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.08);
+      --shadow-md: 0 2px 8px rgba(0,0,0,0.10);
+      --shadow-lg: 0 8px 16px rgba(0,0,0,0.12);
+      --primary: #00A896; --primary-hover: #008B7A; --primary-active: #00705E;
+      --text-primary: #0B2340; --text-secondary: #475569; --text-tertiary: #64748b;
+    }
     body {
       font-family: 'Poppins', system-ui, sans-serif;
       background: #cbd5e1;
@@ -96,9 +106,20 @@
     .header-name { font-size: 16px; font-weight: 700; color: #0B2340; }
     .header-meta { display: flex; align-items: center; gap: 6px; margin-top: 2px; }
     .badge-director {
-      display: inline-flex; padding: 2px 8px; border-radius: 10px;
-      font-size: 10px; font-weight: 700; background: #D6F5F1; color: #00A896;
+      display: inline-flex; padding: 2px 8px; border-radius: 6px;
+      font-size: 10px; font-weight: 700; background: #e0f2fe; color: #0369a1;
     }
+    .badge-comision {
+      display: inline-flex; padding: 2px 8px; border-radius: 6px;
+      font-size: 10px; font-weight: 700; background: #e0f2fe; color: #0369a1;
+    }
+
+    /* Focus & transitions */
+    *:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+    input:focus, textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0,168,150,0.15); }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    .send-btn { transition: background 0.15s ease; }
+    .send-btn:hover { background: var(--primary-hover) !important; }
     .online-dot {
       width: 8px; height: 8px; background: #00A896; border-radius: 50%; display: inline-block;
     }
@@ -163,7 +184,7 @@
       display: flex; align-items: center; justify-content: center;
       cursor: pointer; flex-shrink: 0; transition: background 0.15s;
     }
-    .send-btn:hover { background: #0e7490; }
+    .send-btn:hover { background: var(--primary-hover); }
 
     /* Tab bar */
     .tab-bar {
@@ -304,7 +325,7 @@
       <div class="header-info">
         <div class="header-name" id="chat-name">Dr. Roberto Ramírez</div>
         <div class="header-meta">
-          <span class="badge-director">comisión directiva</span>
+          <span class="badge-comision">Comisión Directiva</span>
           <span class="online-dot"></span>
           <span class="online-label">En línea</span>
         </div>

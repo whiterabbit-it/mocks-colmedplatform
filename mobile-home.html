@@ -9,6 +9,16 @@
   <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --space-xs: 4px; --space-sm: 8px; --space-md: 12px;
+      --space-lg: 16px; --space-xl: 24px; --space-2xl: 32px;
+      --radius-sm: 8px; --radius-md: 12px; --radius-lg: 16px;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.08);
+      --shadow-md: 0 2px 8px rgba(0,0,0,0.10);
+      --shadow-lg: 0 8px 16px rgba(0,0,0,0.12);
+      --primary: #00A896; --primary-hover: #008B7A; --primary-active: #00705E;
+      --text-primary: #0B2340; --text-secondary: #475569; --text-tertiary: #64748b;
+    }
     body {
       font-family: 'Poppins', system-ui, sans-serif;
       background: #cbd5e1;
@@ -96,26 +106,53 @@
     .comm-card {
       background: white; border-radius: 16px; padding: 16px;
       margin-bottom: 12px; border: 1px solid #e2e8f0;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+      box-shadow: var(--shadow-md);
     }
     .card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
     .card-date { font-size: 11px; color: #94a3b8; }
-    .card-title { font-family: 'Lora', serif; font-size: 15px; font-weight: 700; color: #0B2340; line-height: 1.35; margin-bottom: 6px; }
-    .card-snippet { font-size: 13px; color: #64748b; line-height: 1.45; }
+    .card-title { font-family: 'Lora', serif; font-size: 16px; font-weight: 700; line-height: 1.35; color: var(--text-primary); margin-bottom: 10px; }
+    .card-snippet { font-size: 13px; color: var(--text-secondary); line-height: 1.45; }
+    .card-date { font-size: 11px; color: var(--text-tertiary); }
     .card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; }
     .card-author { font-size: 12px; color: #94a3b8; }
     .read-more { font-size: 12px; color: #00A896; font-weight: 600; }
 
-    /* Badges */
-    .badge {
-      display: inline-flex; align-items: center; padding: 3px 10px;
-      border-radius: 12px; font-size: 11px; font-weight: 600;
-    }
-    .badge-cat-circular { background: #ede9fe; color: #7c3aed; }
-    .badge-cat-resolucion { background: #fce7f3; color: #be185d; }
-    .badge-cat-informativo { background: #D6F5F1; color: #00A896; }
-    .badge-cat-urgente { background: #fee2e2; color: #dc2626; }
-    .badge-cat-aviso { background: #fef3c7; color: #F0A500; }
+    /* ===== BADGE SYSTEM ===== */
+    .badge { display:inline-flex; align-items:center; font-weight:600; border-radius:6px; white-space:nowrap; }
+
+    .badge-publicada  { font-size:11px; padding:3px 10px; background:#ecfdf5; color:#065f46; }
+    .badge-borrador   { font-size:11px; padding:3px 10px; background:#fffbeb; color:#78350f; }
+    .badge-archivada  { font-size:11px; padding:3px 10px; background:#f3f4f6; color:#4b5563; }
+
+    .badge-circular    { font-size:10px; padding:3px 8px; background:#f3f0ff; color:#6b21a8; }
+    .badge-resolucion  { font-size:10px; padding:3px 8px; background:#fdf2f8; color:#831843; }
+    .badge-aviso       { font-size:10px; padding:3px 8px; background:#fef3c7; color:#92400e; }
+    .badge-informativo { font-size:10px; padding:3px 8px; background:#eff6ff; color:#1e40af; }
+    .badge-urgente     { font-size:10px; padding:3px 8px; background:#fee2e2; color:#7f1d1d; }
+
+    /* Alias legacy */
+    .badge-cat-circular    { font-size:10px; padding:3px 8px; background:#f3f0ff; color:#6b21a8; }
+    .badge-cat-resolucion  { font-size:10px; padding:3px 8px; background:#fdf2f8; color:#831843; }
+    .badge-cat-aviso       { font-size:10px; padding:3px 8px; background:#fef3c7; color:#92400e; }
+    .badge-cat-informativo { font-size:10px; padding:3px 8px; background:#eff6ff; color:#1e40af; }
+    .badge-cat-urgente     { font-size:10px; padding:3px 8px; background:#fee2e2; color:#7f1d1d; }
+
+    .badge-socio       { font-size:10px; padding:3px 8px; background:#f0f4ff; color:#3730a3; }
+    .badge-comision    { font-size:10px; padding:3px 8px; background:#e0f2fe; color:#0369a1; }
+    .badge-admin       { font-size:10px; padding:3px 8px; background:#d6f5f1; color:#00A896; }
+    .badge-staff       { font-size:10px; padding:3px 8px; background:#f3f4f6; color:#4b5563; }
+
+    .badge-activo    { font-size:10px; padding:3px 8px; background:#ecfdf5; color:#065f46; }
+    .badge-inactivo  { font-size:10px; padding:3px 8px; background:#f3f4f6; color:#4b5563; }
+    .badge-pendiente { font-size:10px; padding:3px 8px; background:#fffbeb; color:#78350f; }
+
+    .badge-disponible    { font-size:10px; padding:3px 8px; background:#d6f5f1; color:#00705E; }
+    .badge-proximamente  { font-size:10px; padding:3px 8px; background:#fef3c7; color:#92400e; }
+
+    /* Focus visible */
+    *:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+    input:focus, textarea:focus, select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0,168,150,0.15); }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
 
     /* Tab bar */
     .tab-bar {
@@ -176,7 +213,7 @@
       <div class="card-title">Circular N° 12/2026 — Protocolo IPROSS actualizado</div>
       <div class="card-snippet">Se informa a todos los asociados las nuevas disposiciones vigentes a partir del 1° de abril de 2026...</div>
       <div class="card-footer">
-        <span class="card-author">Dr. Ramírez · director</span>
+        <span class="card-author">Dr. Ramírez · Comisión Directiva</span>
         <span class="read-more">Leer más →</span>
       </div>
     </div>
@@ -202,7 +239,7 @@
       <div class="card-title">Cierre administrativo Semana Santa 2026</div>
       <div class="card-snippet">Se comunica que las oficinas permanecerán cerradas del 2 al 6 de abril inclusive...</div>
       <div class="card-footer">
-        <span class="card-author">Laura Sánchez · administrativo</span>
+        <span class="card-author">Laura Sánchez · Staff</span>
         <span class="read-more">Leer más →</span>
       </div>
     </div>
@@ -215,7 +252,7 @@
       <div class="card-title">Jornadas de Actualización Médica — Inscripción abierta</div>
       <div class="card-snippet">Se invita a todos los profesionales matriculados a participar de las jornadas del 15 y 16 de abril...</div>
       <div class="card-footer">
-        <span class="card-author">Dra. Fuentes · director</span>
+        <span class="card-author">Dra. Fuentes · Comisión Directiva</span>
         <span class="read-more">Leer más →</span>
       </div>
     </div>

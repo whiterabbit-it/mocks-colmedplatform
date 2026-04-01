@@ -9,6 +9,16 @@
   <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --space-xs: 4px; --space-sm: 8px; --space-md: 12px;
+      --space-lg: 16px; --space-xl: 24px; --space-2xl: 32px;
+      --radius-sm: 8px; --radius-md: 12px; --radius-lg: 16px;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.08);
+      --shadow-md: 0 2px 8px rgba(0,0,0,0.10);
+      --shadow-lg: 0 8px 16px rgba(0,0,0,0.12);
+      --primary: #00A896; --primary-hover: #008B7A; --primary-active: #00705E;
+      --text-primary: #0B2340; --text-secondary: #475569; --text-tertiary: #64748b;
+    }
     body { font-family: 'Poppins', system-ui, sans-serif; background: #F3F6F9; color: #0B2340; display: flex; min-height: 100vh; }
 
     /* Sidebar */
@@ -62,12 +72,13 @@
     .page-title { font-family: 'Lora', serif; font-size: 22px; font-weight: 700; }
     .page-subtitle { font-size: 13px; color: #64748b; margin-top: 3px; }
     .btn-primary {
-      background: #00A896; color: white; border: none; border-radius: 8px;
+      background: var(--primary); color: white; border: none; border-radius: 8px;
       padding: 10px 20px; font-size: 14px; font-weight: 600; cursor: pointer;
       font-family: 'Poppins', sans-serif;
-      text-decoration: none; transition: background 0.15s;
+      text-decoration: none; transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
     }
-    .btn-primary:hover { background: #0e7490; }
+    .btn-primary:hover { background: var(--primary-hover) !important; box-shadow: 0 4px 12px rgba(0,168,150,0.2); }
+    .btn-primary:active { background: var(--primary-active) !important; transform: translateY(1px); }
 
     /* Filter tabs */
     .filter-tabs { display: flex; gap: 4px; margin-bottom: 20px; align-items: center; }
@@ -86,7 +97,7 @@
     .search-input:focus { border-color: #00A896; }
 
     /* Table */
-    .table-card { background: white; border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+    .table-card { background: white; border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden; box-shadow: var(--shadow-md); }
     table { width: 100%; border-collapse: collapse; }
     th {
       background: #f8fafc; padding: 11px 16px;
@@ -116,18 +127,44 @@
     .mem-name { font-weight: 700; color: #0B2340; font-size: 14px; }
     .mem-email { font-size: 12px; color: #94a3b8; margin-top: 1px; }
 
-    /* Badges */
-    .badge {
-      display: inline-flex; align-items: center; padding: 3px 10px;
-      border-radius: 12px; font-size: 11px; font-weight: 600; white-space: nowrap;
-    }
-    .badge-super_admin { background: #f1f5f9; color: #334155; }
-    .badge-admin { background: #e8eef6; color: #0B2340; }
-    .badge-director { background: #D6F5F1; color: #00A896; }
-    .badge-profesional { background: #d1fae5; color: #059669; }
-    .badge-administrativo { background: #fef3c7; color: #F0A500; }
-    .badge-activo { background: #d1fae5; color: #059669; }
-    .badge-inactivo { background: #f1f5f9; color: #64748b; }
+    /* ===== BADGE SYSTEM ===== */
+    .badge { display:inline-flex; align-items:center; font-weight:600; border-radius:6px; white-space:nowrap; }
+
+    .badge-publicada  { font-size:11px; padding:3px 10px; background:#ecfdf5; color:#065f46; }
+    .badge-borrador   { font-size:11px; padding:3px 10px; background:#fffbeb; color:#78350f; }
+    .badge-archivada  { font-size:11px; padding:3px 10px; background:#f3f4f6; color:#4b5563; }
+
+    .badge-circular    { font-size:10px; padding:3px 8px; background:#f3f0ff; color:#6b21a8; }
+    .badge-resolucion  { font-size:10px; padding:3px 8px; background:#fdf2f8; color:#831843; }
+    .badge-aviso       { font-size:10px; padding:3px 8px; background:#fef3c7; color:#92400e; }
+    .badge-informativo { font-size:10px; padding:3px 8px; background:#eff6ff; color:#1e40af; }
+    .badge-urgente     { font-size:10px; padding:3px 8px; background:#fee2e2; color:#7f1d1d; }
+
+    .badge-socio       { font-size:10px; padding:3px 8px; background:#f0f4ff; color:#3730a3; }
+    .badge-comision    { font-size:10px; padding:3px 8px; background:#e0f2fe; color:#0369a1; }
+    .badge-admin       { font-size:10px; padding:3px 8px; background:#d6f5f1; color:#00A896; }
+    .badge-staff       { font-size:10px; padding:3px 8px; background:#f3f4f6; color:#4b5563; }
+
+    /* Legacy */
+    .badge-super_admin    { font-size:10px; padding:3px 8px; background:#f1f5f9; color:#334155; }
+    .badge-director       { font-size:10px; padding:3px 8px; background:#e0f2fe; color:#0369a1; }
+    .badge-profesional    { font-size:10px; padding:3px 8px; background:#f0f4ff; color:#3730a3; }
+    .badge-administrativo { font-size:10px; padding:3px 8px; background:#f3f4f6; color:#4b5563; }
+
+    .badge-activo    { font-size:10px; padding:3px 8px; background:#ecfdf5; color:#065f46; }
+    .badge-inactivo  { font-size:10px; padding:3px 8px; background:#f3f4f6; color:#4b5563; }
+    .badge-pendiente { font-size:10px; padding:3px 8px; background:#fffbeb; color:#78350f; }
+
+    .badge-disponible    { font-size:10px; padding:3px 8px; background:#d6f5f1; color:#00705E; }
+    .badge-proximamente  { font-size:10px; padding:3px 8px; background:#fef3c7; color:#92400e; }
+
+    /* Transitions & Focus */
+    .btn-primary, .btn-action { transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease; }
+    .btn-primary:hover { background: var(--primary-hover) !important; box-shadow: 0 4px 12px rgba(0,168,150,0.2); }
+    .btn-primary:active { background: var(--primary-active) !important; transform: translateY(1px); }
+    *:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+    input:focus, textarea:focus, select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0,168,150,0.15); }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
 
     /* Actions */
     .actions { display: flex; gap: 6px; }
@@ -271,7 +308,7 @@
             </td>
             <td style="color:#475569;">Medicina General</td>
             <td style="font-family:monospace;font-size:13px;color:#475569;">MP 3241</td>
-            <td><span class="badge badge-director">comisión directiva</span></td>
+            <td><span class="badge badge-comision">Comisión Directiva</span></td>
             <td><span class="badge badge-activo">Activo</span></td>
             <td>
               <div class="actions">
@@ -292,7 +329,7 @@
             </td>
             <td style="color:#475569;">Pediatría</td>
             <td style="font-family:monospace;font-size:13px;color:#475569;">MP 2987</td>
-            <td><span class="badge badge-director">comisión directiva</span></td>
+            <td><span class="badge badge-comision">Comisión Directiva</span></td>
             <td><span class="badge badge-activo">Activo</span></td>
             <td>
               <div class="actions">
@@ -313,7 +350,7 @@
             </td>
             <td style="color:#475569;">Cirugía General</td>
             <td style="font-family:monospace;font-size:13px;color:#475569;">MP 4721</td>
-            <td><span class="badge badge-profesional">socio</span></td>
+            <td><span class="badge badge-socio">Socio</span></td>
             <td><span class="badge badge-activo">Activo</span></td>
             <td>
               <div class="actions">
@@ -334,7 +371,7 @@
             </td>
             <td style="color:#475569;">Clínica Médica</td>
             <td style="font-family:monospace;font-size:13px;color:#475569;">MP 5103</td>
-            <td><span class="badge badge-profesional">socio</span></td>
+            <td><span class="badge badge-socio">Socio</span></td>
             <td><span class="badge badge-activo">Activo</span></td>
             <td>
               <div class="actions">
@@ -355,7 +392,7 @@
             </td>
             <td style="color:#475569;">—</td>
             <td style="font-family:monospace;font-size:13px;color:#94a3b8;">N/A</td>
-            <td><span class="badge badge-administrativo">secretaria</span></td>
+            <td><span class="badge badge-staff">Staff</span></td>
             <td><span class="badge badge-activo">Activo</span></td>
             <td>
               <div class="actions">
@@ -376,7 +413,7 @@
             </td>
             <td style="color:#475569;">Traumatología</td>
             <td style="font-family:monospace;font-size:13px;color:#475569;">MP 4892</td>
-            <td><span class="badge badge-profesional">socio</span></td>
+            <td><span class="badge badge-socio">Socio</span></td>
             <td><span class="badge badge-activo">Activo</span></td>
             <td>
               <div class="actions">
@@ -397,7 +434,7 @@
             </td>
             <td style="color:#475569;">Cardiología</td>
             <td style="font-family:monospace;font-size:13px;color:#475569;">MP 3847</td>
-            <td><span class="badge badge-profesional">socio</span></td>
+            <td><span class="badge badge-socio">Socio</span></td>
             <td><span class="badge badge-inactivo">Inactivo</span></td>
             <td>
               <div class="actions">
