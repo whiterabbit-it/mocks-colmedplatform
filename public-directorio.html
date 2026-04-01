@@ -3,36 +3,37 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Directorio Médico — CMRB Colegio Médico Regional Bariloche</title>
+  <title>Directorio Médico — CMRB</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Poppins:wght@300;400;500;600;700&family=Mulish:wght@900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/feedback.css">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Poppins', system-ui, sans-serif; background: #F3F6F9; color: #0B2340; min-height: 100vh; }
 
-    /* Public header — no app nav */
+    /* Public header */
     .pub-header { background: #0B2340; padding: 0 32px; height: 64px; display: flex; align-items: center; justify-content: space-between; }
     .pub-logo { display: flex; align-items: center; gap: 12px; }
-    .pub-logo img { height: 32px; }
+    .pub-logo-img { background: white; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .pub-logo-img img { width: 36px; height: 36px; object-fit: contain; display: block; }
     .pub-logo-text { color: white; }
-    .pub-logo-main { font-size: 16px; font-weight: 700; }
-    .pub-logo-sub { font-size: 11px; color: #94a3b8; }
-    .pub-header-right { font-size: 13px; color: #64748b; }
+    .pub-logo-main { font-family: 'Mulish', sans-serif; font-weight: 900; font-size: 18px; color: white; letter-spacing: 1.5px; line-height: 1.1; }
+    .pub-logo-sub { font-size: 10px; color: #94a3b8; letter-spacing: 0.3px; }
 
-    /* Hero / search */
+    /* Hero */
     .hero { background: linear-gradient(135deg, #0B2340 0%, #0c3a5c 100%); padding: 48px 32px; text-align: center; color: white; }
     .hero h1 { font-family: 'Lora', serif; font-size: 28px; font-weight: 700; margin-bottom: 10px; }
     .hero p { font-size: 15px; color: #94a3b8; margin-bottom: 24px; }
     .search-box { display: flex; gap: 10px; max-width: 560px; margin: 0 auto; }
     .search-input { flex: 1; border: none; border-radius: 10px; padding: 12px 16px; font-size: 14px; font-family: 'Poppins', sans-serif; color: #0B2340; outline: none; }
     .search-btn { background: #1AB8D2; color: white; border: none; border-radius: 10px; padding: 12px 20px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'Poppins', sans-serif; white-space: nowrap; }
+    .search-btn:hover { background: #0FA3BD; }
 
     /* Filters */
     .filters { background: white; padding: 16px 32px; border-bottom: 1px solid #e2e8f0; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
     .filter-label { font-size: 13px; font-weight: 600; color: #64748b; }
-    .filter-chip { padding: 6px 14px; border-radius: 16px; font-size: 12px; font-weight: 500; cursor: pointer; border: 1px solid #e2e8f0; color: #64748b; background: transparent; }
+    .filter-chip { padding: 6px 14px; border-radius: 16px; font-size: 12px; font-weight: 500; cursor: pointer; border: 1px solid #e2e8f0; color: #64748b; background: transparent; transition: all 0.15s; }
     .filter-chip:hover { border-color: #1AB8D2; color: #1AB8D2; }
     .filter-chip.active { background: #0B2340; color: white; border-color: #0B2340; }
 
@@ -43,10 +44,16 @@
     .doctors-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
     .doctor-card { background: white; border-radius: 14px; padding: 20px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.04); transition: all 0.18s; }
     .doctor-card:hover { border-color: #1AB8D2; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(26,184,210,0.1); }
+    .doctor-card.hidden { display: none; }
     .doctor-avatar { width: 52px; height: 52px; border-radius: 50%; background: #e8eef6; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 700; color: #0B2340; margin-bottom: 12px; }
     .doctor-name { font-size: 15px; font-weight: 700; color: #0B2340; margin-bottom: 4px; }
     .doctor-especialidad { font-size: 12px; color: #1AB8D2; font-weight: 600; margin-bottom: 4px; }
     .doctor-lugar { font-size: 12px; color: #64748b; display: flex; align-items: center; gap: 4px; }
+
+    /* Empty state */
+    .empty-state { text-align: center; padding: 48px 24px; color: #94a3b8; grid-column: 1/-1; display: none; }
+    .empty-state svg { margin-bottom: 12px; }
+    .empty-state p { font-size: 14px; }
 
     /* Privacy notice */
     .privacy-notice { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 16px; margin-bottom: 24px; font-size: 12px; color: #64748b; display: flex; align-items: flex-start; gap: 8px; }
@@ -61,6 +68,9 @@
 
 <header class="pub-header">
   <div class="pub-logo">
+    <div class="pub-logo-img">
+      <img src="assets/logov2.png" alt="CMRB">
+    </div>
     <div class="pub-logo-text">
       <div class="pub-logo-main">CMRB</div>
       <div class="pub-logo-sub">Colegio Médico Regional Bariloche</div>
@@ -71,113 +81,184 @@
 
 <div class="hero">
   <h1>Directorio de Profesionales</h1>
-  <p>Buscá información de socios asociados al Colegio Médico Regional Bariloche.</p>
+  <p>Buscá información de socios matriculados en el Colegio Médico Regional Bariloche.</p>
   <div class="search-box">
-    <input type="text" class="search-input" placeholder="Buscar por nombre, especialidad o institución...">
-    <button class="search-btn">Buscar</button>
+    <input type="text" id="search-input" class="search-input" placeholder="Buscar por nombre o especialidad...">
+    <button class="search-btn" onclick="applyFilters()">Buscar</button>
   </div>
 </div>
 
 <div class="filters">
   <span class="filter-label">Especialidad:</span>
-  <span class="filter-chip active">Todas</span>
-  <span class="filter-chip">Clínica Médica</span>
-  <span class="filter-chip">Cirugía</span>
-  <span class="filter-chip">Pediatría</span>
-  <span class="filter-chip">Cardiología</span>
-  <span class="filter-chip">Ginecología</span>
-  <span class="filter-chip">Traumatología</span>
-  <span class="filter-chip">Directorio</span>
+  <span class="filter-chip active" data-filter="">Todas</span>
+  <span class="filter-chip" data-filter="Clínica Médica">Clínica Médica</span>
+  <span class="filter-chip" data-filter="Cirugía">Cirugía</span>
+  <span class="filter-chip" data-filter="Pediatría">Pediatría</span>
+  <span class="filter-chip" data-filter="Cardiología">Cardiología</span>
+  <span class="filter-chip" data-filter="Ginecología">Ginecología</span>
+  <span class="filter-chip" data-filter="Traumatología">Traumatología</span>
+  <span class="filter-chip" data-filter="Neurología">Neurología</span>
+  <span class="filter-chip" data-filter="Dermatología">Dermatología</span>
 </div>
 
 <div class="content">
 
   <div class="privacy-notice">
     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
-    El directorio público no incluye teléfonos ni emails para proteger la privacidad de los profesionales. Para contactar, comuníquese con el Colegio: <a href="mailto:contacto@cmrb.com.ar">contacto@cmrb.com.ar</a>
+    El directorio público no incluye teléfonos ni emails para proteger la privacidad de los profesionales. Para contactar, comuníquese con el Colegio.
   </div>
 
-  <div class="result-count"><strong>48 profesionales</strong> matriculados activos</div>
+  <div class="result-count" id="result-count"><strong>12 profesionales</strong> encontrados</div>
 
-  <div class="doctors-grid">
-    <div class="doctor-card">
-      <div class="doctor-avatar">CR</div>
-      <div class="doctor-name">Dr. Carlos Rodríguez</div>
-      <div class="doctor-especialidad">Cirugía General</div>
-      <div class="doctor-lugar"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Hospital Zonal Bariloche</div>
-    </div>
-    <div class="doctor-card">
-      <div class="doctor-avatar">JP</div>
-      <div class="doctor-name">Dr. Juan Pereyra</div>
-      <div class="doctor-especialidad">Cirugía General</div>
-      <div class="doctor-lugar"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Clínica San Carlos</div>
-    </div>
-    <div class="doctor-card">
-      <div class="doctor-avatar">AB</div>
-      <div class="doctor-name">Dra. Ana Benítez</div>
+  <div class="doctors-grid" id="doctors-grid">
+
+    <div class="doctor-card" data-nombre="dra valentina morales" data-especialidad="Clínica Médica">
+      <div class="doctor-avatar">VM</div>
+      <div class="doctor-name">Dra. Valentina Morales</div>
       <div class="doctor-especialidad">Clínica Médica</div>
-      <div class="doctor-lugar"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Hospital Zonal Bariloche</div>
+      <div class="doctor-lugar"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Hospital Regional</div>
     </div>
-    <div class="doctor-card">
-      <div class="doctor-avatar">CS</div>
-      <div class="doctor-name">Dra. Carmen Silva</div>
+
+    <div class="doctor-card" data-nombre="dr pablo estrada" data-especialidad="Cirugía">
+      <div class="doctor-avatar">PE</div>
+      <div class="doctor-name">Dr. Pablo Estrada</div>
+      <div class="doctor-especialidad">Cirugía</div>
+      <div class="doctor-lugar"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Clínica del Lago</div>
+    </div>
+
+    <div class="doctor-card" data-nombre="dra luciana ferretti" data-especialidad="Pediatría">
+      <div class="doctor-avatar">LF</div>
+      <div class="doctor-name">Dra. Luciana Ferretti</div>
       <div class="doctor-especialidad">Pediatría</div>
-      <div class="doctor-lugar"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>CAPS Norte</div>
+      <div class="doctor-lugar"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Centro de Salud Norte</div>
     </div>
-    <div class="doctor-card">
-      <div class="doctor-avatar">MS</div>
-      <div class="doctor-name">Dr. Marcos Suárez</div>
+
+    <div class="doctor-card" data-nombre="dr tomás quiroga" data-especialidad="Cardiología">
+      <div class="doctor-avatar">TQ</div>
+      <div class="doctor-name">Dr. Tomás Quiroga</div>
       <div class="doctor-especialidad">Cardiología</div>
       <div class="doctor-lugar"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Consultorio Privado</div>
     </div>
-    <div class="doctor-card">
-      <div class="doctor-avatar">DR</div>
-      <div class="doctor-name">Dra. Daniela Ríos</div>
+
+    <div class="doctor-card" data-nombre="dra romina benavídez" data-especialidad="Ginecología">
+      <div class="doctor-avatar">RB</div>
+      <div class="doctor-name">Dra. Romina Benavídez</div>
       <div class="doctor-especialidad">Ginecología</div>
-      <div class="doctor-lugar"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Clínica San Carlos</div>
+      <div class="doctor-lugar"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Clínica del Lago</div>
     </div>
-    <div class="doctor-card">
-      <div class="doctor-avatar">AL</div>
-      <div class="doctor-name">Dr. Alejandro Bravo</div>
+
+    <div class="doctor-card" data-nombre="dr sebastián iturbe" data-especialidad="Traumatología">
+      <div class="doctor-avatar">SI</div>
+      <div class="doctor-name">Dr. Sebastián Iturbe</div>
       <div class="doctor-especialidad">Traumatología</div>
-      <div class="doctor-lugar"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Hospital Zonal Bariloche</div>
+      <div class="doctor-lugar"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Hospital Regional</div>
     </div>
-    <div class="doctor-card">
-      <div class="doctor-avatar">LT</div>
-      <div class="doctor-name">Dr. Luis Torres</div>
+
+    <div class="doctor-card" data-nombre="dra mariana ponce" data-especialidad="Neurología">
+      <div class="doctor-avatar">MP</div>
+      <div class="doctor-name">Dra. Mariana Ponce</div>
       <div class="doctor-especialidad">Neurología</div>
       <div class="doctor-lugar"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Consultorio Privado</div>
     </div>
-    <div class="doctor-card">
-      <div class="doctor-avatar">EG</div>
-      <div class="doctor-name">Dra. Elena Guzmán</div>
+
+    <div class="doctor-card" data-nombre="dr gabriel acosta" data-especialidad="Dermatología">
+      <div class="doctor-avatar">GA</div>
+      <div class="doctor-name">Dr. Gabriel Acosta</div>
       <div class="doctor-especialidad">Dermatología</div>
-      <div class="doctor-lugar"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>CAPS Sur</div>
+      <div class="doctor-lugar"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Centro de Salud Sur</div>
     </div>
-    <div class="doctor-card">
-      <div class="doctor-avatar">AM</div>
-      <div class="doctor-name">Dr. Arturo Medina</div>
+
+    <div class="doctor-card" data-nombre="dra inés villalba" data-especialidad="Clínica Médica">
+      <div class="doctor-avatar">IV</div>
+      <div class="doctor-name">Dra. Inés Villalba</div>
       <div class="doctor-especialidad">Clínica Médica</div>
-      <div class="doctor-lugar"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>CAPS Norte</div>
+      <div class="doctor-lugar"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Centro de Salud Norte</div>
     </div>
-    <div class="doctor-card">
-      <div class="doctor-avatar">RA</div>
-      <div class="doctor-name">Dr. Rodrigo Alves</div>
-      <div class="doctor-especialidad">Ortopedia</div>
-      <div class="doctor-lugar"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Clínica San Carlos</div>
+
+    <div class="doctor-card" data-nombre="dr nicolás zabala" data-especialidad="Cirugía">
+      <div class="doctor-avatar">NZ</div>
+      <div class="doctor-name">Dr. Nicolás Zabala</div>
+      <div class="doctor-especialidad">Cirugía</div>
+      <div class="doctor-lugar"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Hospital Regional</div>
     </div>
-    <div class="doctor-card" style="border: 2px dashed #e2e8f0; display:flex; align-items:center; justify-content:center; min-height:120px; color:#94a3b8; font-size:13px; text-align:center; flex-direction:column; gap:6px;">
+
+    <div class="doctor-card" data-nombre="dra florencia aguirre" data-especialidad="Pediatría">
+      <div class="doctor-avatar">FA</div>
+      <div class="doctor-name">Dra. Florencia Aguirre</div>
+      <div class="doctor-especialidad">Pediatría</div>
+      <div class="doctor-lugar"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Centro de Salud Sur</div>
+    </div>
+
+    <div class="doctor-card" style="border: 2px dashed #e2e8f0; display:flex; align-items:center; justify-content:center; min-height:120px; color:#94a3b8; font-size:13px; text-align:center; flex-direction:column; gap:6px;" data-nombre="" data-especialidad="__placeholder__">
       <div style="font-size:24px;">+36</div>
-      <div>más socios</div>
+      <div>más socios matriculados</div>
+    </div>
+
+    <div class="empty-state" id="empty-state">
+      <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <p>No se encontraron profesionales con ese criterio.</p>
     </div>
   </div>
 
 </div>
 
 <footer class="pub-footer">
-  <strong style="color:white;">CMRB</strong> — Colegio Médico Regional Bariloche · <a href="mailto:contacto@cmrb.com.ar">contacto@cmrb.com.ar</a>
+  <strong style="color:white;">CMRB</strong> — Colegio Médico Regional Bariloche
 </footer>
 
 <script src="assets/feedback.js"></script>
+<script>
+  let activeFilter = '';
+
+  function applyFilters() {
+    const query = document.getElementById('search-input').value.toLowerCase().trim();
+    const cards = document.querySelectorAll('.doctor-card:not([data-especialidad="__placeholder__"])');
+    const placeholder = document.querySelector('[data-especialidad="__placeholder__"]');
+    let visible = 0;
+
+    cards.forEach(card => {
+      const nombre = card.dataset.nombre || '';
+      const esp = card.dataset.especialidad || '';
+      const matchesSearch = !query || nombre.includes(query) || esp.toLowerCase().includes(query);
+      const matchesFilter = !activeFilter || esp === activeFilter;
+
+      if (matchesSearch && matchesFilter) {
+        card.classList.remove('hidden');
+        visible++;
+      } else {
+        card.classList.add('hidden');
+      }
+    });
+
+    // Mostrar placeholder solo si no hay filtros activos
+    if (placeholder) {
+      placeholder.style.display = (!query && !activeFilter) ? '' : 'none';
+    }
+
+    const count = document.getElementById('result-count');
+    const emptyState = document.getElementById('empty-state');
+    if (visible === 0) {
+      count.innerHTML = '<strong>0 profesionales</strong> encontrados';
+      emptyState.style.display = 'block';
+    } else {
+      const total = !query && !activeFilter ? '48' : visible;
+      count.innerHTML = `<strong>${total} profesionales</strong> ${(!query && !activeFilter) ? 'matriculados activos' : 'encontrados'}`;
+      emptyState.style.display = 'none';
+    }
+  }
+
+  // Chips de filtro
+  document.querySelectorAll('.filter-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      activeFilter = chip.dataset.filter;
+      applyFilters();
+    });
+  });
+
+  // Búsqueda en tiempo real
+  document.getElementById('search-input').addEventListener('input', applyFilters);
+</script>
 </body>
 </html>
