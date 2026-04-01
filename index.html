@@ -21,12 +21,12 @@
     .section-label { font-size: 12px; font-weight: 600; color: #64748b; letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 12px; }
     .role-tabs { display: flex; gap: 8px; flex-wrap: wrap; }
     .role-tab { padding: 8px 20px; border-radius: 20px; border: 2px solid transparent; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
-    .role-tab.director { background: #D6F5F1; color: #00A896; border-color: #00A896; }
+    .role-tab.director { background: #D6F4FA; color: #1AB8D2; border-color: #1AB8D2; }
     .role-tab.admin { background: #e8eef6; color: #0B2340; border-color: #0B2340; }
     .role-tab.profesional { background: #d1fae5; color: #059669; border-color: #059669; }
     .role-tab.administrativo { background: #fef3c7; color: #F0A500; border-color: #F0A500; }
     .role-tab .dot { width: 8px; height: 8px; border-radius: 50%; }
-    .role-tab.director .dot { background: #00A896; }
+    .role-tab.director .dot { background: #1AB8D2; }
     .role-tab.admin .dot { background: #0B2340; }
     .role-tab.profesional .dot { background: #059669; }
     .role-tab.administrativo .dot { background: #F0A500; }
@@ -34,23 +34,23 @@
     .section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid #e2e8f0; }
     .section-header h2 { font-family: 'Lora', serif; font-size: 20px; font-weight: 700; color: #0B2340; }
     .section-header .section-tag { background: #0B2340; color: white; font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 12px; letter-spacing: 0.5px; }
-    .section-header .section-tag.mobile { background: #00A896; }
+    .section-header .section-tag.mobile { background: #1AB8D2; }
     .section-header .section-tag.public { background: #059669; }
     .section-header .section-tag.team { background: #7c3aed; }
     .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
     .mock-card { background: white; border-radius: 12px; padding: 24px 20px; text-decoration: none; color: inherit; border: 2px solid #e2e8f0; transition: all 0.18s; display: flex; flex-direction: column; gap: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-    .mock-card:hover { border-color: #00A896; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,168,150,0.12); }
+    .mock-card:hover { border-color: #1AB8D2; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(26,184,210,0.12); }
     .mock-card.featured { border-color: #7c3aed; }
     .mock-card.featured:hover { border-color: #7c3aed; box-shadow: 0 8px 24px rgba(124,58,237,0.15); }
     .mock-card .card-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; }
     .mock-card .card-icon.navy { background: #e8eef6; }
-    .mock-card .card-icon.teal { background: #D6F5F1; }
+    .mock-card .card-icon.teal { background: #D6F4FA; }
     .mock-card .card-icon.mobile { background: #f0fdf4; }
     .mock-card .card-icon.green { background: #d1fae5; }
     .mock-card .card-icon.purple { background: #ede9fe; }
     .mock-card .card-name { font-size: 15px; font-weight: 700; color: #0B2340; line-height: 1.3; }
     .mock-card .card-desc { font-size: 12px; color: #64748b; line-height: 1.5; }
-    .mock-card .card-arrow { margin-top: auto; font-size: 12px; color: #00A896; font-weight: 600; display: flex; align-items: center; gap: 4px; }
+    .mock-card .card-arrow { margin-top: auto; font-size: 12px; color: #1AB8D2; font-weight: 600; display: flex; align-items: center; gap: 4px; }
     .mock-card.featured .card-arrow { color: #7c3aed; }
     .info-banner { background: linear-gradient(135deg, #0B2340 0%, #0c2340 100%); border-radius: 12px; padding: 24px 28px; color: white; margin-bottom: 40px; display: flex; align-items: center; gap: 20px; }
     .info-banner .info-icon { font-size: 36px; }
@@ -60,7 +60,7 @@
     .role-badge { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 12px; color: white; }
     .badge-super_admin { background: #334155; }
     .badge-admin { background: #0B2340; }
-    .badge-director { background: #00A896; }
+    .badge-director { background: #1AB8D2; }
     .badge-profesional { background: #059669; }
     .badge-administrativo { background: #F0A500; }
     .footer { text-align: center; padding: 32px; color: #64748b; font-size: 13px; border-top: 1px solid #e2e8f0; margin-top: 20px; }
@@ -100,16 +100,16 @@
       color: #0B2340; outline: none; margin-bottom: 12px; box-sizing: border-box;
       transition: border-color 0.15s;
     }
-    .auth-input:focus { border-color: #00A896; }
+    .auth-input:focus { border-color: #1AB8D2; }
     .auth-btn {
-      width: 100%; background: #00A896; color: white; border: none;
+      width: 100%; background: #1AB8D2; color: white; border: none;
       border-radius: 10px; padding: 13px; font-size: 14px; font-weight: 600;
       cursor: pointer; font-family: 'Poppins', sans-serif; transition: background 0.15s;
     }
     .auth-btn:hover { background: #0e7490; }
     .auth-btn:disabled { background: #94a3b8; cursor: not-allowed; }
     .auth-sent-box {
-      background: #D6F5F1; border-radius: 12px;
+      background: #D6F4FA; border-radius: 12px;
       padding: 20px; margin-bottom: 16px;
     }
     /* Name prompt */
@@ -133,7 +133,7 @@
       padding: 4px 12px 4px 6px;
     }
     .user-chip-avatar {
-      width: 28px; height: 28px; background: #00A896; border-radius: 50%;
+      width: 28px; height: 28px; background: #1AB8D2; border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
       font-size: 12px; font-weight: 700; color: white; flex-shrink: 0;
     }
@@ -188,7 +188,7 @@
     <div id="auth-sent" style="display:none;">
       <div class="auth-sent-box">
         <div style="margin-bottom:12px;">
-          <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#00A896" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#1AB8D2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
             <rect x="2" y="4" width="20" height="16" rx="2"/>
             <path d="m2 7 10 6 10-6"/>
           </svg>

@@ -17,7 +17,7 @@
       --shadow-sm: 0 1px 2px rgba(0,0,0,0.08);
       --shadow-md: 0 2px 8px rgba(0,0,0,0.10);
       --shadow-lg: 0 8px 16px rgba(0,0,0,0.12);
-      --primary: #00A896; --primary-hover: #008B7A; --primary-active: #00705E;
+      --primary: #1AB8D2; --primary-hover: #0FA3BD; --primary-active: #0B8FAA;
       --text-primary: #0B2340; --text-secondary: #475569; --text-tertiary: #64748b;
     }
     body { font-family: 'Poppins', system-ui, sans-serif; background: #F3F6F9; color: #0B2340; display: flex; min-height: 100vh; }
@@ -27,7 +27,7 @@
     .sidebar-logo { padding: 24px 20px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
     .sidebar-logo .logo-main { font-size: 20px; font-weight: 800; color: white; letter-spacing: -0.5px; }
     .sidebar-logo .logo-sub { font-size: 11px; color: #64b5d9; margin-top: 2px; letter-spacing: 0.5px; }
-    .sidebar-logo .logo-tag { display: inline-block; margin-top: 8px; background: #00A896; color: white; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 10px; letter-spacing: 0.5px; }
+    .sidebar-logo .logo-tag { display: inline-block; margin-top: 8px; background: #1AB8D2; color: white; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 10px; letter-spacing: 0.5px; }
     .sidebar-nav { padding: 16px 12px; flex: 1; overflow-y: auto; }
     .nav-label { font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.5); letter-spacing: 0.8px; text-transform: uppercase; padding: 0 8px; margin: 16px 0 6px; }
     .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; cursor: pointer; font-size: 14px; color: rgba(255,255,255,0.9); font-weight: 500; text-decoration: none; transition: all 0.15s; margin-bottom: 2px; }
@@ -35,7 +35,7 @@
     .nav-item.active { background: #1AB8D2; color: white; font-weight: 600; }
     .nav-item .nav-icon { font-size: 16px; width: 20px; text-align: center; }
     .sidebar-user { padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; }
-    .user-avatar-sm { width: 36px; height: 36px; background: #00A896; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: white; }
+    .user-avatar-sm { width: 36px; height: 36px; background: #1AB8D2; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: white; }
     .user-name { font-size: 13px; font-weight: 600; color: white; }
     .user-role { font-size: 11px; color: rgba(255,255,255,0.5); }
 
@@ -57,9 +57,9 @@
     .filter-select { padding: 8px 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 13px; font-family: 'Poppins', sans-serif; color: #0B2340; background: white; cursor: pointer; transition: all 0.15s; }
     .filter-select:hover { border-color: #cbd5e1; background: #F3F6F9; }
     .search-input { flex: 1; min-width: 200px; padding: 10px 14px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 13px; font-family: 'Poppins', sans-serif; color: #0B2340; transition: all 0.15s; }
-    .search-input:focus { outline: none; border-color: #00A896; box-shadow: 0 0 0 3px rgba(0,168,150,0.1); }
-    .btn-new-benefit { margin-left: auto; padding: 10px 16px; background: #00A896; color: white; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; font-family: 'Poppins', sans-serif; cursor: pointer; transition: all 0.15s; display: flex; align-items: center; gap: 6px; }
-    .btn-new-benefit:hover { background: #008B7A; }
+    .search-input:focus { outline: none; border-color: #1AB8D2; box-shadow: 0 0 0 3px rgba(26,184,210,0.1); }
+    .btn-new-benefit { margin-left: auto; padding: 10px 16px; background: #1AB8D2; color: white; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; font-family: 'Poppins', sans-serif; cursor: pointer; transition: all 0.15s; display: flex; align-items: center; gap: 6px; }
+    .btn-new-benefit:hover { background: #0FA3BD; }
 
     /* ===== BENEFIT GRID ===== */
     .benefits-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; margin-bottom: 28px; }
@@ -75,7 +75,7 @@
       transition: box-shadow 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
     }
     .benefit-card:hover {
-      border-color: #00A896;
+      border-color: #1AB8D2;
       box-shadow: var(--shadow-lg);
       transform: translateY(-1px);
     }
@@ -136,7 +136,7 @@
       font-size: 11px;
       font-weight: 600;
     }
-    .badge-cat-descuentos { background: #D6F5F1; color: #00A896; }
+    .badge-cat-descuentos { background: #D6F4FA; color: #1AB8D2; }
     .badge-cat-salud { background: #dbeafe; color: #0284c7; }
     .badge-cat-educacion { background: #fce7f3; color: #be185d; }
     .badge-cat-viajes { background: #fef3c7; color: #F0A500; }
@@ -150,7 +150,7 @@
       font-size: 11px;
       font-weight: 600;
     }
-    .badge-disponible   { background: #d6f5f1; color: #00705E; }
+    .badge-disponible   { background: #d6f5f1; color: #0B8FAA; }
     .badge-proximamente { background: #fef3c7; color: #92400e; }
     .badge-proximo      { background: #fef3c7; color: #92400e; }
 
@@ -158,9 +158,9 @@
     .benefit-card { transition: box-shadow 0.15s ease, border-color 0.15s ease, transform 0.15s ease; }
     .benefit-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-1px); }
     .btn-new-benefit, .btn-save { transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease; }
-    .btn-new-benefit:hover { background: var(--primary-hover) !important; box-shadow: 0 4px 12px rgba(0,168,150,0.2); }
+    .btn-new-benefit:hover { background: var(--primary-hover) !important; box-shadow: 0 4px 12px rgba(26,184,210,0.2); }
     *:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
-    input:focus, textarea:focus, select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0,168,150,0.15); }
+    input:focus, textarea:focus, select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(26,184,210,0.15); }
     button:disabled { opacity: 0.5; cursor: not-allowed; }
 
     .benefit-dates {
@@ -272,8 +272,8 @@
     }
     .form-input:focus, .form-textarea:focus, .form-select:focus {
       outline: none;
-      border-color: #00A896;
-      box-shadow: 0 0 0 3px rgba(0,168,150,0.1);
+      border-color: #1AB8D2;
+      box-shadow: 0 0 0 3px rgba(26,184,210,0.1);
     }
     .form-textarea {
       min-height: 100px;
@@ -312,12 +312,12 @@
       font-weight: 600;
       cursor: pointer;
       font-family: 'Poppins', sans-serif;
-      background: #00A896;
+      background: #1AB8D2;
       color: white;
       transition: all 0.15s;
     }
     .btn-save:hover {
-      background: #008B7A;
+      background: #0FA3BD;
     }
   </style>
 </head>

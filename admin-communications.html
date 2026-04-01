@@ -16,7 +16,7 @@
       --shadow-sm: 0 1px 2px rgba(0,0,0,0.08);
       --shadow-md: 0 2px 8px rgba(0,0,0,0.10);
       --shadow-lg: 0 8px 16px rgba(0,0,0,0.12);
-      --primary: #00A896; --primary-hover: #008B7A; --primary-active: #00705E;
+      --primary: #1AB8D2; --primary-hover: #0FA3BD; --primary-active: #0B8FAA;
       --text-primary: #0B2340; --text-secondary: #475569; --text-tertiary: #64748b;
     }
     body { font-family: 'Poppins', system-ui, sans-serif; background: #F3F6F9; color: #0B2340; display: flex; min-height: 100vh; }
@@ -31,7 +31,7 @@
     .sidebar-logo .logo-main { font-size: 20px; font-weight: 800; color: white; }
     .sidebar-logo .logo-sub { font-size: 11px; color: #64b5d9; margin-top: 2px; }
     .sidebar-logo .logo-tag {
-      display: inline-block; margin-top: 8px; background: #00A896; color: white;
+      display: inline-block; margin-top: 8px; background: #1AB8D2; color: white;
       font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 10px;
     }
     .sidebar-nav { padding: 16px 12px; flex: 1; overflow-y: auto; }
@@ -46,7 +46,7 @@
     .nav-item.active { background: #1AB8D2; color: white; font-weight: 600; }
     .nav-item .nav-icon { font-size: 16px; width: 20px; text-align: center; }
     .sidebar-user { padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; }
-    .user-avatar { width: 36px; height: 36px; background: #00A896; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: white; }
+    .user-avatar { width: 36px; height: 36px; background: #1AB8D2; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: white; }
     .user-name { font-size: 13px; font-weight: 600; color: white; }
     .user-role { font-size: 11px; color: rgba(255,255,255,0.5); }
 
@@ -80,7 +80,7 @@
       display: flex; align-items: center; gap: 6px; text-decoration: none;
       transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
     }
-    .btn-primary:hover { background: var(--primary-hover) !important; box-shadow: 0 4px 12px rgba(0,168,150,0.2); }
+    .btn-primary:hover { background: var(--primary-hover) !important; box-shadow: 0 4px 12px rgba(26,184,210,0.2); }
     .btn-primary:active { background: var(--primary-active) !important; transform: translateY(1px); }
 
     /* Filter tabs */
@@ -90,7 +90,7 @@
       cursor: pointer; border: 1px solid #e2e8f0; background: white; color: #64748b;
       transition: all 0.15s;
     }
-    .filter-tab:hover { border-color: #00A896; color: #00A896; }
+    .filter-tab:hover { border-color: #1AB8D2; color: #1AB8D2; }
     .filter-tab.active { background: #0B2340; color: white; border-color: #0B2340; font-weight: 600; }
 
     /* Table */
@@ -135,7 +135,7 @@
     /* Rol de usuario */
     .badge-socio       { font-size:10px; padding:3px 8px; background:#f0f4ff; color:#3730a3; }
     .badge-comision    { font-size:10px; padding:3px 8px; background:#e0f2fe; color:#0369a1; }
-    .badge-admin       { font-size:10px; padding:3px 8px; background:#d6f5f1; color:#00A896; }
+    .badge-admin       { font-size:10px; padding:3px 8px; background:#d6f5f1; color:#1AB8D2; }
     .badge-staff       { font-size:10px; padding:3px 8px; background:#f3f4f6; color:#4b5563; }
 
     /* Legacy rol badges */
@@ -150,7 +150,7 @@
     .badge-pendiente { font-size:10px; padding:3px 8px; background:#fffbeb; color:#78350f; }
 
     /* Beneficios */
-    .badge-disponible    { font-size:10px; padding:3px 8px; background:#d6f5f1; color:#00705E; }
+    .badge-disponible    { font-size:10px; padding:3px 8px; background:#d6f5f1; color:#0B8FAA; }
     .badge-proximamente  { font-size:10px; padding:3px 8px; background:#fef3c7; color:#92400e; }
 
     /* Transitions */
@@ -168,7 +168,7 @@
     input:focus, textarea:focus, select:focus {
       outline: none;
       border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(0,168,150,0.15);
+      box-shadow: 0 0 0 3px rgba(26,184,210,0.15);
     }
 
     /* Disabled */
@@ -186,8 +186,8 @@
       transition: all 0.15s; text-decoration: none;
     }
     .btn-action:hover { background: #F3F6F9; border-color: #cbd5e1; }
-    .btn-action.edit { color: #00A896; border-color: #bae6fd; }
-    .btn-action.edit:hover { background: #D6F5F1; }
+    .btn-action.edit { color: #1AB8D2; border-color: #bae6fd; }
+    .btn-action.edit:hover { background: #D6F4FA; }
 
     /* Read counter */
     .read-counter {
@@ -235,7 +235,7 @@
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");
       background-repeat: no-repeat; background-position: 10px center;
     }
-    .modal-search input:focus { border-color: #00A896; background-color: white; }
+    .modal-search input:focus { border-color: #1AB8D2; background-color: white; }
     .modal-list { overflow-y: auto; padding: 8px 0; }
     .reader-row {
       display: flex; align-items: center; gap: 12px;
