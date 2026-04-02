@@ -77,37 +77,37 @@
       padding: 20px;
     }
     .auth-card {
-      background: white; border-radius: 20px;
+      background: #1A4EA8; border-radius: 20px;
       padding: 40px; width: 100%; max-width: 420px;
-      box-shadow: 0 16px 48px rgba(11,35,64,0.15);
-      border: 1px solid #e2e8f0; text-align: center;
+      box-shadow: 0 16px 48px rgba(11,35,64,0.35);
+      border: none; text-align: center;
     }
     .auth-card-header {
-      background: #f0f7ff; border: 1px solid #dbeafe; border-radius: 12px;
+      background: rgba(0,0,0,0.15); border-radius: 12px;
       padding: 20px; margin-bottom: 28px;
     }
     .auth-title {
       font-family: 'Lora', serif; font-size: 22px;
-      font-weight: 700; color: #0B2340; margin-bottom: 8px;
+      font-weight: 700; color: white; margin-bottom: 8px;
     }
     .auth-sub {
-      font-size: 14px; color: #64748b;
+      font-size: 14px; color: rgba(255,255,255,0.75);
       margin-bottom: 28px; line-height: 1.6;
     }
     .auth-input {
-      width: 100%; border: 1.5px solid #e2e8f0; border-radius: 10px;
+      width: 100%; border: 1.5px solid rgba(255,255,255,0.3); border-radius: 10px;
       padding: 12px 16px; font-size: 14px; font-family: 'Poppins', sans-serif;
-      color: #0B2340; outline: none; margin-bottom: 12px; box-sizing: border-box;
+      color: #0B2340; background: white; outline: none; margin-bottom: 12px; box-sizing: border-box;
       transition: border-color 0.15s;
     }
     .auth-input:focus { border-color: #1AB8D2; }
     .auth-btn {
-      width: 100%; background: #1AB8D2; color: white; border: none;
+      width: 100%; background: #0B2340; color: white; border: none;
       border-radius: 10px; padding: 13px; font-size: 14px; font-weight: 600;
       cursor: pointer; font-family: 'Poppins', sans-serif; transition: background 0.15s;
     }
-    .auth-btn:hover { background: #0e7490; }
-    .auth-btn:disabled { background: #94a3b8; cursor: not-allowed; }
+    .auth-btn:hover { background: #0a1e36; }
+    .auth-btn:disabled { background: rgba(255,255,255,0.3); cursor: not-allowed; }
     .auth-sent-box {
       background: #D6F4FA; border-radius: 12px;
       padding: 20px; margin-bottom: 16px;
@@ -178,9 +178,9 @@
     <div class="auth-card-header">
       <div style="display:flex;align-items:center;justify-content:center;gap:12px;">
         <img src="assets/logov2.png" alt="CMRB" style="width:48px;height:48px;object-fit:contain;display:block;border-radius:50%;">
-        <span style="font-family:'Mulish',sans-serif;font-weight:900;font-size:32px;color:#1A4EA8;letter-spacing:1.5px;display:block;line-height:1;">CMRB</span>
+        <span style="font-family:'Mulish',sans-serif;font-weight:900;font-size:32px;color:white;letter-spacing:1.5px;display:block;line-height:1;">CMRB</span>
       </div>
-      <div style="font-size:12px;color:#64748b;letter-spacing:0.5px;margin-top:10px;">Colegio Médico de Bariloche</div>
+      <div style="font-size:12px;color:rgba(255,255,255,0.65);letter-spacing:0.5px;margin-top:10px;">Colegio Médico de Bariloche</div>
     </div>
     <div class="auth-title">Mocks de revisión</div>
     <p class="auth-sub">Ingresá tu email para acceder.<br>Te enviamos un link, sin contraseña.</p>
@@ -208,7 +208,7 @@
         ¿No llegó? Intentar con otro email
       </button>
     </div>
-    <p style="font-size:12px;color:#94a3b8;margin-top:20px;">Acceso solo para el equipo de revisión</p>
+    <p style="font-size:12px;color:rgba(255,255,255,0.5);margin-top:20px;">Acceso solo para el equipo de revisión</p>
   </div>
 </div>
 
