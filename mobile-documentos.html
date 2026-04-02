@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mobile Documentos — CMRB App</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Poppins:wght@300;400;500;600;700&family=Mulish:wght@900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/feedback.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Poppins', system-ui, sans-serif; background: #cbd5e1; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 32px 16px; }
+    .back-link { align-self: flex-start; margin-bottom: 16px; margin-left: calc(50% - 195px); font-size: 13px; color: #475569; text-decoration: none; display: flex; align-items: center; gap: 4px; background: white; padding: 6px 14px; border-radius: 8px; border: 1px solid #e2e8f0; font-weight: 500; }
+    .phone { width: 390px; height: 844px; background: #F3F6F9; border-radius: 48px; overflow: hidden; box-shadow: 0 32px 64px rgba(0,0,0,0.28), 0 0 0 2px #94a3b8; display: flex; flex-direction: column; position: relative; }
+    .status-bar { background: #1A4EA8; padding: 12px 24px 8px; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
+    .status-time { font-size: 15px; font-weight: 700; color: white; }
+    .status-icons { display: flex; align-items: center; gap: 6px; font-size: 13px; color: white; }
+    .app-header { background: white; border-bottom: 1px solid #e2e8f0; box-shadow: 0 1px 4px rgba(0,0,0,0.06); padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+    .notif-btn { width: 36px; height: 36px; border-radius: 50%; background: #EEF2FF; color: #1A4EA8; display: flex; align-items: center; justify-content: center; position: relative; font-size: 18px; }
+    .notif-dot { position: absolute; top: 2px; right: 2px; width: 16px; height: 16px; background: #E8735A; border-radius: 50%; border: 2px solid white; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; color: white; }
+    .screen-header { background: #0B2340; padding: 14px 20px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; }
+    .screen-title { font-family: 'Lora', serif; font-size: 18px; font-weight: 700; color: white; }
+    .scroll-area { flex: 1; overflow-y: auto; padding: 16px 16px 100px; }
+    .scroll-area::-webkit-scrollbar { display: none; }
+
+    /* Search bar */
+    .search-bar { display: flex; align-items: center; gap: 8px; background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 14px; margin-bottom: 16px; }
+    .search-bar input { border: none; outline: none; font-family: 'Poppins', sans-serif; font-size: 13px; color: #334155; flex: 1; background: transparent; }
+    .search-bar input::placeholder { color: #94a3b8; }
+
+    /* Filter chips */
+    .filter-row { display: flex; gap: 8px; margin-bottom: 16px; overflow-x: auto; padding-bottom: 4px; }
+    .filter-row::-webkit-scrollbar { display: none; }
+    .filter-chip { flex-shrink: 0; padding: 5px 14px; border-radius: 20px; font-size: 11px; font-weight: 600; cursor: pointer; font-family: 'Poppins', sans-serif; border: 1.5px solid #e2e8f0; background: white; color: #64748b; }
+    .filter-chip.active { background: #1A4EA8; border-color: #1A4EA8; color: white; }
+
+    /* Section label */
+    .section-label { font-size: 11px; font-weight: 600; color: #64748b; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 10px; margin-top: 4px; }
+
+    /* Document card */
+    .doc-card { background: white; border-radius: 14px; padding: 14px 16px; margin-bottom: 10px; border: 1px solid #e2e8f0; display: flex; align-items: center; gap: 14px; cursor: pointer; transition: box-shadow 0.15s; }
+    .doc-card:hover { box-shadow: 0 4px 12px rgba(26,78,168,0.08); }
+    .doc-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .doc-icon.pdf { background: #FEE2E2; color: #DC2626; }
+    .doc-icon.doc { background: #DBEAFE; color: #1A4EA8; }
+    .doc-icon.img { background: #D1FAE5; color: #059669; }
+    .doc-meta { flex: 1; min-width: 0; }
+    .doc-name { font-size: 13px; font-weight: 600; color: #0B2340; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .doc-detail { font-size: 11px; color: #94a3b8; display: flex; align-items: center; gap: 6px; }
+    .doc-badge { font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 6px; }
+    .doc-badge.new { background: #D6F4FA; color: #0e7490; }
+    .doc-arrow { color: #cbd5e1; flex-shrink: 0; }
+
+    /* Tab bar */
+    .tab-bar { position: absolute; bottom: 0; left: 0; right: 0; background: white; border-top: 1px solid #e2e8f0; display: flex; height: 72px; box-shadow: 0 -4px 12px rgba(0,0,0,0.06); }
+    .tab-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; cursor: pointer; padding: 8px 0; font-size: 10px; font-weight: 600; color: #94a3b8; text-decoration: none; }
+    .tab-item.active { color: #1AB8D2; }
+    .tab-icon { font-size: 20px; }
+  </style>
+</head>
+<body>
+
+<a href="index.html" class="back-link">← Volver a mocks</a>
+
+<div class="phone">
+  <div class="status-bar">
+    <span class="status-time">9:41</span>
+    <div class="status-icons"><span>●●●●</span><span>WiFi</span><span>🔋</span></div>
+  </div>
+  <div class="app-header">
+    <div style="display:flex;align-items:center;gap:8px;">
+      <div style="background:white;border-radius:50%;width:44px;height:44px;flex-shrink:0;display:flex;align-items:center;justify-content:center;">
+        <img src="assets/logov2.png" alt="CMRB" style="width:40px;height:40px;object-fit:contain;display:block;">
+      </div>
+      <span style="font-family:'Mulish',sans-serif;font-weight:900;font-size:17px;color:#1A4EA8;letter-spacing:1.5px;">CMRB</span>
+    </div>
+    <div class="notif-btn">
+      <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      <span class="notif-dot">3</span>
+    </div>
+  </div>
+  <div class="screen-header">
+    <span class="screen-title">Documentos</span>
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+  </div>
+
+  <div class="scroll-area">
+
+    <div class="search-bar">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" placeholder="Buscar documentos...">
+    </div>
+
+    <div class="filter-row">
+      <div class="filter-chip active">Todos</div>
+      <div class="filter-chip">Resoluciones</div>
+      <div class="filter-chip">Estatutos</div>
+      <div class="filter-chip">Circulares</div>
+      <div class="filter-chip">Convenios</div>
+    </div>
+
+    <div class="section-label">Recientes</div>
+
+    <div class="doc-card">
+      <div class="doc-icon pdf">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      </div>
+      <div class="doc-meta">
+        <div class="doc-name">Resolución N° 142/2025</div>
+        <div class="doc-detail">
+          <span>PDF · 210 KB</span>
+          <span>·</span>
+          <span>28 mar 2025</span>
+          <span class="doc-badge new">Nuevo</span>
+        </div>
+      </div>
+      <div class="doc-arrow">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+    </div>
+
+    <div class="doc-card">
+      <div class="doc-icon pdf">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      </div>
+      <div class="doc-meta">
+        <div class="doc-name">Circular Informativa — Marzo 2025</div>
+        <div class="doc-detail">
+          <span>PDF · 85 KB</span>
+          <span>·</span>
+          <span>15 mar 2025</span>
+          <span class="doc-badge new">Nuevo</span>
+        </div>
+      </div>
+      <div class="doc-arrow">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+    </div>
+
+    <div class="section-label" style="margin-top:8px;">Estatutos y Normativa</div>
+
+    <div class="doc-card">
+      <div class="doc-icon doc">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      </div>
+      <div class="doc-meta">
+        <div class="doc-name">Estatuto del CMRB</div>
+        <div class="doc-detail">
+          <span>PDF · 1.2 MB</span>
+          <span>·</span>
+          <span>Actualizado 2024</span>
+        </div>
+      </div>
+      <div class="doc-arrow">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+    </div>
+
+    <div class="doc-card">
+      <div class="doc-icon doc">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      </div>
+      <div class="doc-meta">
+        <div class="doc-name">Reglamento Interno 2023</div>
+        <div class="doc-detail">
+          <span>PDF · 340 KB</span>
+          <span>·</span>
+          <span>ene 2023</span>
+        </div>
+      </div>
+      <div class="doc-arrow">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+    </div>
+
+    <div class="section-label" style="margin-top:8px;">Convenios</div>
+
+    <div class="doc-card">
+      <div class="doc-icon img">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      </div>
+      <div class="doc-meta">
+        <div class="doc-name">Convenio OSDE — Médicos CMRB</div>
+        <div class="doc-detail">
+          <span>PDF · 520 KB</span>
+          <span>·</span>
+          <span>Vigente 2025</span>
+        </div>
+      </div>
+      <div class="doc-arrow">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+    </div>
+
+    <div class="doc-card">
+      <div class="doc-icon img">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      </div>
+      <div class="doc-meta">
+        <div class="doc-name">Acuerdo Pami — Prestadores 2025</div>
+        <div class="doc-detail">
+          <span>PDF · 290 KB</span>
+          <span>·</span>
+          <span>Vigente 2025</span>
+        </div>
+      </div>
+      <div class="doc-arrow">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="tab-bar">
+    <a href="mobile-modules.html" class="tab-item active">
+      <span class="tab-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>
+      Inicio
+    </a>
+    <a href="mobile-home.html" class="tab-item">
+      <span class="tab-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 11 18-5v12L3 13v-2z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg></span>
+      Comunicaciones
+    </a>
+    <a href="mobile-dms.html" class="tab-item" style="position:relative;">
+      <span class="tab-icon" style="position:relative;display:inline-block;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        <span style="position:absolute;top:-4px;right:-6px;background:#E8735A;color:white;border-radius:50%;width:14px;height:14px;font-size:8px;font-weight:700;display:flex;align-items:center;justify-content:center;border:1.5px solid white;">3</span>
+      </span>
+      Chat
+    </a>
+    <a href="mobile-directorio.html" class="tab-item">
+      <span class="tab-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+      Contactos
+    </a>
+    <a href="mobile-perfil.html" class="tab-item">
+      <span class="tab-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+      Perfil
+    </a>
+  </div>
+</div>
+
+<script src="assets/feedback.js"></script>
+</body>
+</html>
